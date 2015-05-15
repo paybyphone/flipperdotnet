@@ -20,8 +20,8 @@ namespace FlipperDotNet.Adapter
         {
             get { return _actors; }
         }
-        public int? PercentageOfActors { get; set; }
-        public int? PercentageOfTime { get; set; }
+        public int PercentageOfActors { get; set; }
+        public int PercentageOfTime { get; set; }
 
         public bool Equals(FeatureResult other)
         {

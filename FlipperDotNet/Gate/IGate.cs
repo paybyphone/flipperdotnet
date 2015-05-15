@@ -1,9 +1,13 @@
-﻿namespace FlipperDotNet.Gate
+﻿using System;
+
+namespace FlipperDotNet.Gate
 {
     public interface IGate
     {
-        bool IsEnabled(bool value);
-        bool IsOpen(object thing, bool value);
+        bool IsEnabled(object value);
+        bool IsOpen(object thing, object value);
+        string Name { get; }
         string Key { get; }
+        Type DataType { get; }
     }
 }

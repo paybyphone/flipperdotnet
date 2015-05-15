@@ -17,19 +17,37 @@ namespace FlipperDotNet.Adapter
         {
             var result = new FeatureResult();
 
-            result.Boolean = Read(Key(feature, feature.BooleanGate));
+            result.Boolean = ReadBool(Key(feature, feature.BooleanGate));
+            result.PercentageOfTime = ReadInt(Key(feature, feature.PercentageOfTimeGate));
 
             return result;
         }
 
-        public void Enable(Feature feature, IGate gate, bool b)
+        public void Enable(Feature feature, IGate gate, object b)
         {
-            Write(Key(feature, gate), b.ToString());
+            if (gate.DataType == typeof (bool) || gate.DataType == typeof (int))
+            {
+                Write(Key(feature, gate), b.ToString());
+            }
+            else
+            {
+                throw new NotSupportedException(string.Format("{0} is not supported by this adapter yet", gate.Name));
+            }
         }
 
-        public void Disable(Feature feature, IGate booleanGate, bool b)
+        public void Disable(Feature feature, IGate gate, object b)
         {
-            Clear(feature);
+            if (gate.DataType == typeof (bool))
+            {
+                Clear(feature);
+            }else if (gate.DataType == typeof (int))
+            {
+                Write(Key(feature, gate), b.ToString());
+            }
+            else
+            {
+                throw new NotSupportedException(string.Format("{0} is not supported by this adapter yet", gate.Name));
+            }
         }
 
         public ISet<string> Features
@@ -50,6 +68,7 @@ namespace FlipperDotNet.Adapter
         private void Clear(Feature feature)
         {
             Delete(Key(feature, feature.BooleanGate));
+            Delete(Key(feature, feature.PercentageOfTimeGate));
         }
 
         private void Write(string key, string value)
@@ -57,13 +76,24 @@ namespace FlipperDotNet.Adapter
             _dictionary[key] = value;
         }
 
-        private bool? Read(string key)
+        private bool? ReadBool(string key)
         {
             bool? result = null;
             string value;
             if (_dictionary.TryGetValue(key, out value))
             {
                 result = Convert.ToBoolean(value);
+            }
+            return result;
+        }
+
+        private int ReadInt(string key)
+        {
+            var result = 0;
+            string value;
+            if (_dictionary.TryGetValue(key, out value))
+            {
+                result = Convert.ToInt32(value);
             }
             return result;
         }

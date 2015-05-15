@@ -13,6 +13,7 @@ namespace FlipperDotNet
     public class Feature
     {
         private BooleanGate _booleanGate = new BooleanGate();
+        private PercentageOfTimeGate _percentageOfTimeGate = new PercentageOfTimeGate();
 
         public Feature(string name, IAdapter adapter)
         {
@@ -35,6 +36,14 @@ namespace FlipperDotNet
             Adapter.Enable(this, BooleanGate, true);
         }
 
+        public void EnablePercentageOfTime(int percentage)
+        {
+            Adapter.Add(this);
+            Adapter.Enable(this, PercentageOfTimeGate, percentage);
+        }
+
+        //private void Enable()
+
         public void Disable()
         {
             Adapter.Add(this);
@@ -45,9 +54,11 @@ namespace FlipperDotNet
         {
             get
             {
-                return GateValues.Boolean.HasValue
-                           ? GateValues.Boolean.Value ? FeatureState.On : FeatureState.Off
-                           : FeatureState.Off;
+                if (GateValues.Boolean.HasValue && GateValues.Boolean.Value || GateValues.PercentageOfTime == 100)
+                {
+                    return FeatureState.On;
+                }
+                return FeatureState.Off;
             }
         }
 
@@ -76,9 +87,19 @@ namespace FlipperDotNet
             get { return GateValues.Boolean.HasValue && GateValues.Boolean.Value; }
         }
 
+        public object PercentageOfTimeValue
+        {
+            get { return GateValues.PercentageOfTime; }
+        }
+
         public IGate BooleanGate
         {
             get { return _booleanGate; }
+        }
+
+        public IGate PercentageOfTimeGate
+        {
+            get { return _percentageOfTimeGate; }
         }
     }
 }

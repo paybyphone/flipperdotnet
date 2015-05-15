@@ -45,6 +45,23 @@ namespace FlipperDotNet.AdapterTests
         }
 
         [Test]
+        public void ShouldEnableAPercentageOfTimeGate()
+        {
+            var feature = Flipper.Feature("Stats");
+            Adapter.Enable(feature, feature.PercentageOfTimeGate, 10);
+            Assert.That(Adapter.Get(feature).PercentageOfTime, Is.EqualTo(10));
+        }
+
+        [Test]
+        public void ShouldDisableAPercentageOfTimeGate()
+        {
+            var feature = Flipper.Feature("Stats");
+            Adapter.Enable(feature, feature.PercentageOfTimeGate, 10);
+            Adapter.Disable(feature, feature.PercentageOfTimeGate, 0);
+            Assert.That(Adapter.Get(feature).PercentageOfTime, Is.EqualTo(0));
+        }
+
+        [Test]
         public void ShouldDefaultToEmptySetOfFeatures()
         {
             Assert.That(Adapter.Features, Is.Empty);

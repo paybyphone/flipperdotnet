@@ -46,6 +46,7 @@
     <Compile Include="Flipper.cs" />
     <Compile Include="Gate\BooleanGate.cs" />
     <Compile Include="Gate\IGate.cs" />
+    <Compile Include="Gate\PercentageOfTimeGate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
