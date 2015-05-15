@@ -1,4 +1,5 @@
-﻿using FlipperDotNet.Gate;
+﻿using System.Collections.Generic;
+using FlipperDotNet.Gate;
 
 namespace FlipperDotNet.Adapter
 {
@@ -7,5 +8,8 @@ namespace FlipperDotNet.Adapter
         FeatureResult Get(Feature feature);
         void Enable(Feature feature, IGate gate, bool b);
         void Disable(Feature feature, IGate booleanGate, bool b);
+        ISet<string> Features { get; }
+        void Add(Feature feature);
+        void Remove(Feature feature);
     }
 }

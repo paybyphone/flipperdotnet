@@ -43,5 +43,35 @@ namespace FlipperDotNet.AdapterTests
             Adapter.Disable(feature, feature.BooleanGate, false);
             Assert.That(Adapter.Get(feature).Boolean, Is.Null);
         }
+
+        [Test]
+        public void ShouldDefaultToEmptySetOfFeatures()
+        {
+            Assert.That(Adapter.Features, Is.Empty);
+        }
+
+        [Test]
+        public void ShouldAddFeature()
+        {
+            Adapter.Add(Flipper.Feature("Stats"));
+            Assert.That(Adapter.Features,Is.EquivalentTo(new[]{"Stats"}));
+        }
+
+        [Test]
+        public void ShouldAddMultipleFeatures()
+        {
+            Adapter.Add(Flipper.Feature("Stats"));
+            Adapter.Add(Flipper.Feature("Search"));
+            Assert.That(Adapter.Features, Is.EquivalentTo(new[] {"Stats", "Search"}));
+        }
+
+        [Test]
+        public void ShouldRemoveFeature()
+        {
+            Adapter.Add(Flipper.Feature("Stats"));
+            Adapter.Add(Flipper.Feature("Search"));
+            Adapter.Remove(Flipper.Feature("Stats"));
+            Assert.That(Adapter.Features, Is.EquivalentTo(new[] {"Search"}));
+        }
     }
 }

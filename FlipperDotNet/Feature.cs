@@ -22,7 +22,7 @@ namespace FlipperDotNet
 
         public string Name { get; private set; }
 
-        public object Key
+        public string Key
         {
             get { return Name; }
         }
@@ -31,11 +31,13 @@ namespace FlipperDotNet
 
         public void Enable()
         {
+            Adapter.Add(this);
             Adapter.Enable(this, BooleanGate, true);
         }
 
         public void Disable()
         {
+            Adapter.Add(this);
             Adapter.Disable(this, BooleanGate, false);
         }
 

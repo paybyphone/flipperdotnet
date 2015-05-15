@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using NUnit.Framework;
 using Rhino.Mocks;
 using FlipperDotNet.Adapter;
 
@@ -57,6 +58,24 @@ namespace FlipperDotNet.Tests
             flipper.Enable("Test");
             flipper.Disable("Test");
             Assert.That(flipper.Feature("Test").BooleanValue, Is.False);
+        }
+
+        [Test]
+        public void FeaturesShouldDefaultToEmptySet()
+        {
+            var flipper = new Flipper(new MemoryAdapter());
+            Assert.That(flipper.Features, Is.Empty);
+        }
+
+        [Test]
+        public void FeaturesShouldReturnEnabledAndDisabledFeatures()
+        {
+            var flipper = new Flipper(new MemoryAdapter());
+            flipper.Enable("Stats");
+            flipper.Enable("Cache");
+            flipper.Disable("Search");
+            Assert.That(from feature in flipper.Features select feature.Name,
+                        Is.EquivalentTo(new[] {"Stats", "Cache", "Search"}));
         }
     }
 }

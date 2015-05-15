@@ -10,6 +10,7 @@ namespace FlipperDotNet.Adapter
 {
     public class MemoryAdapter : IAdapter
     {
+        private readonly HashSet<string> _features = new HashSet<string>(); 
         private readonly Dictionary<string,string> _dictionary = new Dictionary<string, string>();
 
         public FeatureResult Get(Feature feature)
@@ -29,6 +30,21 @@ namespace FlipperDotNet.Adapter
         public void Disable(Feature feature, IGate booleanGate, bool b)
         {
             Clear(feature);
+        }
+
+        public ISet<string> Features
+        {
+            get { return _features; }
+        }
+
+        public void Add(Feature feature)
+        {
+            _features.Add(feature.Key);
+        }
+
+        public void Remove(Feature feature)
+        {
+            _features.Remove(feature.Key);
         }
 
         private void Clear(Feature feature)

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FlipperDotNet.Adapter;
 
 namespace FlipperDotNet
@@ -13,6 +14,15 @@ namespace FlipperDotNet
         }
 
         public IAdapter Adapter { get; private set; }
+
+        public ISet<Feature> Features
+        {
+            get
+            {
+                return new HashSet<Feature>(from featureName in Adapter.Features
+                                            select Feature(featureName));
+            }
+        }
 
         public Feature Feature(string name)
         {
