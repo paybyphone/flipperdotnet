@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlipperDotNet", "FlipperDot
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlipperDotNet.Tests", "FlipperDotNet.Tests\FlipperDotNet.Tests.csproj", "{15ADF25A-81CD-4E2A-BD3E-CAA716EAF06B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlipperDotNet.AdapterTests", "FlipperDotNet.AdapterTests\FlipperDotNet.AdapterTests.csproj", "{D88E3CFB-F9C1-47F4-A278-AE062029DBFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{15ADF25A-81CD-4E2A-BD3E-CAA716EAF06B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15ADF25A-81CD-4E2A-BD3E-CAA716EAF06B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15ADF25A-81CD-4E2A-BD3E-CAA716EAF06B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D88E3CFB-F9C1-47F4-A278-AE062029DBFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D88E3CFB-F9C1-47F4-A278-AE062029DBFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D88E3CFB-F9C1-47F4-A278-AE062029DBFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D88E3CFB-F9C1-47F4-A278-AE062029DBFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

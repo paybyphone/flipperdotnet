@@ -1,4 +1,5 @@
 ﻿using FlipperDotNet.Adapter;
+using FlipperDotNet.Gate;
 
 namespace FlipperDotNet
 {
@@ -11,7 +12,7 @@ namespace FlipperDotNet
 
     public class Feature
     {
-        private bool _enabled;
+        private BooleanGate _booleanGate = new BooleanGate();
 
         public Feature(string name, IAdapter adapter)
         {
@@ -21,21 +22,31 @@ namespace FlipperDotNet
 
         public string Name { get; private set; }
 
+        public object Key
+        {
+            get { return Name; }
+        }
+
         public IAdapter Adapter { get; private set; }
 
         public void Enable()
         {
-            _enabled = true;
+            Adapter.Enable(this, BooleanGate, true);
         }
 
         public void Disable()
         {
-            _enabled = false;
+            Adapter.Disable(this, BooleanGate, false);
         }
 
         public FeatureState State
         {
-            get { return _enabled ? FeatureState.On : FeatureState.Off; }
+            get
+            {
+                return GateValues.Boolean.HasValue
+                           ? GateValues.Boolean.Value ? FeatureState.On : FeatureState.Off
+                           : FeatureState.Off;
+            }
         }
 
         public bool IsOn
@@ -53,9 +64,19 @@ namespace FlipperDotNet
             get { return State == FeatureState.Conditional; }
         }
 
-        public object BooleanValue
+        public FeatureResult GateValues
         {
-            get { return _enabled; }
+            get { return Adapter.Get(this); }
+        }
+
+        public bool BooleanValue
+        {
+            get { return GateValues.Boolean.HasValue && GateValues.Boolean.Value; }
+        }
+
+        public IGate BooleanGate
+        {
+            get { return _booleanGate; }
         }
     }
 }

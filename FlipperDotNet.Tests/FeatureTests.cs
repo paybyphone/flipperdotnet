@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FlipperDotNet.Adapter;
+﻿using FlipperDotNet.Adapter;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -37,7 +32,7 @@ namespace FlipperDotNet.Tests
         [SetUp]
         public void SetUp()
         {
-            _feature = new Feature("Test", null);
+            _feature = new Feature("Test", new MemoryAdapter());
             _feature.Enable();
         }
 
@@ -74,7 +69,7 @@ namespace FlipperDotNet.Tests
         [SetUp]
         public void SetUp()
         {
-            _feature = new Feature("Test", null);
+            _feature = new Feature("Test", new MemoryAdapter());
         }
 
         [Test]

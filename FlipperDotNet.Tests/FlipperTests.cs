@@ -45,8 +45,7 @@ namespace FlipperDotNet.Tests
         [Test]
         public void EnableEnablesTheFeature()
         {
-            var adapter = MockRepository.GenerateStub<IAdapter>();
-            var flipper = new Flipper(adapter);
+            var flipper = new Flipper(new MemoryAdapter());
             flipper.Enable("Test");
             Assert.That(flipper.Feature("Test").BooleanValue, Is.True);
         }
@@ -54,8 +53,7 @@ namespace FlipperDotNet.Tests
         [Test]
         public void DisableDisablesTheFeature()
         {
-            var adapter = MockRepository.GenerateStub<IAdapter>();
-            var flipper = new Flipper(adapter);
+            var flipper = new Flipper(new MemoryAdapter());
             flipper.Enable("Test");
             flipper.Disable("Test");
             Assert.That(flipper.Feature("Test").BooleanValue, Is.False);
