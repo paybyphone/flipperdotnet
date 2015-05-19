@@ -47,6 +47,7 @@
     <Compile Include="Adapter\MemoryAdapter.cs" />
     <Compile Include="Feature.cs" />
     <Compile Include="Flipper.cs" />
+    <Compile Include="GateValues.cs" />
     <Compile Include="Gate\ActorGate.cs" />
     <Compile Include="Gate\BooleanGate.cs" />
     <Compile Include="Gate\GroupGate.cs" />

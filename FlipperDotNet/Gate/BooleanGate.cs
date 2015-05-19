@@ -4,6 +4,9 @@ namespace FlipperDotNet.Gate
 {
     public class BooleanGate : IGate
     {
+        public const string NAME = "boolean";
+        public const string KEY = "boolean";
+
         public bool IsEnabled(object value)
         {
             return IsEnabled((bool) value);
@@ -26,12 +29,12 @@ namespace FlipperDotNet.Gate
 
         public string Name
         {
-            get { return Key; }
+            get { return NAME; }
         }
 
         public string Key
         {
-            get { return "boolean"; }
+            get { return KEY; }
         }
 
         public Type DataType

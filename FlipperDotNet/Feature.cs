@@ -1,4 +1,6 @@
-﻿using FlipperDotNet.Adapter;
+﻿using System.Collections.Generic;
+using System.Linq;
+using FlipperDotNet.Adapter;
 using FlipperDotNet.Gate;
 
 namespace FlipperDotNet
@@ -12,9 +14,15 @@ namespace FlipperDotNet
 
     public class Feature
     {
-        private BooleanGate _booleanGate = new BooleanGate();
-        private PercentageOfActorsGate _percentageOfActorsGate = new PercentageOfActorsGate();
-        private PercentageOfTimeGate _percentageOfTimeGate = new PercentageOfTimeGate();
+        private readonly List<IGate> _gates =
+            new List<IGate>(new IGate[]
+                {
+                    new BooleanGate(),
+//                    new GroupGate(),
+//                    new ActorGate(),
+                    new PercentageOfActorsGate(),
+                    new PercentageOfTimeGate()
+                });
 
         public Feature(string name, IAdapter adapter)
         {
@@ -61,9 +69,14 @@ namespace FlipperDotNet
         {
             get
             {
-                if (GateValues.Boolean.HasValue && GateValues.Boolean.Value || GateValues.PercentageOfActors == 100 || GateValues.PercentageOfTime == 100)
+                if (GateValues.Boolean || GateValues.PercentageOfActors == 100 || GateValues.PercentageOfTime == 100)
                 {
                     return FeatureState.On;
+                }
+                var nonBooleanGates = from gate in Gates where gate.Name != FlipperDotNet.Gate.BooleanGate.NAME select gate;
+                if (nonBooleanGates.Any(x => x.IsEnabled(GateValues[x.Key])))
+                {
+                    return FeatureState.Conditional;
                 }
                 return FeatureState.Off;
             }
@@ -84,34 +97,44 @@ namespace FlipperDotNet
             get { return State == FeatureState.Conditional; }
         }
 
-        public FeatureResult GateValues
+        public GateValues GateValues
         {
-            get { return Adapter.Get(this); }
+            get { return new GateValues(Adapter.Get(this)); }
         }
 
         public bool BooleanValue
         {
-            get { return GateValues.Boolean.HasValue && GateValues.Boolean.Value; }
+            get { return GateValues.Boolean; }
         }
 
-        public object PercentageOfTimeValue
+        public int PercentageOfTimeValue
         {
             get { return GateValues.PercentageOfTime; }
         }
 
         public IGate BooleanGate
         {
-            get { return _booleanGate; }
+            get { return Gate(FlipperDotNet.Gate.BooleanGate.NAME); }
         }
 
         public IGate PercentageOfActorsGate
         {
-            get { return _percentageOfActorsGate; }
+            get { return Gate(FlipperDotNet.Gate.PercentageOfActorsGate.NAME); }
         }
 
         public IGate PercentageOfTimeGate
         {
-            get { return _percentageOfTimeGate; }
+            get { return Gate(FlipperDotNet.Gate.PercentageOfTimeGate.NAME); }
+        }
+
+        public IList<IGate> Gates
+        {
+            get { return _gates; }
+        }
+
+        public IGate Gate(string name)
+        {
+            return _gates.Find(x => x.Name == name);
         }
     }
 }

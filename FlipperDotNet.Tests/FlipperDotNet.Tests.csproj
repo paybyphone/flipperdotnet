@@ -48,6 +48,7 @@
     <Compile Include="Adapter\MemoryAdapterTests.cs" />
     <Compile Include="FeatureTests.cs" />
     <Compile Include="FlipperTests.cs" />
+    <Compile Include="GateValuesTests.cs" />
     <Compile Include="Gate\BooleanGateTests.cs" />
     <Compile Include="Gate\PercentageOfActorsGateTests.cs" />
     <Compile Include="Gate\PercentageOfTimeGateTests.cs" />

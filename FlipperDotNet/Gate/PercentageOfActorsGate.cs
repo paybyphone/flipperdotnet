@@ -5,6 +5,9 @@ namespace FlipperDotNet.Gate
 {
     public class PercentageOfActorsGate : IGate
     {
+        public const string NAME = "percentage_of_actors";
+        public const string KEY = "percentage_of_actors";
+
         public bool IsEnabled(object value)
         {
             return (int) value > 0;
@@ -28,12 +31,12 @@ namespace FlipperDotNet.Gate
 
         public string Name
         {
-            get { return Key; }
+            get { return NAME; }
         }
 
         public string Key
         {
-            get { return "percentage_of_actors"; }
+            get { return KEY; }
         }
 
         public Type DataType

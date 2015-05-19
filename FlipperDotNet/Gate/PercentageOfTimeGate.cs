@@ -4,6 +4,9 @@ namespace FlipperDotNet.Gate
 {
     public class PercentageOfTimeGate : IGate
     {
+        public const string NAME = "percentage_of_time";
+        public const string KEY = "percentage_of_time";
+
         private readonly Random _random = new Random();
 
         public bool IsEnabled(object value)
@@ -19,12 +22,12 @@ namespace FlipperDotNet.Gate
 
         public string Name
         {
-            get { return Key; }
+            get { return NAME; }
         }
 
         public string Key
         {
-            get { return "percentage_of_time"; }
+            get { return KEY; }
         }
 
         public Type DataType

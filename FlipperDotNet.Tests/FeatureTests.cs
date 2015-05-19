@@ -5,7 +5,7 @@ using Rhino.Mocks;
 namespace FlipperDotNet.Tests
 {
     [TestFixture]
-    class FeatureTests
+    public class FeatureTests
     {
         [Test]
         public void ConstructorShouldSetName()
@@ -181,7 +181,7 @@ namespace FlipperDotNet.Tests
         public void SetUp()
         {
             _feature = new Feature("Test", new MemoryAdapter());
-            _feature.Enable();
+            _feature.EnablePercentageOfTime(5);
         }
 
         [Test]
@@ -272,4 +272,29 @@ namespace FlipperDotNet.Tests
             Assert.That(_feature.PercentageOfTimeValue, Is.EqualTo(0));
         }
     }
+
+    [TestFixture]
+    public class GateTests
+    {
+        private Feature _feature;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _feature = new Feature("Test", new MemoryAdapter());
+        }
+
+        [Test]
+        public void ShouldRetrieveGateByName()
+        {
+            Assert.That(_feature.Gate("boolean").Key, Is.EqualTo("boolean"));
+        }
+
+        [Test]
+        public void ShouldReturnNullForNonExistantGate()
+        {
+            Assert.That(_feature.Gate("foo"), Is.Null);
+        }
+    }
+
 }
