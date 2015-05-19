@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="klinkby.checksum">
+      <HintPath>..\packages\Klinkby.Checksum.1.0.2.1\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\klinkby.checksum.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,12 +47,18 @@
     <Compile Include="Adapter\MemoryAdapter.cs" />
     <Compile Include="Feature.cs" />
     <Compile Include="Flipper.cs" />
+    <Compile Include="Gate\ActorGate.cs" />
     <Compile Include="Gate\BooleanGate.cs" />
+    <Compile Include="Gate\GroupGate.cs" />
+    <Compile Include="Gate\PercentageOfActorsGate.cs" />
     <Compile Include="Gate\IGate.cs" />
     <Compile Include="Gate\PercentageOfTimeGate.cs" />
+    <Compile Include="IFlipperActor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

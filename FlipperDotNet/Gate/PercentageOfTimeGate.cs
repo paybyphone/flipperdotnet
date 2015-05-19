@@ -11,13 +11,16 @@ namespace FlipperDotNet.Gate
             return (int) value > 0;
         }
 
-        public bool IsOpen(object thing, object value)
+        public bool IsOpen(object thing, object value, string featureName)
         {
             var percentage = (int) value;
             return _random.NextDouble() < (percentage/100.0);
         }
 
-        public string Name { get; private set; }
+        public string Name
+        {
+            get { return Key; }
+        }
 
         public string Key
         {

@@ -14,16 +14,19 @@ namespace FlipperDotNet.Gate
             return value;
         }
 
-        public bool IsOpen(object thing, object value)
+        public bool IsOpen(object thing, object value, string featureName)
         {
             return IsOpen(thing, (bool) value);
         }
 
-        public string Name { get; private set; }
-
         public bool IsOpen(object thing, bool value)
         {
             return value;
+        }
+
+        public string Name
+        {
+            get { return Key; }
         }
 
         public string Key

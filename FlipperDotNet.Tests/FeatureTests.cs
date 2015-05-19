@@ -25,7 +25,7 @@ namespace FlipperDotNet.Tests
     }
 
     [TestFixture]
-    public class EnabledFeatureTests
+    public class FullyOnFeatureTests
     {
         private Feature _feature;
 
@@ -95,6 +95,117 @@ namespace FlipperDotNet.Tests
         public void ShouldReturnFalseForIsConditional()
         {
             Assert.That(_feature.IsConditional, Is.False);
+        }
+    }
+
+    [TestFixture]
+    public class PercentageOfActors100Tests
+    {
+        private Feature _feature;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _feature = new Feature("Test", new MemoryAdapter());
+            _feature.EnablePercentageOfActors(100);
+        }
+
+        [Test]
+        public void ShouldReturnStateOfOn()
+        {
+            Assert.That(_feature.State, Is.EqualTo(FeatureState.On));
+        }
+
+        [Test]
+        public void ShouldReturnTrueForIsOn()
+        {
+            Assert.That(_feature.IsOn, Is.True);
+        }
+
+        [Test]
+        public void ShouldReturnFalseForIsOff()
+        {
+            Assert.That(_feature.IsOff, Is.False);
+        }
+
+        [Test]
+        public void ShouldReturnFalseForIsConditional()
+        {
+            Assert.That(_feature.IsConditional, Is.False);
+        }
+    }
+
+    [TestFixture]
+    public class FullyOffFeatureTests
+    {
+        private Feature _feature;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _feature = new Feature("Test", new MemoryAdapter());
+            _feature.Disable();
+        }
+
+        [Test]
+        public void ShouldReturnStateOfOff()
+        {
+            Assert.That(_feature.State, Is.EqualTo(FeatureState.Off));
+        }
+
+        [Test]
+        public void ShouldReturnFalseForIsOn()
+        {
+            Assert.That(_feature.IsOn, Is.False);
+        }
+
+        [Test]
+        public void ShouldReturnTrueForIsOff()
+        {
+            Assert.That(_feature.IsOff, Is.True);
+        }
+
+        [Test]
+        public void ShouldReturnFalseForIsConditional()
+        {
+            Assert.That(_feature.IsConditional, Is.False);
+        }
+    }
+
+    [TestFixture]
+    public class PartiallyOnFeatureTests
+    {
+        private Feature _feature;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _feature = new Feature("Test", new MemoryAdapter());
+            _feature.Enable();
+        }
+
+        [Test]
+        public void ShouldReturnStateOfConditional()
+        {
+            Assert.That(_feature.State, Is.EqualTo(FeatureState.Conditional));
+        }
+
+        [Test]
+        public void ShouldReturnFalseForIsOn()
+        {
+            Assert.That(_feature.IsOn, Is.False);
+        }
+
+        [Test]
+        public void ShouldReturnFalseForIsOff()
+        {
+            Assert.That(_feature.IsOff, Is.False);
+        }
+
+        [Test]
+        public void ShouldReturnTrueForIsConditional()
+        {
+            Assert.That(_feature.IsConditional, Is.True);
         }
     }
 

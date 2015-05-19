@@ -45,6 +45,23 @@ namespace FlipperDotNet.AdapterTests
         }
 
         [Test]
+        public void ShouldEnableAPercentageOfActorsGate()
+        {
+            var feature = Flipper.Feature("Stats");
+            Adapter.Enable(feature, feature.PercentageOfActorsGate, 15);
+            Assert.That(Adapter.Get(feature).PercentageOfActors, Is.EqualTo(15));
+        }
+
+        [Test]
+        public void ShouldDisableAPercentageOfActorsGate()
+        {
+            var feature = Flipper.Feature("Stats");
+            Adapter.Enable(feature, feature.PercentageOfActorsGate, 15);
+            Adapter.Disable(feature, feature.PercentageOfActorsGate, 0);
+            Assert.That(Adapter.Get(feature).PercentageOfActors, Is.EqualTo(0));
+        }
+
+        [Test]
         public void ShouldEnableAPercentageOfTimeGate()
         {
             var feature = Flipper.Feature("Stats");

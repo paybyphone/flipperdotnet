@@ -19,6 +19,7 @@ namespace FlipperDotNet.Adapter
 
             result.Boolean = ReadBool(Key(feature, feature.BooleanGate));
             result.PercentageOfTime = ReadInt(Key(feature, feature.PercentageOfTimeGate));
+            result.PercentageOfActors = ReadInt(Key(feature, feature.PercentageOfActorsGate));
 
             return result;
         }
