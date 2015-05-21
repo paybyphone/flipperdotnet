@@ -112,6 +112,11 @@ namespace FlipperDotNet
             get { return GateValues.PercentageOfTime; }
         }
 
+        public object PercentageOfActorsValue
+        {
+            get { return GateValues.PercentageOfActors; }
+        }
+
         public IGate BooleanGate
         {
             get { return Gate(FlipperDotNet.Gate.BooleanGate.NAME); }

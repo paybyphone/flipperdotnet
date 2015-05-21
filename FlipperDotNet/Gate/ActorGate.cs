@@ -2,7 +2,7 @@
 
 namespace FlipperDotNet.Gate
 {
-    class ActorGate : IGate
+    public class ActorGate : IGate
     {
         public const string NAME = "actor";
         public const string KEY = "actors";

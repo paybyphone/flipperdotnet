@@ -274,6 +274,74 @@ namespace FlipperDotNet.Tests
     }
 
     [TestFixture]
+    public class FeaturePercentageOfActorsValueTests
+    {
+        private Feature _feature;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _feature = new Feature("Test", new MemoryAdapter());
+        }
+
+        [Test]
+        public void ShouldDefaultToZero()
+        {
+            Assert.That(_feature.PercentageOfActorsValue, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ShouldReturnValueWhenEnabled()
+        {
+            _feature.EnablePercentageOfActors(5);
+            Assert.That(_feature.PercentageOfActorsValue, Is.EqualTo(5));
+        }
+
+        [Test]
+        public void ShouldReturnZeroWhenDisabled()
+        {
+            _feature.Disable();
+            Assert.That(_feature.PercentageOfActorsValue, Is.EqualTo(0));
+        }
+    }
+
+    [TestFixture]
+    public class FeatureGateValuesTests
+    {
+        private Feature _feature;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _feature = new Feature("Test", new MemoryAdapter());
+        }
+
+        [Test]
+        public void ShouldDefaultToEmpty()
+        {
+            Assert.That(_feature.GateValues, Is.EqualTo(new GateValues(new FeatureResult())));
+        }
+
+        [Test, Ignore("No Actors or Groups support yet")]
+        public void ShouldReturnValuesSetInAdapter()
+        {
+            _feature.Enable();
+            //_feature.EnableActor(5);
+            //_feature.EnableGroup("admins");
+            _feature.EnablePercentageOfTime(50);
+            _feature.EnablePercentageOfActors(25);
+
+            var gateValues = _feature.GateValues;
+
+            Assert.That(gateValues.Boolean, Is.True);
+            //Assert.That(gateValues.Actors, Is.EquivalentTo(new[] {"5"}));
+            //Assert.That(gateValues.Groups, Is.EquivalentTo(new[] {"admins"}));
+            Assert.That(gateValues.PercentageOfTime, Is.EqualTo(50));
+            Assert.That(gateValues.PercentageOfActors, Is.EqualTo(25));
+        }
+    }
+
+    [TestFixture]
     public class GateTests
     {
         private Feature _feature;
@@ -296,5 +364,18 @@ namespace FlipperDotNet.Tests
             Assert.That(_feature.Gate("foo"), Is.Null);
         }
     }
+
+    [TestFixture, Ignore]
+    public class EnabledGroupsTests{}
+
+    [TestFixture, Ignore]
+    public class DisabledGroupsTests { }
+
+    [TestFixture, Ignore]
+    public class FeatureGroupsValueTests { }
+
+
+    [TestFixture, Ignore]
+    public class FeatureActorsValueTests { }
 
 }

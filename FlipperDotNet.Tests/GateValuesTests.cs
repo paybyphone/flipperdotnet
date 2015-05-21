@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FlipperDotNet.Adapter;
+﻿using FlipperDotNet.Adapter;
 using FlipperDotNet.Gate;
 using NUnit.Framework;
 
@@ -46,6 +41,25 @@ namespace FlipperDotNet.Tests
             var adapterValues = new FeatureResult {Boolean = true};
             var gateValues = new GateValues(adapterValues);
             Assert.That(gateValues[BooleanGate.KEY], Is.EqualTo(true));
+        }
+
+        [Test]
+        public void ShouldRetrieveTheActorsValue()
+        {
+            var adapterValues = new FeatureResult();
+            adapterValues.Actors.Add("1");
+            adapterValues.Actors.Add("2");
+            var gateValues = new GateValues(adapterValues);
+            Assert.That(gateValues[ActorGate.KEY], Is.EquivalentTo(new[] {"1", "2"}));
+        }
+
+        [Test]
+        public void ShouldRetrieveTheGroupsValue()
+        {
+            var adapterValues = new FeatureResult();
+            adapterValues.Groups.Add("admins");
+            var gateValues = new GateValues(adapterValues);
+            Assert.That(gateValues[GroupGate.KEY], Is.EquivalentTo(new[] { "admins" }));
         }
 
         [Test]

@@ -2,7 +2,7 @@
 
 namespace FlipperDotNet.Gate
 {
-    class GroupGate : IGate
+    public class GroupGate : IGate
     {
         public const string NAME = "groups";
         public const string KEY = "group";
