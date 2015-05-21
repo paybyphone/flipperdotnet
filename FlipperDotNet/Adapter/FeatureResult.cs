@@ -5,18 +5,14 @@ namespace FlipperDotNet.Adapter
 {
     public class FeatureResult:IEquatable<FeatureResult>
     {
-        private readonly HashSet<string> _groups = new HashSet<string>();
-        private readonly HashSet<string> _actors = new HashSet<string>();
-
+        public FeatureResult()
+        {
+            Groups = new HashSet<string>();
+            Actors = new HashSet<string>();
+        }
         public bool? Boolean { get; set; }
-        public ISet<string> Groups
-        {
-            get { return _groups; }
-        }
-        public ISet<string> Actors
-        {
-            get { return _actors; }
-        }
+        public ISet<string> Groups { get; set; }
+        public ISet<string> Actors { get; set; }
         public int PercentageOfActors { get; set; }
         public int PercentageOfTime { get; set; }
 

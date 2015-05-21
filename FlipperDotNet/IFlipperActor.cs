@@ -1,6 +1,6 @@
 ﻿namespace FlipperDotNet
 {
-    interface IFlipperActor
+    public interface IFlipperActor
     {
         string FlipperId { get; }
     }

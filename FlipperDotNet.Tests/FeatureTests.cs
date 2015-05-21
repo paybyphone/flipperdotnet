@@ -244,8 +244,49 @@ namespace FlipperDotNet.Tests
     [TestFixture, Ignore]
     public class FeatureGroupsValueTests { }
 
-    [TestFixture, Ignore]
-    public class FeatureActorsValueTests { }
+    [TestFixture]
+    public class FeatureActorsValueTests
+    {
+        private Feature _feature;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _feature = new Feature("Test", new MemoryAdapter());
+        }
+
+        [Test]
+        public void ShouldDefaultToEmpty()
+        {
+            Assert.That(_feature.ActorsValue, Is.Empty);
+        }
+
+        [Test]
+        public void ShouldReturnActorIdsWhenSet()
+        {
+            _feature.EnableActor(MockActor("User:5"));
+            _feature.EnableActor(MockActor("User:22"));
+
+            Assert.That(_feature.ActorsValue, Is.EquivalentTo(new[] {"User:5", "User:22"}));
+        }
+
+        [Test]
+        public void ShouldDisableActor()
+        {
+            _feature.EnableActor(MockActor("5"));
+
+            _feature.DisableActor(MockActor("5"));
+
+            Assert.That(_feature.ActorsValue, Is.Empty);
+        }
+
+        private static IFlipperActor MockActor(string id)
+        {
+            var actor = MockRepository.GenerateStub<IFlipperActor>();
+            actor.Stub(x => x.FlipperId).Return(id);
+            return actor;
+        }
+    }
 
     [TestFixture]
     public class FeaturePercentageOfTimeValueTests
@@ -328,11 +369,14 @@ namespace FlipperDotNet.Tests
             Assert.That(_feature.GateValues, Is.EqualTo(new GateValues(new FeatureResult())));
         }
 
-        [Test, Ignore("No Actors or Groups support yet")]
+        [Test, Ignore("No Groups support yet")]
         public void ShouldReturnValuesSetInAdapter()
         {
+            var actor = MockRepository.GenerateStub<IFlipperActor>();
+            actor.Stub(x => x.FlipperId).Return("5");
+
             _feature.Enable();
-            //_feature.EnableActor(5);
+            _feature.EnableActor(actor);
             //_feature.EnableGroup("admins");
             _feature.EnablePercentageOfTime(50);
             _feature.EnablePercentageOfActors(25);
@@ -340,7 +384,7 @@ namespace FlipperDotNet.Tests
             var gateValues = _feature.GateValues;
 
             Assert.That(gateValues.Boolean, Is.True);
-            //Assert.That(gateValues.Actors, Is.EquivalentTo(new[] {"5"}));
+            Assert.That(gateValues.Actors, Is.EquivalentTo(new[] {"5"}));
             //Assert.That(gateValues.Groups, Is.EquivalentTo(new[] {"admins"}));
             Assert.That(gateValues.PercentageOfTime, Is.EqualTo(50));
             Assert.That(gateValues.PercentageOfActors, Is.EqualTo(25));

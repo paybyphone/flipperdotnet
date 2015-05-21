@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FlipperDotNet.Adapter;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace FlipperDotNet.AdapterTests
 {
@@ -42,6 +43,42 @@ namespace FlipperDotNet.AdapterTests
             Adapter.Enable(feature, feature.BooleanGate, true);
             Adapter.Disable(feature, feature.BooleanGate, false);
             Assert.That(Adapter.Get(feature).Boolean, Is.Null);
+        }
+
+        [Test]
+        public void ShouldEnableActorsForActorGate()
+        {
+            var feature = Flipper.Feature("Stats");
+
+            Adapter.Enable(feature, feature.ActorGate, "22");
+            Adapter.Enable(feature, feature.ActorGate, "asdf");
+
+            Assert.That(Adapter.Get(feature).Actors, Is.EquivalentTo(new[] {"22", "asdf"}));
+        }
+
+        [Test]
+        public void ShouldDisableActorForActorGateWhenThereAreMultipleActors()
+        {
+            var feature = Flipper.Feature("Stats");
+
+            Adapter.Enable(feature, feature.ActorGate, "22");
+            Adapter.Enable(feature, feature.ActorGate, "asdf");
+
+            Adapter.Disable(feature, feature.ActorGate, "22");
+
+            Assert.That(Adapter.Get(feature).Actors, Is.EquivalentTo(new[] {"asdf"}));
+        }
+
+        [Test]
+        public void ShouldDisableActorForActorGateWhenItIsTheLastActor()
+        {
+            var feature = Flipper.Feature("Stats");
+
+            Adapter.Enable(feature, feature.ActorGate, "asdf");
+
+            Adapter.Disable(feature, feature.ActorGate, "asdf");
+
+            Assert.That(Adapter.Get(feature).Actors, Is.Empty);
         }
 
         [Test]

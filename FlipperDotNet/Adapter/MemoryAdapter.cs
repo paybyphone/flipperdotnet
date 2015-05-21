@@ -10,14 +10,16 @@ namespace FlipperDotNet.Adapter
 {
     public class MemoryAdapter : IAdapter
     {
-        private readonly HashSet<string> _features = new HashSet<string>(); 
-        private readonly Dictionary<string,string> _dictionary = new Dictionary<string, string>();
+        private readonly HashSet<string> _features = new HashSet<string>();
+        private readonly Dictionary<string, object> _dictionary = new Dictionary<string, object>();
 
         public FeatureResult Get(Feature feature)
         {
             var result = new FeatureResult();
 
             result.Boolean = ReadBool(Key(feature, feature.BooleanGate));
+            //result.Groups = 
+            result.Actors = ReadSet(Key(feature, feature.ActorGate));
             result.PercentageOfTime = ReadInt(Key(feature, feature.PercentageOfTimeGate));
             result.PercentageOfActors = ReadInt(Key(feature, feature.PercentageOfActorsGate));
 
@@ -29,6 +31,10 @@ namespace FlipperDotNet.Adapter
             if (gate.DataType == typeof (bool) || gate.DataType == typeof (int))
             {
                 Write(Key(feature, gate), b.ToString());
+            }
+            else if (gate.DataType == typeof (ISet<string>))
+            {
+                AddToSet(Key(feature, gate), b.ToString());
             }
             else
             {
@@ -44,6 +50,10 @@ namespace FlipperDotNet.Adapter
             }else if (gate.DataType == typeof (int))
             {
                 Write(Key(feature, gate), b.ToString());
+            }
+            else if (gate.DataType == typeof (ISet<string>))
+            {
+                RemoveFromSet(Key(feature, gate), b.ToString());
             }
             else
             {
@@ -77,10 +87,30 @@ namespace FlipperDotNet.Adapter
             _dictionary[key] = value;
         }
 
+        private void AddToSet(string key, string value)
+        {
+            EnsureSetExists(key);
+            ((ISet<string>) _dictionary[key]).Add(value);
+        }
+
+        private void RemoveFromSet(string key, string value)
+        {
+            EnsureSetExists(key);
+            ((ISet<string>)_dictionary[key]).Remove(value);
+        }
+
+        private void EnsureSetExists(string key)
+        {
+            if (! _dictionary.ContainsKey(key))
+            {
+                _dictionary[key] = new HashSet<string>();
+            }
+        }
+
         private bool? ReadBool(string key)
         {
             bool? result = null;
-            string value;
+            object value;
             if (_dictionary.TryGetValue(key, out value))
             {
                 result = Convert.ToBoolean(value);
@@ -91,12 +121,18 @@ namespace FlipperDotNet.Adapter
         private int ReadInt(string key)
         {
             var result = 0;
-            string value;
+            object value;
             if (_dictionary.TryGetValue(key, out value))
             {
                 result = Convert.ToInt32(value);
             }
             return result;
+        }
+
+        private ISet<string> ReadSet(string key)
+        {
+            EnsureSetExists(key);
+            return new HashSet<string>(_dictionary[key] as IEnumerable<string>);
         }
 
         private void Delete(string key)

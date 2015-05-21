@@ -19,7 +19,7 @@ namespace FlipperDotNet
                 {
                     new BooleanGate(),
 //                    new GroupGate(),
-//                    new ActorGate(),
+                    new ActorGate(),
                     new PercentageOfActorsGate(),
                     new PercentageOfTimeGate()
                 });
@@ -45,6 +45,12 @@ namespace FlipperDotNet
             Adapter.Enable(this, BooleanGate, true);
         }
 
+        public void EnableActor(IFlipperActor actor)
+        {
+            Adapter.Add(this);
+            Adapter.Enable(this, ActorGate, actor.FlipperId);
+        }
+
         public void EnablePercentageOfTime(int percentage)
         {
             Adapter.Add(this);
@@ -63,6 +69,12 @@ namespace FlipperDotNet
         {
             Adapter.Add(this);
             Adapter.Disable(this, BooleanGate, false);
+        }
+
+        public void DisableActor(IFlipperActor actor)
+        {
+            Adapter.Add(this);
+            Adapter.Disable(this, ActorGate, actor.FlipperId);
         }
 
         public FeatureState State
@@ -107,6 +119,11 @@ namespace FlipperDotNet
             get { return GateValues.Boolean; }
         }
 
+        public ISet<string> ActorsValue
+        {
+            get { return GateValues.Actors; }
+        }
+
         public int PercentageOfTimeValue
         {
             get { return GateValues.PercentageOfTime; }
@@ -120,6 +137,11 @@ namespace FlipperDotNet
         public IGate BooleanGate
         {
             get { return Gate(FlipperDotNet.Gate.BooleanGate.NAME); }
+        }
+
+        public IGate ActorGate
+        {
+            get { return Gate(FlipperDotNet.Gate.ActorGate.NAME); }
         }
 
         public IGate PercentageOfActorsGate
