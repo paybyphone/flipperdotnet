@@ -18,7 +18,7 @@ namespace FlipperDotNet
             new List<IGate>(new IGate[]
                 {
                     new BooleanGate(),
-//                    new GroupGate(),
+                    new GroupGate(),
                     new ActorGate(),
                     new PercentageOfActorsGate(),
                     new PercentageOfTimeGate()
@@ -137,6 +137,11 @@ namespace FlipperDotNet
         public IGate BooleanGate
         {
             get { return Gate(FlipperDotNet.Gate.BooleanGate.NAME); }
+        }
+
+        public IGate GroupGate
+        {
+            get { return Gate(FlipperDotNet.Gate.GroupGate.NAME); }
         }
 
         public IGate ActorGate

@@ -18,7 +18,7 @@ namespace FlipperDotNet.Adapter
             var result = new FeatureResult();
 
             result.Boolean = ReadBool(Key(feature, feature.BooleanGate));
-            //result.Groups = 
+            result.Groups = ReadSet(Key(feature, feature.GroupGate));
             result.Actors = ReadSet(Key(feature, feature.ActorGate));
             result.PercentageOfTime = ReadInt(Key(feature, feature.PercentageOfTimeGate));
             result.PercentageOfActors = ReadInt(Key(feature, feature.PercentageOfActorsGate));
@@ -74,12 +74,15 @@ namespace FlipperDotNet.Adapter
         public void Remove(Feature feature)
         {
             _features.Remove(feature.Key);
+            Clear(feature);
         }
 
-        private void Clear(Feature feature)
+        public void Clear(Feature feature)
         {
-            Delete(Key(feature, feature.BooleanGate));
-            Delete(Key(feature, feature.PercentageOfTimeGate));
+            foreach (var gate in feature.Gates)
+            {
+                Delete(Key(feature, gate));
+            }
         }
 
         private void Write(string key, string value)

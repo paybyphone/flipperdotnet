@@ -11,5 +11,6 @@ namespace FlipperDotNet.Adapter
         ISet<string> Features { get; }
         void Add(Feature feature);
         void Remove(Feature feature);
+        void Clear(Feature feature);
     }
 }

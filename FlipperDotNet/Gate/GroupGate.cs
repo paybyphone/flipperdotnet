@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FlipperDotNet.Gate
 {
@@ -9,7 +10,12 @@ namespace FlipperDotNet.Gate
 
         public bool IsEnabled(object value)
         {
-            throw new NotImplementedException();
+            return IsEnabled((ISet<string>)value);
+        }
+
+        public bool IsEnabled(ISet<string> value)
+        {
+            return value.Count != 0;
         }
 
         public bool IsOpen(object thing, object value, string featureName)
@@ -21,6 +27,9 @@ namespace FlipperDotNet.Gate
 
         public string Key { get { return KEY; } }
 
-        public Type DataType { get; private set; }
+        public Type DataType
+        {
+            get { return typeof(ISet<string>); }
+        }
     }
 }
