@@ -241,6 +241,12 @@ namespace FlipperDotNet.Tests
         }
     }
 
+    [TestFixture, Ignore]
+    public class FeatureGroupsValueTests { }
+
+    [TestFixture, Ignore]
+    public class FeatureActorsValueTests { }
+
     [TestFixture]
     public class FeaturePercentageOfTimeValueTests
     {
@@ -370,12 +376,4 @@ namespace FlipperDotNet.Tests
 
     [TestFixture, Ignore]
     public class DisabledGroupsTests { }
-
-    [TestFixture, Ignore]
-    public class FeatureGroupsValueTests { }
-
-
-    [TestFixture, Ignore]
-    public class FeatureActorsValueTests { }
-
 }
