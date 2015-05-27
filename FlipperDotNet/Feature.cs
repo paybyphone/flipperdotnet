@@ -202,8 +202,14 @@ namespace FlipperDotNet
             get
             {
                 var values = GateValues;
-                return BooleanGate.IsOpen(null, values[BooleanGate.Key], Name);
+                return Gates.Any(gate => gate.IsOpen(null, values[gate.Key], Name));
             }
+        }
+
+        public bool IsEnabledFor(IFlipperActor actor)
+        {
+            var values = GateValues;
+            return Gates.Any(gate => gate.IsOpen(actor, values[gate.Key], Name));
         }
     }
 }

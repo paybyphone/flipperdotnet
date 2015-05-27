@@ -20,7 +20,7 @@ namespace FlipperDotNet.Gate
 
         public bool IsOpen(object thing, object value, string featureName)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public string Name { get { return NAME; } }

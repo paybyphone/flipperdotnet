@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using FlipperDotNet.Adapter;
 using FlipperDotNet.Gate;
 using NUnit.Framework;
@@ -496,10 +497,82 @@ namespace FlipperDotNet.Tests
         }
 
         [Test]
+        public void ForActorShouldReturnTrueWhenFullyEnabled()
+        {
+            var actor = MockRepository.GenerateStub<IFlipperActor>();
+            actor.Stub(x => x.FlipperId).Return("22");
+            _feature.Enable();
+            Assert.That(_feature.IsEnabledFor(actor), Is.True);
+        }
+
+        [Test, Ignore("No Group support yet")]
+        public void ForGroupShouldReturnTrueWhenFullyEnabled()
+        {
+            //var group = new object();
+            //_feature.Enable();
+            //Assert.That(_feature.IsEnabledFor(group), Is.True);
+            throw new NotImplementedException();
+        }
+
+        [Test]
         public void ShouldReturnFalseWhenFullyDisabled()
         {
             _feature.Disable();
             Assert.That(_feature.IsEnabled, Is.False);
+        }
+
+        [TestCase(1, 50, ExpectedResult = true)]
+        [TestCase(1, 20, ExpectedResult = false)]
+        public bool TestIsEnabledWhenPercentageOfTimeSet(int seed, int percentage)
+        {
+            HackNewPercentageOfTimeGateIntoPlace(seed);
+
+            _feature.EnablePercentageOfTime(percentage);
+
+            return _feature.IsEnabled;
+        }
+
+        private void HackNewPercentageOfTimeGateIntoPlace(int seed)
+        {
+            var hackyIndex = _feature.Gates.IndexOf(_feature.PercentageOfTimeGate);
+            var newPoTGate = new PercentageOfTimeGate(new Random(seed));
+            _feature.Gates[hackyIndex] = newPoTGate;
+        }
+
+        [Test]
+        public void ForActorShouldReturnFalseWhenFullyDisabled()
+        {
+            var actor = MockRepository.GenerateStub<IFlipperActor>();
+            actor.Stub(x => x.FlipperId).Return("22");
+            _feature.Disable();
+            Assert.That(_feature.IsEnabledFor(actor), Is.False);
+        }
+
+        [Test, Ignore("No Group support yet")]
+        public void ForGroupShouldReturnFalseWhenFullyDisabled()
+        {
+            //var group = new object();
+            //_feature.Disable();
+            //Assert.That(_feature.IsEnabledFor(group), Is.False);
+            throw new NotImplementedException();
+        }
+
+        [Test]
+        public void ForActorShouldReturnTrueWhenActorIsEnabled()
+        {
+            var actor = MockRepository.GenerateStub<IFlipperActor>();
+            actor.Stub(x => x.FlipperId).Return("22");
+            _feature.EnableActor(actor);
+            Assert.That(_feature.IsEnabledFor(actor), Is.True);
+        }
+
+        [Test]
+        public void ForActorShouldReturnFalseWhenActorIsDisabled()
+        {
+            var actor = MockRepository.GenerateStub<IFlipperActor>();
+            actor.Stub(x => x.FlipperId).Return("22");
+            _feature.DisableActor(actor);
+            Assert.That(_feature.IsEnabledFor(actor), Is.False);
         }
     }
 }
