@@ -77,6 +77,18 @@ namespace FlipperDotNet
             Adapter.Disable(this, ActorGate, actor.FlipperId);
         }
 
+        public void DisablePercentageOfTime()
+        {
+            Adapter.Add(this);
+            Adapter.Disable(this, PercentageOfTimeGate, 0);
+        }
+
+        public void DisablePercentageOfActors()
+        {
+            Adapter.Add(this);
+            Adapter.Disable(this, PercentageOfActorsGate, 0);
+        }
+
         public FeatureState State
         {
             get
@@ -167,6 +179,31 @@ namespace FlipperDotNet
         public IGate Gate(string name)
         {
             return _gates.Find(x => x.Name == name);
+        }
+
+        public IEnumerable<IGate> EnabledGates
+        {
+            get
+            {
+                var values = GateValues;
+                return from gate in Gates
+                       where gate.IsEnabled(values[gate.Key])
+                       select gate;
+            }
+        }
+
+        public IEnumerable<IGate> DisabledGates
+        {
+            get { return Gates.Except(EnabledGates); }
+        }
+
+        public bool IsEnabled
+        {
+            get
+            {
+                var values = GateValues;
+                return BooleanGate.IsOpen(null, values[BooleanGate.Key], Name);
+            }
         }
     }
 }

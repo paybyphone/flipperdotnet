@@ -1,4 +1,6 @@
-﻿using FlipperDotNet.Adapter;
+﻿using System.Linq;
+using FlipperDotNet.Adapter;
+using FlipperDotNet.Gate;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -242,7 +244,9 @@ namespace FlipperDotNet.Tests
     }
 
     [TestFixture, Ignore]
-    public class FeatureGroupsValueTests { }
+    public class FeatureGroupsValueTests
+    {
+    }
 
     [TestFixture]
     public class FeatureActorsValueTests
@@ -313,9 +317,16 @@ namespace FlipperDotNet.Tests
         }
 
         [Test]
-        public void ShouldReturnZeroWhenDisabled()
+        public void ShouldReturnZeroWhenFullyDisabled()
         {
             _feature.Disable();
+            Assert.That(_feature.PercentageOfTimeValue, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ShouldReturnZeroWhenDisabled()
+        {
+            _feature.DisablePercentageOfTime();
             Assert.That(_feature.PercentageOfTimeValue, Is.EqualTo(0));
         }
     }
@@ -345,9 +356,16 @@ namespace FlipperDotNet.Tests
         }
 
         [Test]
-        public void ShouldReturnZeroWhenDisabled()
+        public void ShouldReturnZeroWhenFullyDisabled()
         {
             _feature.Disable();
+            Assert.That(_feature.PercentageOfActorsValue, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ShouldReturnZeroWhenDisabled()
+        {
+            _feature.DisablePercentageOfActors();
             Assert.That(_feature.PercentageOfActorsValue, Is.EqualTo(0));
         }
     }
@@ -415,9 +433,73 @@ namespace FlipperDotNet.Tests
         }
     }
 
-    [TestFixture, Ignore]
-    public class EnabledGroupsTests{}
+    [TestFixture, Ignore("No Groups support yet")]
+    public class EnabledGroupsTests
+    {
+    }
 
-    [TestFixture, Ignore]
-    public class DisabledGroupsTests { }
+    [TestFixture, Ignore("No Groups support yet")]
+    public class DisabledGroupsTests
+    {
+    }
+
+    [TestFixture]
+    public class EnabledAndDisabledGatesTests
+    {
+        private Feature _feature;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _feature = new Feature("Test", new MemoryAdapter());
+            _feature.EnablePercentageOfTime(5);
+            _feature.EnablePercentageOfActors(15);
+        }
+
+        [Test]
+        public void ShouldReturnEnabledGates()
+        {
+            var gates = _feature.EnabledGates;
+            var names = from gate in gates
+                        select gate.Name;
+
+            Assert.That(names, Is.EquivalentTo(new[] {PercentageOfTimeGate.NAME, PercentageOfActorsGate.NAME}));
+        }
+
+        [Test]
+        public void ShouldReturnDisabledGates()
+        {
+            var gates = _feature.DisabledGates;
+            var names = from gate in gates
+                        select gate.Name;
+
+            Assert.That(names, Is.EquivalentTo(new[] {BooleanGate.NAME, GroupGate.NAME, ActorGate.NAME}));
+        }
+    }
+
+    [TestFixture]
+    public class IsEnabledTests
+    {
+        private Feature _feature;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _feature = new Feature("Test", new MemoryAdapter());
+        }
+
+        [Test]
+        public void ShouldReturnTrueWhenFullyEnabled()
+        {
+            _feature.Enable();
+            Assert.That(_feature.IsEnabled, Is.True);
+        }
+
+        [Test]
+        public void ShouldReturnFalseWhenFullyDisabled()
+        {
+            _feature.Disable();
+            Assert.That(_feature.IsEnabled, Is.False);
+        }
+    }
 }

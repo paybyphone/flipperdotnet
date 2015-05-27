@@ -37,11 +37,11 @@ namespace FlipperDotNet
 
         public int PercentageOfTime { get; private set; }
 
-        public object this[string name]
+        public object this[string key]
         {
             get
             {
-                switch (name)
+                switch (key)
                 {
                     case BooleanGate.KEY:
                         return Boolean;
