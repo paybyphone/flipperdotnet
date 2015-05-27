@@ -7,7 +7,17 @@ namespace FlipperDotNet.Gate
         public const string NAME = "percentage_of_time";
         public const string KEY = "percentage_of_time";
 
-        private readonly Random _random = new Random();
+        private readonly Random _random;
+
+        public PercentageOfTimeGate()
+        {
+            _random = new Random();
+        }
+
+        public PercentageOfTimeGate(Random random)
+        {
+            _random = random;
+        }
 
         public bool IsEnabled(object value)
         {
@@ -17,7 +27,7 @@ namespace FlipperDotNet.Gate
         public bool IsOpen(object thing, object value, string featureName)
         {
             var percentage = (int) value;
-            return _random.NextDouble() < (percentage/100.0);
+            return _random.NextDouble() < (percentage / 100.0);
         }
 
         public string Name
