@@ -31,55 +31,19 @@ namespace FlipperDotNet.ConsulAdapter
             return result;
         }
 
-        private bool? ReadBool(string key)
-        {
-            bool? result = null;
-            var value = _client.KV.Get(key);
-            if (value.Response != null)
-            {
-                result = bool.Parse(Encoding.UTF8.GetString(value.Response.Value));
-            }
-            return result;
-        }
-
-        private int ReadInt(string key)
-        {
-            var result = 0;
-            var value = _client.KV.Get(key);
-            if (value.Response != null)
-            {
-                result = Convert.ToInt32(Encoding.UTF8.GetString(value.Response.Value));
-            }
-            return result;
-        }
-
-        private ISet<string> ReadSet(string keyPath)
-        {
-            var values = new HashSet<string>();
-            var valuesResult = _client.KV.List(keyPath);
-            if (valuesResult.Response != null)
-            {
-                foreach (var feature in valuesResult.Response)
-                {
-                    values.Add(feature.Key.Replace(keyPath + "/", ""));
-                }
-            }
-            return values;
-        }
-
-        public void Enable(Feature feature, IGate gate, object b)
+        public void Enable(Feature feature, IGate gate, object thing)
         {
             if (gate.DataType == typeof(bool))
             {
-                WriteBool(Key(feature, gate), (bool) b);
+                WriteBool(Key(feature, gate), (bool) thing);
             }
             else if (gate.DataType == typeof(int))
             {
-                WriteInt(Key(feature, gate), (int) b);
+                WriteInt(Key(feature, gate), (int) thing);
             }
             else if (gate.DataType == typeof(ISet<string>))
             {
-                AddToSet(Key(feature, gate), b.ToString());
+                AddToSet(Key(feature, gate), thing.ToString());
             }
             else
             {
@@ -87,34 +51,7 @@ namespace FlipperDotNet.ConsulAdapter
             }
         }
 
-        private void WriteBool(string key, bool value)
-        {
-            var pair = new Consul.KVPair(key)
-                {
-                    Value = Encoding.UTF8.GetBytes(value.ToString().ToLower()),
-                };
-            _client.KV.Put(pair);
-        }
-
-        private void WriteInt(string key, int value)
-        {
-            var pair = new Consul.KVPair(key)
-            {
-                Value = Encoding.UTF8.GetBytes(value.ToString(CultureInfo.InvariantCulture).ToLower()),
-            };
-            _client.KV.Put(pair);
-        }
-
-        private void AddToSet(string key, string value)
-        {
-            var pair = new Consul.KVPair(string.Format("{0}/{1}", key, value))
-            {
-                    Value = Encoding.UTF8.GetBytes("1")
-            };
-            _client.KV.Put(pair);
-        }
-
-        public void Disable(Feature feature, IGate gate, object b)
+        public void Disable(Feature feature, IGate gate, object thing)
         {
             if (gate.DataType == typeof(bool))
             {
@@ -122,21 +59,16 @@ namespace FlipperDotNet.ConsulAdapter
             }
             else if (gate.DataType == typeof(int))
             {
-                WriteInt(Key(feature, gate), (int)b);
+                WriteInt(Key(feature, gate), (int)thing);
             }
             else if (gate.DataType == typeof(ISet<string>))
             {
-                RemoveFromSet(Key(feature, gate), b.ToString());
+                RemoveFromSet(Key(feature, gate), thing.ToString());
             }
             else
             {
                 throw new NotSupportedException(string.Format("{0} is not supported by this adapter yet", gate.Name));
             }
-        }
-
-        private void RemoveFromSet(string key, string value)
-        {
-            _client.KV.Delete(string.Format("{0}/{1}", key, value));
         }
 
         public ISet<string> Features
@@ -181,6 +113,79 @@ namespace FlipperDotNet.ConsulAdapter
         private string Key(Feature feature, IGate gate)
         {
             return feature.Key + "/" + gate.Key;
+        }
+
+        private bool? ReadBool(string key)
+        {
+            bool? result = null;
+            var value = _client.KV.Get(key);
+            if (value.Response != null)
+            {
+                result = bool.Parse(Encoding.UTF8.GetString(value.Response.Value));
+            }
+            return result;
+        }
+
+        private int ReadInt(string key)
+        {
+            var result = 0;
+            var value = _client.KV.Get(key);
+            if (value.Response != null)
+            {
+                result = Convert.ToInt32(Encoding.UTF8.GetString(value.Response.Value));
+            }
+            return result;
+        }
+
+        private ISet<string> ReadSet(string keyPath)
+        {
+            var values = new HashSet<string>();
+            var valuesResult = _client.KV.List(keyPath);
+            if (valuesResult.Response != null)
+            {
+                foreach (var feature in valuesResult.Response)
+                {
+                    values.Add(feature.Key.Replace(keyPath + "/", ""));
+                }
+            }
+            return values;
+        }
+
+        private void WriteBool(string key, bool value)
+        {
+            var pair = new Consul.KVPair(key)
+            {
+                Value = Encoding.UTF8.GetBytes(value.ToString().ToLower()),
+            };
+            _client.KV.Put(pair);
+        }
+
+        private void WriteInt(string key, int value)
+        {
+            var pair = new Consul.KVPair(key)
+            {
+                Value = Encoding.UTF8.GetBytes(value.ToString(CultureInfo.InvariantCulture).ToLower()),
+            };
+            _client.KV.Put(pair);
+        }
+
+        private void AddToSet(string key, string value)
+        {
+            var pair = new Consul.KVPair(SetMemberKey(key, value))
+            {
+                Value = Encoding.UTF8.GetBytes("1")
+            };
+            _client.KV.Put(pair);
+        }
+
+        private void RemoveFromSet(string key, string value)
+        {
+            _client.KV.Delete(SetMemberKey(key, value));
+        }
+
+        private static string SetMemberKey(string key, string value)
+        {
+            return string.Format("{0}/{1}", key, value);
         }
     }
 }

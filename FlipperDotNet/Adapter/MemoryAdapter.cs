@@ -26,15 +26,15 @@ namespace FlipperDotNet.Adapter
             return result;
         }
 
-        public void Enable(Feature feature, IGate gate, object b)
+        public void Enable(Feature feature, IGate gate, object thing)
         {
             if (gate.DataType == typeof (bool) || gate.DataType == typeof (int))
             {
-                Write(Key(feature, gate), b.ToString());
+                Write(Key(feature, gate), thing.ToString());
             }
             else if (gate.DataType == typeof (ISet<string>))
             {
-                AddToSet(Key(feature, gate), b.ToString());
+                AddToSet(Key(feature, gate), thing.ToString());
             }
             else
             {
@@ -42,7 +42,7 @@ namespace FlipperDotNet.Adapter
             }
         }
 
-        public void Disable(Feature feature, IGate gate, object b)
+        public void Disable(Feature feature, IGate gate, object thing)
         {
             if (gate.DataType == typeof (bool))
             {
@@ -50,11 +50,11 @@ namespace FlipperDotNet.Adapter
             }
             else if (gate.DataType == typeof (int))
             {
-                Write(Key(feature, gate), b.ToString());
+                Write(Key(feature, gate), thing.ToString());
             }
             else if (gate.DataType == typeof (ISet<string>))
             {
-                RemoveFromSet(Key(feature, gate), b.ToString());
+                RemoveFromSet(Key(feature, gate), thing.ToString());
             }
             else
             {
