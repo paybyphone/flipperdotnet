@@ -19,17 +19,29 @@ namespace FlipperDotNet.ConsulAdapter
 
         public FeatureResult Get(Feature feature)
         {
-            throw new NotImplementedException();
+            var result = new FeatureResult();
+            var boolean = _client.KV.Get(Key(feature, feature.BooleanGate));
+
+            if (boolean.Response != null)
+            {
+                result.Boolean = bool.Parse(Encoding.UTF8.GetString(boolean.Response.Value));
+            }
+
+            return result;
         }
 
         public void Enable(Feature feature, IGate gate, object b)
         {
-            throw new NotImplementedException();
+            var pair = new Consul.KVPair(Key(feature, gate))
+                {
+                    Value = Encoding.UTF8.GetBytes(b.ToString().ToLower()),
+                };
+            _client.KV.Put(pair);
         }
 
-        public void Disable(Feature feature, IGate booleanGate, object b)
+        public void Disable(Feature feature, IGate gate, object b)
         {
-            throw new NotImplementedException();
+            _client.KV.Delete(Key(feature, gate));
         }
 
         public ISet<string> Features
@@ -68,6 +80,11 @@ namespace FlipperDotNet.ConsulAdapter
         public void Clear(Feature feature)
         {
             throw new NotImplementedException();
+        }
+
+        private string Key(Feature feature, IGate gate)
+        {
+            return feature.Key + "/" + gate.Key;
         }
     }
 }

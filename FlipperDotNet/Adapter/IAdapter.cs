@@ -7,7 +7,7 @@ namespace FlipperDotNet.Adapter
     {
         FeatureResult Get(Feature feature);
         void Enable(Feature feature, IGate gate, object b);
-        void Disable(Feature feature, IGate booleanGate, object b);
+        void Disable(Feature feature, IGate gate, object b);
         ISet<string> Features { get; }
         void Add(Feature feature);
         void Remove(Feature feature);
