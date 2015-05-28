@@ -143,9 +143,9 @@ namespace FlipperDotNet.ConsulAdapter
             var valuesResult = _client.KV.List(keyPath);
             if (valuesResult.Response != null)
             {
-                foreach (var feature in valuesResult.Response)
+                foreach (var member in valuesResult.Response)
                 {
-                    values.Add(feature.Key.Replace(keyPath + "/", ""));
+                    values.Add(member.Key.Replace(keyPath + "/", ""));
                 }
             }
             return values;
@@ -153,29 +153,26 @@ namespace FlipperDotNet.ConsulAdapter
 
         private void WriteBool(string key, bool value)
         {
+            WriteValue(key, value.ToString().ToLower());
+        }
+
+        private void WriteValue(string key, string value)
+        {
             var pair = new Consul.KVPair(key)
-            {
-                Value = Encoding.UTF8.GetBytes(value.ToString().ToLower()),
-            };
+                {
+                    Value = Encoding.UTF8.GetBytes(value),
+                };
             _client.KV.Put(pair);
         }
 
         private void WriteInt(string key, int value)
         {
-            var pair = new Consul.KVPair(key)
-            {
-                Value = Encoding.UTF8.GetBytes(value.ToString(CultureInfo.InvariantCulture).ToLower()),
-            };
-            _client.KV.Put(pair);
+            WriteValue(key, value.ToString(CultureInfo.InvariantCulture).ToLower());
         }
 
         private void AddToSet(string key, string value)
         {
-            var pair = new Consul.KVPair(SetMemberKey(key, value))
-            {
-                Value = Encoding.UTF8.GetBytes("1")
-            };
-            _client.KV.Put(pair);
+            WriteValue(SetMemberKey(key, value), "1");
         }
 
         private void RemoveFromSet(string key, string value)
