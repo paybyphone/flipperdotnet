@@ -74,12 +74,13 @@ namespace FlipperDotNet.ConsulAdapter
 
         public void Remove(Feature feature)
         {
-            throw new NotImplementedException();
+            _client.KV.DeleteTree(string.Format("{0}/features/{1}", FeaturesKey, feature.Key));
+            Clear(feature);
         }
 
         public void Clear(Feature feature)
         {
-            throw new NotImplementedException();
+            _client.KV.DeleteTree(feature.Key);
         }
 
         private string Key(Feature feature, IGate gate)
