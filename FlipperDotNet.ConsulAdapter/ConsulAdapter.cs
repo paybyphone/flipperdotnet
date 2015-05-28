@@ -23,6 +23,8 @@ namespace FlipperDotNet.ConsulAdapter
             var result = new FeatureResult();
 
             result.Boolean = ReadBool(Key(feature, feature.BooleanGate));
+            result.Groups = ReadSet(Key(feature, feature.GroupGate));
+            result.Actors = ReadSet(Key(feature, feature.ActorGate));
             result.PercentageOfTime = ReadInt(Key(feature, feature.PercentageOfTimeGate));
             result.PercentageOfActors = ReadInt(Key(feature, feature.PercentageOfActorsGate));
 
@@ -51,6 +53,20 @@ namespace FlipperDotNet.ConsulAdapter
             return result;
         }
 
+        private ISet<string> ReadSet(string keyPath)
+        {
+            var values = new HashSet<string>();
+            var valuesResult = _client.KV.List(keyPath);
+            if (valuesResult.Response != null)
+            {
+                foreach (var feature in valuesResult.Response)
+                {
+                    values.Add(feature.Key.Replace(keyPath + "/", ""));
+                }
+            }
+            return values;
+        }
+
         public void Enable(Feature feature, IGate gate, object b)
         {
             if (gate.DataType == typeof(bool))
@@ -61,10 +77,10 @@ namespace FlipperDotNet.ConsulAdapter
             {
                 WriteInt(Key(feature, gate), (int) b);
             }
-            //else if (gate.DataType == typeof(ISet<string>))
-            //{
-            //    AddToSet(Key(feature, gate), b.ToString());
-            //}
+            else if (gate.DataType == typeof(ISet<string>))
+            {
+                AddToSet(Key(feature, gate), b.ToString());
+            }
             else
             {
                 throw new NotSupportedException(string.Format("{0} is not supported by this adapter yet", gate.Name));
@@ -89,9 +105,38 @@ namespace FlipperDotNet.ConsulAdapter
             _client.KV.Put(pair);
         }
 
+        private void AddToSet(string key, string value)
+        {
+            var pair = new Consul.KVPair(string.Format("{0}/{1}", key, value))
+            {
+                    Value = Encoding.UTF8.GetBytes("1")
+            };
+            _client.KV.Put(pair);
+        }
+
         public void Disable(Feature feature, IGate gate, object b)
         {
-            _client.KV.Delete(Key(feature, gate));
+            if (gate.DataType == typeof(bool))
+            {
+                Clear(feature);
+            }
+            else if (gate.DataType == typeof(int))
+            {
+                WriteInt(Key(feature, gate), (int)b);
+            }
+            else if (gate.DataType == typeof(ISet<string>))
+            {
+                RemoveFromSet(Key(feature, gate), b.ToString());
+            }
+            else
+            {
+                throw new NotSupportedException(string.Format("{0} is not supported by this adapter yet", gate.Name));
+            }
+        }
+
+        private void RemoveFromSet(string key, string value)
+        {
+            _client.KV.Delete(string.Format("{0}/{1}", key, value));
         }
 
         public ISet<string> Features

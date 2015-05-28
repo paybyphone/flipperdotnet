@@ -47,7 +47,8 @@ namespace FlipperDotNet.Adapter
             if (gate.DataType == typeof (bool))
             {
                 Clear(feature);
-            }else if (gate.DataType == typeof (int))
+            }
+            else if (gate.DataType == typeof (int))
             {
                 Write(Key(feature, gate), b.ToString());
             }
