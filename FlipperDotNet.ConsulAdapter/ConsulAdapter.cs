@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using FlipperDotNet.Adapter;
 using FlipperDotNet.Gate;
@@ -20,22 +21,70 @@ namespace FlipperDotNet.ConsulAdapter
         public FeatureResult Get(Feature feature)
         {
             var result = new FeatureResult();
-            var boolean = _client.KV.Get(Key(feature, feature.BooleanGate));
 
-            if (boolean.Response != null)
+            result.Boolean = ReadBool(Key(feature, feature.BooleanGate));
+            result.PercentageOfTime = ReadInt(Key(feature, feature.PercentageOfTimeGate));
+
+            return result;
+        }
+
+        private bool? ReadBool(string key)
+        {
+            bool? result = null;
+            var value = _client.KV.Get(key);
+            if (value.Response != null)
             {
-                result.Boolean = bool.Parse(Encoding.UTF8.GetString(boolean.Response.Value));
+                result = bool.Parse(Encoding.UTF8.GetString(value.Response.Value));
             }
+            return result;
+        }
 
+        private int ReadInt(string key)
+        {
+            var result = 0;
+            var value = _client.KV.Get(key);
+            if (value.Response != null)
+            {
+                result = Convert.ToInt32(Encoding.UTF8.GetString(value.Response.Value));
+            }
             return result;
         }
 
         public void Enable(Feature feature, IGate gate, object b)
         {
-            var pair = new Consul.KVPair(Key(feature, gate))
+            if (gate.DataType == typeof(bool))
+            {
+                WriteBool(Key(feature, gate), (bool) b);
+            }
+            else if (gate.DataType == typeof(int))
+            {
+                WriteInt(Key(feature, gate), (int) b);
+            }
+            //else if (gate.DataType == typeof(ISet<string>))
+            //{
+            //    AddToSet(Key(feature, gate), b.ToString());
+            //}
+            else
+            {
+                throw new NotSupportedException(string.Format("{0} is not supported by this adapter yet", gate.Name));
+            }
+        }
+
+        private void WriteBool(string key, bool value)
+        {
+            var pair = new Consul.KVPair(key)
                 {
-                    Value = Encoding.UTF8.GetBytes(b.ToString().ToLower()),
+                    Value = Encoding.UTF8.GetBytes(value.ToString().ToLower()),
                 };
+            _client.KV.Put(pair);
+        }
+
+        private void WriteInt(string key, int value)
+        {
+            var pair = new Consul.KVPair(key)
+            {
+                Value = Encoding.UTF8.GetBytes(value.ToString(CultureInfo.InvariantCulture).ToLower()),
+            };
             _client.KV.Put(pair);
         }
 
