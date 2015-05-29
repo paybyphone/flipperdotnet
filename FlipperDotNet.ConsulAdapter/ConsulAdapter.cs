@@ -76,17 +76,7 @@ namespace FlipperDotNet.ConsulAdapter
             get
             {
                 var keyPath = string.Format("{0}/features", FeaturesKey);
-
-                var features = new HashSet<string>();
-                var featuresResult = _client.KV.List(keyPath);
-                if (featuresResult.Response != null)
-                {
-                    foreach (var feature in featuresResult.Response)
-                    {
-                        features.Add(feature.Key.Replace(keyPath + "/", ""));
-                    }
-                }
-                return features;
+                return ReadSet(keyPath);
             }
         }
 
