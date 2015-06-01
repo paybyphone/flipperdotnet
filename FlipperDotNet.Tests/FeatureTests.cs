@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FlipperDotNet.Adapter;
 using FlipperDotNet.Gate;
@@ -385,7 +386,7 @@ namespace FlipperDotNet.Tests
         [Test]
         public void ShouldDefaultToEmpty()
         {
-            Assert.That(_feature.GateValues, Is.EqualTo(new GateValues(new FeatureResult())));
+            Assert.That(_feature.GateValues, Is.EqualTo(new GateValues(new Dictionary<string, object>())));
         }
 
         [Test, Ignore("No Groups support yet")]

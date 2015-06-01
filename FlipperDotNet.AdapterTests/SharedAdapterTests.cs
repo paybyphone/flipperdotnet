@@ -1,4 +1,6 @@
-﻿using FlipperDotNet.Adapter;
+﻿using System.Collections.Generic;
+using FlipperDotNet.Adapter;
+using FlipperDotNet.Gate;
 using NUnit.Framework;
 
 namespace FlipperDotNet.AdapterTests
@@ -19,7 +21,7 @@ namespace FlipperDotNet.AdapterTests
         public void ShouldSetDefaultGateValues()
         {
             var feature = Flipper.Feature("Stats");
-            Assert.That(Adapter.Get(feature), Is.EqualTo(new FeatureResult()));
+            Assert.That(Adapter.Get(feature), Is.EquivalentTo(EmptyResult()));
         }
 
         [Test]
@@ -27,7 +29,7 @@ namespace FlipperDotNet.AdapterTests
         {
             var feature = Flipper.Feature("Stats");
             Adapter.Enable(feature, feature.BooleanGate, true);
-            Assert.That(Adapter.Get(feature).Boolean, Is.EqualTo(true));
+            Assert.That(Adapter.Get(feature)[BooleanGate.KEY], Is.EqualTo(true));
         }
 
         [Test]
@@ -36,7 +38,7 @@ namespace FlipperDotNet.AdapterTests
             var feature = Flipper.Feature("Stats");
             Adapter.Enable(feature, feature.BooleanGate, true);
             Adapter.Disable(feature, feature.BooleanGate, false);
-            Assert.That(Adapter.Get(feature).Boolean, Is.Null);
+            Assert.That(Adapter.Get(feature)[BooleanGate.KEY], Is.Null);
         }
 
         [Test]
@@ -53,7 +55,7 @@ namespace FlipperDotNet.AdapterTests
 
             Adapter.Disable(feature, feature.BooleanGate, false);
 
-            Assert.That(Adapter.Get(feature), Is.EqualTo(new FeatureResult()));
+            Assert.That(Adapter.Get(feature), Is.EqualTo(EmptyResult()));
         }
 
         [Test,Ignore("No Group support yet")]
@@ -79,7 +81,7 @@ namespace FlipperDotNet.AdapterTests
             Adapter.Enable(feature, feature.ActorGate, "22");
             Adapter.Enable(feature, feature.ActorGate, "asdf");
 
-            Assert.That(Adapter.Get(feature).Actors, Is.EquivalentTo(new[] {"22", "asdf"}));
+            Assert.That(Adapter.Get(feature)[ActorGate.KEY], Is.EquivalentTo(new[] {"22", "asdf"}));
         }
 
         [Test]
@@ -92,7 +94,7 @@ namespace FlipperDotNet.AdapterTests
 
             Adapter.Disable(feature, feature.ActorGate, "22");
 
-            Assert.That(Adapter.Get(feature).Actors, Is.EquivalentTo(new[] {"asdf"}));
+            Assert.That(Adapter.Get(feature)[ActorGate.KEY], Is.EquivalentTo(new[] { "asdf" }));
         }
 
         [Test]
@@ -104,7 +106,7 @@ namespace FlipperDotNet.AdapterTests
 
             Adapter.Disable(feature, feature.ActorGate, "asdf");
 
-            Assert.That(Adapter.Get(feature).Actors, Is.Empty);
+            Assert.That(Adapter.Get(feature)[ActorGate.KEY], Is.Empty);
         }
 
         [Test]
@@ -112,7 +114,7 @@ namespace FlipperDotNet.AdapterTests
         {
             var feature = Flipper.Feature("Stats");
             Adapter.Enable(feature, feature.PercentageOfActorsGate, 15);
-            Assert.That(Adapter.Get(feature).PercentageOfActors, Is.EqualTo(15));
+            Assert.That(Adapter.Get(feature)[PercentageOfActorsGate.KEY], Is.EqualTo(15));
         }
 
         [Test]
@@ -121,7 +123,7 @@ namespace FlipperDotNet.AdapterTests
             var feature = Flipper.Feature("Stats");
             Adapter.Enable(feature, feature.PercentageOfActorsGate, 15);
             Adapter.Disable(feature, feature.PercentageOfActorsGate, 0);
-            Assert.That(Adapter.Get(feature).PercentageOfActors, Is.EqualTo(0));
+            Assert.That(Adapter.Get(feature)[PercentageOfActorsGate.KEY], Is.EqualTo(0));
         }
 
         [Test]
@@ -129,7 +131,7 @@ namespace FlipperDotNet.AdapterTests
         {
             var feature = Flipper.Feature("Stats");
             Adapter.Enable(feature, feature.PercentageOfTimeGate, 10);
-            Assert.That(Adapter.Get(feature).PercentageOfTime, Is.EqualTo(10));
+            Assert.That(Adapter.Get(feature)[PercentageOfTimeGate.KEY], Is.EqualTo(10));
         }
 
         [Test]
@@ -138,7 +140,7 @@ namespace FlipperDotNet.AdapterTests
             var feature = Flipper.Feature("Stats");
             Adapter.Enable(feature, feature.PercentageOfTimeGate, 10);
             Adapter.Disable(feature, feature.PercentageOfTimeGate, 0);
-            Assert.That(Adapter.Get(feature).PercentageOfTime, Is.EqualTo(0));
+            Assert.That(Adapter.Get(feature)[PercentageOfTimeGate.KEY], Is.EqualTo(0));
         }
 
         [Test]
@@ -185,7 +187,7 @@ namespace FlipperDotNet.AdapterTests
 
             Adapter.Remove(feature);
 
-            Assert.That(Adapter.Get(feature), Is.EqualTo(new FeatureResult()));
+            Assert.That(Adapter.Get(feature), Is.EqualTo(EmptyResult()));
         }
 
         [Test]
@@ -202,7 +204,19 @@ namespace FlipperDotNet.AdapterTests
 
             Adapter.Clear(feature);
 
-            Assert.That(Adapter.Get(feature), Is.EqualTo(new FeatureResult()));
+            Assert.That(Adapter.Get(feature), Is.EqualTo(EmptyResult()));
+        }
+
+        private static Dictionary<string, object> EmptyResult()
+        {
+            return new Dictionary<string, object>
+                {
+                    {BooleanGate.KEY, null},
+                    {GroupGate.KEY, new HashSet<string>()},
+                    {ActorGate.KEY, new HashSet<string>()},
+                    {PercentageOfActorsGate.KEY, null},
+                    {PercentageOfTimeGate.KEY, null}
+                };
         }
     }
 }

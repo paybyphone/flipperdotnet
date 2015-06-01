@@ -1,4 +1,4 @@
-﻿using FlipperDotNet.Adapter;
+﻿using System.Collections.Generic;
 using FlipperDotNet.Gate;
 using NUnit.Framework;
 
@@ -12,7 +12,7 @@ namespace FlipperDotNet.Tests
         [TestCase(true, ExpectedResult = true)]
         public bool ShouldReturnBooleanValue(bool? input)
         {
-            var adapterValues = new FeatureResult {Boolean = input};
+            var adapterValues = new Dictionary<string, object> {{BooleanGate.KEY, input}};
             var gateValues = new GateValues(adapterValues);
             return gateValues.Boolean;
         }
@@ -21,7 +21,7 @@ namespace FlipperDotNet.Tests
         [TestCase(1, ExpectedResult = 1)]
         public int ShouldReturnPercentageOfTimeValue(int input)
         {
-            var adapterValues = new FeatureResult {PercentageOfTime = input};
+            var adapterValues = new Dictionary<string, object> {{PercentageOfTimeGate.KEY, input}};
             var gateValues = new GateValues(adapterValues);
             return gateValues.PercentageOfTime;
         }
@@ -30,7 +30,7 @@ namespace FlipperDotNet.Tests
         [TestCase(1, ExpectedResult = 1)]
         public int ShouldReturnPercentageOfActorsValue(int input)
         {
-            var adapterValues = new FeatureResult { PercentageOfActors = input };
+            var adapterValues = new Dictionary<string, object> {{PercentageOfActorsGate.KEY, input}};
             var gateValues = new GateValues(adapterValues);
             return gateValues.PercentageOfActors;
         }
@@ -38,7 +38,7 @@ namespace FlipperDotNet.Tests
         [Test]
         public void ShouldRetrieveTheBooleanValue()
         {
-            var adapterValues = new FeatureResult {Boolean = true};
+            var adapterValues = new Dictionary<string, object> {{BooleanGate.KEY, true}};
             var gateValues = new GateValues(adapterValues);
             Assert.That(gateValues[BooleanGate.KEY], Is.EqualTo(true));
         }
@@ -46,9 +46,7 @@ namespace FlipperDotNet.Tests
         [Test]
         public void ShouldRetrieveTheActorsValue()
         {
-            var adapterValues = new FeatureResult();
-            adapterValues.Actors.Add("1");
-            adapterValues.Actors.Add("2");
+            var adapterValues = new Dictionary<string, object> {{ActorGate.KEY, new HashSet<string> {"1", "2"}}};
             var gateValues = new GateValues(adapterValues);
             Assert.That(gateValues[ActorGate.KEY], Is.EquivalentTo(new[] {"1", "2"}));
         }
@@ -56,16 +54,15 @@ namespace FlipperDotNet.Tests
         [Test]
         public void ShouldRetrieveTheGroupsValue()
         {
-            var adapterValues = new FeatureResult();
-            adapterValues.Groups.Add("admins");
+            var adapterValues = new Dictionary<string, object> {{GroupGate.KEY, new HashSet<string> {"admins"}}};
             var gateValues = new GateValues(adapterValues);
-            Assert.That(gateValues[GroupGate.KEY], Is.EquivalentTo(new[] { "admins" }));
+            Assert.That(gateValues[GroupGate.KEY], Is.EquivalentTo(new[] {"admins"}));
         }
 
         [Test]
         public void ShouldRetrieveThePercentageOfTimeValue()
         {
-            var adapterValues = new FeatureResult {PercentageOfTime = 15};
+            var adapterValues = new Dictionary<string, object> {{PercentageOfTimeGate.KEY, 15}};
             var gateValues = new GateValues(adapterValues);
             Assert.That(gateValues[PercentageOfTimeGate.KEY], Is.EqualTo(15));
         }
@@ -73,7 +70,7 @@ namespace FlipperDotNet.Tests
         [Test]
         public void ShouldRetrieveThePercentageOfActorsValue()
         {
-            var adapterValues = new FeatureResult { PercentageOfActors = 25 };
+            var adapterValues = new Dictionary<string, object> {{PercentageOfActorsGate.KEY, 25}};
             var gateValues = new GateValues(adapterValues);
             Assert.That(gateValues[PercentageOfActorsGate.KEY], Is.EqualTo(25));
         }
@@ -81,7 +78,7 @@ namespace FlipperDotNet.Tests
         [Test]
         public void ShouldReturnNullForNonExistantValue()
         {
-            var adapterValues = new FeatureResult();
+            var adapterValues = new Dictionary<string, object>();
             var gateValues = new GateValues(adapterValues);
             Assert.That(gateValues["foo"], Is.Null);
         }

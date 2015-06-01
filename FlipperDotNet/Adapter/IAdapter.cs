@@ -5,7 +5,7 @@ namespace FlipperDotNet.Adapter
 {
     public interface IAdapter
     {
-        FeatureResult Get(Feature feature);
+        IDictionary<string, object> Get(Feature feature);
         void Enable(Feature feature, IGate gate, object thing);
         void Disable(Feature feature, IGate gate, object thing);
         ISet<string> Features { get; }

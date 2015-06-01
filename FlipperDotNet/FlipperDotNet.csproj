@@ -42,7 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adapter\FeatureResult.cs" />
     <Compile Include="Adapter\IAdapter.cs" />
     <Compile Include="Adapter\MemoryAdapter.cs" />
     <Compile Include="Feature.cs" />

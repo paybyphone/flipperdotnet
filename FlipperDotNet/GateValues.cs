@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using FlipperDotNet.Adapter;
 using FlipperDotNet.Gate;
 
 namespace FlipperDotNet
@@ -10,13 +9,13 @@ namespace FlipperDotNet
         private  HashSet<string> _groups;
         private  HashSet<string> _actors;
 
-        public GateValues(FeatureResult adapterValues)
+        public GateValues(IDictionary<string, object> adapterValues)
         {
-            Boolean = adapterValues.Boolean.HasValue && adapterValues.Boolean.Value;
-            Groups = adapterValues.Groups;
-            Actors = adapterValues.Actors;
-            PercentageOfActors = adapterValues.PercentageOfActors;
-            PercentageOfTime = adapterValues.PercentageOfTime;
+            //Boolean = adapterValues.Boolean.HasValue && adapterValues.Boolean.Value;
+            //Groups = adapterValues.Groups;
+            //Actors = adapterValues.Actors;
+            //PercentageOfActors = adapterValues.PercentageOfActors;
+            //PercentageOfTime = adapterValues.PercentageOfTime;
         }
 
         public bool Boolean { get; private set; }
