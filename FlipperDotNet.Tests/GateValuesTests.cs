@@ -8,27 +8,48 @@ namespace FlipperDotNet.Tests
     public class GateValuesTests
     {
         [TestCase(null, ExpectedResult = false)]
+        [TestCase("", ExpectedResult = false)]
         [TestCase(false, ExpectedResult = false)]
         [TestCase(true, ExpectedResult = true)]
-        public bool ShouldReturnBooleanValue(bool? input)
+        [TestCase("false", ExpectedResult = false)]
+        [TestCase("true", ExpectedResult = true)]
+        [TestCase(0, ExpectedResult = false)]
+        [TestCase(1, ExpectedResult = true)]
+        [TestCase("0", ExpectedResult = false)]
+        [TestCase("1", ExpectedResult = true)]
+        [TestCase("False", ExpectedResult = false)]
+        [TestCase("True", ExpectedResult = true)]
+        public bool ShouldReturnBooleanValue(object input)
         {
             var adapterValues = new Dictionary<string, object> {{BooleanGate.KEY, input}};
             var gateValues = new GateValues(adapterValues);
             return gateValues.Boolean;
         }
 
+        [TestCase(null, ExpectedResult = 0)]
+        [TestCase("", ExpectedResult = 0)]
         [TestCase(0, ExpectedResult = 0)]
         [TestCase(1, ExpectedResult = 1)]
-        public int ShouldReturnPercentageOfTimeValue(int input)
+        [TestCase(99, ExpectedResult = 99)]
+        [TestCase("0", ExpectedResult = 0)]
+        [TestCase("1", ExpectedResult = 1)]
+        [TestCase("99", ExpectedResult = 99)]
+        public int ShouldReturnPercentageOfTimeValue(object input)
         {
             var adapterValues = new Dictionary<string, object> {{PercentageOfTimeGate.KEY, input}};
             var gateValues = new GateValues(adapterValues);
             return gateValues.PercentageOfTime;
         }
 
+        [TestCase(null, ExpectedResult = 0)]
+        [TestCase("", ExpectedResult = 0)]
         [TestCase(0, ExpectedResult = 0)]
         [TestCase(1, ExpectedResult = 1)]
-        public int ShouldReturnPercentageOfActorsValue(int input)
+        [TestCase(99, ExpectedResult = 99)]
+        [TestCase("0", ExpectedResult = 0)]
+        [TestCase("1", ExpectedResult = 1)]
+        [TestCase("99", ExpectedResult = 99)]
+        public int ShouldReturnPercentageOfActorsValue(object input)
         {
             var adapterValues = new Dictionary<string, object> {{PercentageOfActorsGate.KEY, input}};
             var gateValues = new GateValues(adapterValues);

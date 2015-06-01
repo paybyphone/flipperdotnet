@@ -11,11 +11,18 @@ namespace FlipperDotNet
 
         public GateValues(IDictionary<string, object> adapterValues)
         {
-            //Boolean = adapterValues.Boolean.HasValue && adapterValues.Boolean.Value;
-            //Groups = adapterValues.Groups;
-            //Actors = adapterValues.Actors;
-            //PercentageOfActors = adapterValues.PercentageOfActors;
-            //PercentageOfTime = adapterValues.PercentageOfTime;
+            Boolean = ParseBoolean(GetAdapterValue(adapterValues, BooleanGate.KEY));
+            Groups = CopySet(GetAdapterValue(adapterValues, GroupGate.KEY));
+            Actors = CopySet(GetAdapterValue(adapterValues, ActorGate.KEY));
+            PercentageOfActors = ParseInt(GetAdapterValue(adapterValues, PercentageOfActorsGate.KEY));
+            PercentageOfTime = ParseInt(GetAdapterValue(adapterValues, PercentageOfTimeGate.KEY));
+        }
+
+        private static object GetAdapterValue(IDictionary<string, object> adapterValues, string key)
+        {
+            object value;
+            adapterValues.TryGetValue(key, out value);
+            return value;
         }
 
         public bool Boolean { get; private set; }
@@ -70,6 +77,55 @@ namespace FlipperDotNet
                    Actors.SetEquals(other.Actors) &&
                    PercentageOfActors == other.PercentageOfActors &&
                    PercentageOfTime == other.PercentageOfTime;
+        }
+
+        private static bool ParseBoolean(object adapterValue)
+        {
+            if (adapterValue is bool && ((bool)adapterValue))
+            {
+                return true;
+            }
+            if (adapterValue is int && (int)adapterValue == 1)
+            {
+                return true;
+            }
+            var stringValue = adapterValue as string;
+            if (stringValue != null)
+            {
+                if (stringValue == "1" || stringValue.ToLower() == "true")
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static int ParseInt(object adapterValue)
+        {
+            if (adapterValue is int)
+            {
+                return (int) adapterValue;
+            }
+            var stringValue = adapterValue as string;
+            if (stringValue != null)
+            {
+                if (string.IsNullOrEmpty(stringValue))
+                {
+                    return 0;
+                }
+                return Convert.ToInt32(adapterValue);
+            }
+            return 0;
+        }
+
+        private static ISet<string> CopySet(object value)
+        {
+            var set = value as ISet<string>;
+            if (set != null)
+            {
+                return set;
+            }
+            return new HashSet<string>();
         }
     }
 }
