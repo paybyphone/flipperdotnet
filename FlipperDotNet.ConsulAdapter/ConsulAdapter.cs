@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using FlipperDotNet.Adapter;
 using FlipperDotNet.Gate;
@@ -22,17 +23,17 @@ namespace FlipperDotNet.ConsulAdapter
         {
             var result = new Dictionary<string, object>();
 
+            var values = GetFeatureValues(feature);
+
             foreach (var gate in feature.Gates)
             {
-                if (gate.DataType == typeof (bool))
+                if (gate.DataType == typeof (bool) || gate.DataType == typeof (int))
                 {
-                    result[gate.Key] = ReadBool(Key(feature, gate));
-                }else if (gate.DataType == typeof (int))
+                    result[gate.Key] = ReadValue(values, gate);
+                }
+                else if (gate.DataType == typeof (ISet<string>))
                 {
-                    result[gate.Key] = ReadInt(Key(feature, gate));
-                } else if (gate.DataType == typeof (ISet<string>))
-                {
-                    result[gate.Key] = ReadSet(Key(feature, gate));
+                    result[gate.Key] = ReadSet(values, gate);
                 }
             }
 
@@ -113,26 +114,30 @@ namespace FlipperDotNet.ConsulAdapter
             return feature.Key + "/" + gate.Key;
         }
 
-        private string ReadBool(string key)
+        private IDictionary<string,object> GetFeatureValues(Feature feature)
         {
-            string result = null;
-            var value = _client.KV.Get(key);
-            if (value.Response != null)
+
+            var result = new Dictionary<string,object>();
+            var keyPath = feature.Key;
+            var values = _client.KV.List(keyPath);
+            if (values.Response != null)
             {
-                result = Encoding.UTF8.GetString(value.Response.Value);
+                foreach (var member in values.Response)
+                {
+                    result.Add(member.Key.Replace(keyPath + "/", ""), Encoding.UTF8.GetString(member.Value));
+                }
             }
             return result;
         }
 
-        private string ReadInt(string key)
+        private static object ReadValue(IDictionary<string, object> values, IGate gate)
         {
-            string result = null;
-            var value = _client.KV.Get(key);
-            if (value.Response != null)
+            object value;
+            if (values.TryGetValue(gate.Key, out value))
             {
-                result = Encoding.UTF8.GetString(value.Response.Value);
+                return value;
             }
-            return result;
+            return null;
         }
 
         private ISet<string> ReadSet(string keyPath)
@@ -147,6 +152,15 @@ namespace FlipperDotNet.ConsulAdapter
                 }
             }
             return values;
+        }
+
+        private static ICollection<string> ReadSet(IDictionary<string, object> values, IGate gate)
+        {
+            var keysFromSet = from key in values.Keys
+                              where key.StartsWith(gate.Key)
+                              select key.Split('/')[1];
+            var value = new HashSet<string>(keysFromSet);
+            return value;
         }
 
         private void WriteBool(string key, bool value)
