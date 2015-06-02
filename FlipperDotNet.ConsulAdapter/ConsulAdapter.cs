@@ -18,15 +18,23 @@ namespace FlipperDotNet.ConsulAdapter
             _client = client;
         }
 
-        public FeatureResult Get(Feature feature)
+        public IDictionary<string, object> Get(Feature feature)
         {
-            var result = new FeatureResult();
+            var result = new Dictionary<string, object>();
 
-            result.Boolean = ReadBool(Key(feature, feature.BooleanGate));
-            result.Groups = ReadSet(Key(feature, feature.GroupGate));
-            result.Actors = ReadSet(Key(feature, feature.ActorGate));
-            result.PercentageOfTime = ReadInt(Key(feature, feature.PercentageOfTimeGate));
-            result.PercentageOfActors = ReadInt(Key(feature, feature.PercentageOfActorsGate));
+            foreach (var gate in feature.Gates)
+            {
+                if (gate.DataType == typeof (bool))
+                {
+                    result[gate.Key] = ReadBool(Key(feature, gate));
+                }else if (gate.DataType == typeof (int))
+                {
+                    result[gate.Key] = ReadInt(Key(feature, gate));
+                } else if (gate.DataType == typeof (ISet<string>))
+                {
+                    result[gate.Key] = ReadSet(Key(feature, gate));
+                }
+            }
 
             return result;
         }
@@ -105,24 +113,24 @@ namespace FlipperDotNet.ConsulAdapter
             return feature.Key + "/" + gate.Key;
         }
 
-        private bool? ReadBool(string key)
+        private string ReadBool(string key)
         {
-            bool? result = null;
+            string result = null;
             var value = _client.KV.Get(key);
             if (value.Response != null)
             {
-                result = bool.Parse(Encoding.UTF8.GetString(value.Response.Value));
+                result = Encoding.UTF8.GetString(value.Response.Value);
             }
             return result;
         }
 
-        private int ReadInt(string key)
+        private string ReadInt(string key)
         {
-            var result = 0;
+            string result = null;
             var value = _client.KV.Get(key);
             if (value.Response != null)
             {
-                result = Convert.ToInt32(Encoding.UTF8.GetString(value.Response.Value));
+                result = Encoding.UTF8.GetString(value.Response.Value);
             }
             return result;
         }
