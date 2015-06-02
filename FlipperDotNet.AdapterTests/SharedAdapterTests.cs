@@ -29,7 +29,7 @@ namespace FlipperDotNet.AdapterTests
         {
             var feature = Flipper.Feature("Stats");
             Adapter.Enable(feature, feature.BooleanGate, true);
-            Assert.That(Adapter.Get(feature)[BooleanGate.KEY], Is.EqualTo(true));
+            Assert.That(Adapter.Get(feature)[BooleanGate.KEY], Is.EqualTo("true"));
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace FlipperDotNet.AdapterTests
         {
             var feature = Flipper.Feature("Stats");
             Adapter.Enable(feature, feature.PercentageOfActorsGate, 15);
-            Assert.That(Adapter.Get(feature)[PercentageOfActorsGate.KEY], Is.EqualTo(15));
+            Assert.That(Adapter.Get(feature)[PercentageOfActorsGate.KEY], Is.EqualTo("15"));
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace FlipperDotNet.AdapterTests
             var feature = Flipper.Feature("Stats");
             Adapter.Enable(feature, feature.PercentageOfActorsGate, 15);
             Adapter.Disable(feature, feature.PercentageOfActorsGate, 0);
-            Assert.That(Adapter.Get(feature)[PercentageOfActorsGate.KEY], Is.EqualTo(0));
+            Assert.That(Adapter.Get(feature)[PercentageOfActorsGate.KEY], Is.EqualTo("0"));
         }
 
         [Test]
@@ -131,7 +131,7 @@ namespace FlipperDotNet.AdapterTests
         {
             var feature = Flipper.Feature("Stats");
             Adapter.Enable(feature, feature.PercentageOfTimeGate, 10);
-            Assert.That(Adapter.Get(feature)[PercentageOfTimeGate.KEY], Is.EqualTo(10));
+            Assert.That(Adapter.Get(feature)[PercentageOfTimeGate.KEY], Is.EqualTo("10"));
         }
 
         [Test]
@@ -140,7 +140,7 @@ namespace FlipperDotNet.AdapterTests
             var feature = Flipper.Feature("Stats");
             Adapter.Enable(feature, feature.PercentageOfTimeGate, 10);
             Adapter.Disable(feature, feature.PercentageOfTimeGate, 0);
-            Assert.That(Adapter.Get(feature)[PercentageOfTimeGate.KEY], Is.EqualTo(0));
+            Assert.That(Adapter.Get(feature)[PercentageOfTimeGate.KEY], Is.EqualTo("0"));
         }
 
         [Test]

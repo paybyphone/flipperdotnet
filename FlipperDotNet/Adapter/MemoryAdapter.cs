@@ -40,7 +40,7 @@ namespace FlipperDotNet.Adapter
         {
             if (gate.DataType == typeof (bool) || gate.DataType == typeof (int))
             {
-                Write(Key(feature, gate), thing.ToString());
+                Write(Key(feature, gate), thing.ToString().ToLower());
             }
             else if (gate.DataType == typeof (ISet<string>))
             {
@@ -121,24 +121,24 @@ namespace FlipperDotNet.Adapter
             }
         }
 
-        private bool? ReadBool(string key)
+        private string ReadBool(string key)
         {
-            bool? result = null;
+            string result = null;
             object value;
             if (_dictionary.TryGetValue(key, out value))
             {
-                result = Convert.ToBoolean(value);
+                result = (string) value;
             }
             return result;
         }
 
-        private int? ReadInt(string key)
+        private string ReadInt(string key)
         {
-            int? result = null;
+            string result = null;
             object value;
             if (_dictionary.TryGetValue(key, out value))
             {
-                result = Convert.ToInt32(value);
+                result = (string)value;
             }
             return result;
         }
