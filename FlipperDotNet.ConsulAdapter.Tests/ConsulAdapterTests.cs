@@ -45,7 +45,7 @@ namespace FlipperDotNet.ConsulAdapter.Tests
             Assert.That(Encoding.UTF8.GetString(result.Response.Value), Is.EqualTo("1"));
         }
 
-        [Test, Ignore]
+        [Test]
         public void ShouldStoreKeyValueDataInNamespacedHierarchy()
         {
             var feature = new Feature("search", Adapter);

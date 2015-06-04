@@ -119,19 +119,19 @@ namespace FlipperDotNet.ConsulAdapter
 
         public void Clear(Feature feature)
         {
-            _client.KV.DeleteTree(feature.Key);
+            _client.KV.DeleteTree(BuildPath(feature.Key));
         }
 
         private string Key(Feature feature, IGate gate)
         {
-            return feature.Key + "/" + gate.Key;
+            return BuildPath(feature.Key + "/" + gate.Key);
         }
 
         private IDictionary<string, object> GetFeatureValues(Feature feature)
         {
 
             var result = new Dictionary<string, object>();
-            var keyPath = feature.Key;
+            var keyPath = BuildPath(feature.Key);
             var values = _client.KV.List(keyPath);
             if (values.Response != null)
             {
