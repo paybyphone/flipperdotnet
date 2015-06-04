@@ -13,10 +13,23 @@ namespace FlipperDotNet.ConsulAdapter
         public const string FeaturesKey = "flipper_features";
 
         private readonly Consul.Client _client;
+        private readonly string _namespace;
+
+        public ConsulAdapter(Consul.Client client, string rootNamespace)
+        {
+            _client = client;
+            _namespace = rootNamespace.TrimStart('/');
+        }
 
         public ConsulAdapter(Consul.Client client)
         {
             _client = client;
+            _namespace = "";
+        }
+
+        public string Namespace
+        {
+            get { return _namespace; }
         }
 
         public IDictionary<string, object> Get(Feature feature)
@@ -42,15 +55,15 @@ namespace FlipperDotNet.ConsulAdapter
 
         public void Enable(Feature feature, IGate gate, object thing)
         {
-            if (gate.DataType == typeof(bool))
+            if (gate.DataType == typeof (bool))
             {
                 WriteBool(Key(feature, gate), (bool) thing);
             }
-            else if (gate.DataType == typeof(int))
+            else if (gate.DataType == typeof (int))
             {
                 WriteInt(Key(feature, gate), (int) thing);
             }
-            else if (gate.DataType == typeof(ISet<string>))
+            else if (gate.DataType == typeof (ISet<string>))
             {
                 AddToSet(Key(feature, gate), thing.ToString());
             }
@@ -62,15 +75,15 @@ namespace FlipperDotNet.ConsulAdapter
 
         public void Disable(Feature feature, IGate gate, object thing)
         {
-            if (gate.DataType == typeof(bool))
+            if (gate.DataType == typeof (bool))
             {
                 Clear(feature);
             }
-            else if (gate.DataType == typeof(int))
+            else if (gate.DataType == typeof (int))
             {
-                WriteInt(Key(feature, gate), (int)thing);
+                WriteInt(Key(feature, gate), (int) thing);
             }
-            else if (gate.DataType == typeof(ISet<string>))
+            else if (gate.DataType == typeof (ISet<string>))
             {
                 RemoveFromSet(Key(feature, gate), thing.ToString());
             }
@@ -84,14 +97,14 @@ namespace FlipperDotNet.ConsulAdapter
         {
             get
             {
-                var keyPath = string.Format("{0}/features", FeaturesKey);
+                var keyPath = BuildPath(string.Format("{0}/features", FeaturesKey));
                 return ReadSet(keyPath);
             }
         }
 
         public void Add(Feature feature)
         {
-            var pair = new Consul.KVPair(string.Format("{0}/features/{1}", FeaturesKey, feature.Key))
+            var pair = new Consul.KVPair(BuildPath(string.Format("{0}/features/{1}", FeaturesKey, feature.Key)))
                 {
                     Value = Encoding.UTF8.GetBytes("1")
                 };
@@ -100,7 +113,7 @@ namespace FlipperDotNet.ConsulAdapter
 
         public void Remove(Feature feature)
         {
-            _client.KV.DeleteTree(string.Format("{0}/features/{1}", FeaturesKey, feature.Key));
+            _client.KV.DeleteTree(BuildPath(string.Format("{0}/features/{1}", FeaturesKey, feature.Key)));
             Clear(feature);
         }
 
@@ -114,10 +127,10 @@ namespace FlipperDotNet.ConsulAdapter
             return feature.Key + "/" + gate.Key;
         }
 
-        private IDictionary<string,object> GetFeatureValues(Feature feature)
+        private IDictionary<string, object> GetFeatureValues(Feature feature)
         {
 
-            var result = new Dictionary<string,object>();
+            var result = new Dictionary<string, object>();
             var keyPath = feature.Key;
             var values = _client.KV.List(keyPath);
             if (values.Response != null)
@@ -195,6 +208,15 @@ namespace FlipperDotNet.ConsulAdapter
         private static string SetMemberKey(string key, string value)
         {
             return string.Format("{0}/{1}", key, value);
+        }
+
+        private string BuildPath(string key)
+        {
+            if (Namespace != string.Empty)
+            {
+                return string.Join("/", Namespace, key);
+            }
+            return key;
         }
     }
 }
