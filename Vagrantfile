@@ -3,14 +3,21 @@
 
 Vagrant.configure(2) do |config|
   config.vm.box = "hashicorp/precise64"
-  config.vm.network "forwarded_port", guest: 8500, host: 8500
-  config.vm.provision "shell", inline: <<-SHELL
-    sudo apt-get update
-    wget -qO- https://get.docker.com/ | sh
+  config.vm.define :consul do |consul|
+    consul.vm.network "forwarded_port", guest: 8500, host: 8500
+    consul.vm.provision "shell", inline: <<-SHELL
+      sudo apt-get update
+      sudo apt-get install unzip
     
-    # add vagrant to docker group
-    sudo usermod -aG docker vagrant
-    
-    docker run -d -p 8400:8400 -p 8500:8500 -p 8600:53/udp -h node1 progrium/consul -server -bootstrap -ui-dir /ui
-  SHELL
+      wget 'https://dl.bintray.com/mitchellh/consul/0.5.2_linux_amd64.zip' -O consul.zip
+      unzip consul.zip
+      sudo chmod +x consul
+      sudo mv consul /usr/bin/consul
+      
+      wget 'https://dl.bintray.com/mitchellh/consul/0.5.2_web_ui.zip' -O ui.zip
+      unzip ui.zip
+      
+      consul agent -server -client 0.0.0.0 -bootstrap-expect 1 -data-dir /tmp/consul -ui-dir /home/vagrant/dist > /var/log/consul.log 2>&1 &
+    SHELL
+  end
 end
