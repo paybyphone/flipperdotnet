@@ -97,6 +97,15 @@ _NCrunch_*
 *.mm.*
 AutoTest.Net/
 
+#Monodevelop User Specific
+*.userprefs
+*.usertasks
+
+#Mono Project Files
+*.pidb
+*.resources
+test-results/
+
 # Installshield output folder
 [Ee]xpress/
 
