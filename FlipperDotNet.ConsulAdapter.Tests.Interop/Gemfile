@@ -1,0 +1,4 @@
+source 'https://rubygems.org'
+
+gem 'flipper-consul', '~> 0.1'
+

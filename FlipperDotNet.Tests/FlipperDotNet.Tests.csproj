@@ -60,11 +60,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlipperDotNet.AdapterTests\FlipperDotNet.AdapterTests.csproj">
-      <Project>{d88e3cfb-f9c1-47f4-a278-ae062029dbfe}</Project>
+      <Project>{D88E3CFB-F9C1-47F4-A278-AE062029DBFE}</Project>
       <Name>FlipperDotNet.AdapterTests</Name>
     </ProjectReference>
     <ProjectReference Include="..\FlipperDotNet\FlipperDotNet.csproj">
-      <Project>{1529333c-c4f1-4e88-a9ae-5614fa2574c5}</Project>
+      <Project>{1529333C-C4F1-4E88-A9AE-5614FA2574C5}</Project>
       <Name>FlipperDotNet</Name>
     </ProjectReference>
   </ItemGroup>

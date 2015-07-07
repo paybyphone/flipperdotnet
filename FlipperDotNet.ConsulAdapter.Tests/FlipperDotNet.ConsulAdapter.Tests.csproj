@@ -53,11 +53,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlipperDotNet.AdapterTests\FlipperDotNet.AdapterTests.csproj">
-      <Project>{d88e3cfb-f9c1-47f4-a278-ae062029dbfe}</Project>
+      <Project>{D88E3CFB-F9C1-47F4-A278-AE062029DBFE}</Project>
       <Name>FlipperDotNet.AdapterTests</Name>
     </ProjectReference>
     <ProjectReference Include="..\FlipperDotNet.ConsulAdapter\FlipperDotNet.ConsulAdapter.csproj">
-      <Project>{d413889b-2f76-48c7-83f7-62077ab9dcf9}</Project>
+      <Project>{D413889B-2F76-48C7-83F7-62077AB9DCF9}</Project>
       <Name>FlipperDotNet.ConsulAdapter</Name>
     </ProjectReference>
     <ProjectReference Include="..\FlipperDotNet\FlipperDotNet.csproj">
