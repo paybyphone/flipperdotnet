@@ -1,9 +1,9 @@
-﻿using NUnit.Framework;
-using FlipperDotNet;
+﻿using System;
 using Consul;
+using FlipperDotNet;
 using FlipperDotNet.ConsulAdapter;
+using NUnit.Framework;
 using Rhino.Mocks;
-using System;
 
 namespace FlipperDotNet.ConsulAdapter.Tests.Interop
 {
