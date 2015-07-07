@@ -141,7 +141,7 @@ namespace FlipperDotNet
             get { return GateValues.PercentageOfTime; }
         }
 
-        public object PercentageOfActorsValue
+        public int PercentageOfActorsValue
         {
             get { return GateValues.PercentageOfActors; }
         }
