@@ -175,6 +175,24 @@ namespace FlipperDotNet.ConsulAdapter.Tests.Interop
 
 			Assert.That(rubyAdapter.PercentageOfTimeValue(stats), Is.EqualTo(0));
 		}
+
+		[Test,Ignore("No Group support yet")]
+		public void ShouldReadAGroupGate()
+		{
+			throw new NotImplementedException();
+		}
+
+		[Test, Ignore("No Group support yet")]
+		public void ShouldEnableGroupGateForRuby()
+		{
+			throw new NotImplementedException();
+		}
+
+		[Test, Ignore("No Group support yet")]
+		public void ShouldDisableGroupGateForRuby()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
 
