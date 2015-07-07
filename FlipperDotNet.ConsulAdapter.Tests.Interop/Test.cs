@@ -3,6 +3,7 @@ using FlipperDotNet;
 using Consul;
 using FlipperDotNet.ConsulAdapter;
 using Rhino.Mocks;
+using System;
 
 namespace FlipperDotNet.ConsulAdapter.Tests.Interop
 {
@@ -138,6 +139,41 @@ namespace FlipperDotNet.ConsulAdapter.Tests.Interop
 			flipper.Feature(stats).DisablePercentageOfActors();
 
 			Assert.That(rubyAdapter.PercentageOfActorsValue(stats), Is.EqualTo(0));
+		}
+
+		[Test]
+		public void ShouldReadAPercentageOfTimeGate()
+		{
+			const string stats = "Stats";
+			const int percentage = 10;
+
+			rubyAdapter.EnablePercentageOfTime(stats, percentage);
+
+			Assert.That(flipper.Feature(stats).PercentageOfTimeValue, Is.EqualTo(percentage));
+		}
+
+		[Test]
+		public void ShouldEnablePercentageOfTimeForRuby()
+		{
+			const string stats = "Stats";
+			const int percentage = 10;
+
+			flipper.Feature(stats).EnablePercentageOfTime(percentage);
+
+			Assert.That(rubyAdapter.PercentageOfTimeValue(stats), Is.EqualTo(percentage));
+		}
+
+		[Test]
+		public void ShouldDisablePercentageOfTimeForRuby()
+		{
+			const string stats = "Stats";
+			const int percentage = 10;
+
+			rubyAdapter.EnablePercentageOfTime(stats, percentage);
+
+			flipper.Feature(stats).DisablePercentageOfTime();
+
+			Assert.That(rubyAdapter.PercentageOfTimeValue(stats), Is.EqualTo(0));
 		}
 	}
 }

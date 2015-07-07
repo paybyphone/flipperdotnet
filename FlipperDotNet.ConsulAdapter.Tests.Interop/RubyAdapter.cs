@@ -43,6 +43,18 @@ feature.enable_percentage_of_actors {1}";
 			Run(String.Format(command, key, percentage));
 		}
 
+		public void EnablePercentageOfTime(string key, int percentage)
+		{
+			const string command = @"
+require 'flipper-consul'
+client = Diplomat::Kv.new
+adapter = Flipper::Adapters::Consul.new(client)
+flipper = Flipper.new(adapter)
+feature = flipper.feature '{0}'
+feature.enable_percentage_of_time {1}";
+			Run(String.Format(command, key, percentage));
+					}
+
 		public bool IsEnabled(string key)
 		{
 			const string command = @"
@@ -79,6 +91,20 @@ adapter = Flipper::Adapters::Consul.new(client)
 flipper = Flipper.new(adapter)
 feature = flipper.feature '{0}'
 print feature.percentage_of_actors_value";
+			var output = Run(String.Format(command, key));
+
+			return Int32.Parse(output);
+		}
+
+		public object PercentageOfTimeValue(string key)
+		{
+			const string command = @"
+require 'flipper-consul'
+client = Diplomat::Kv.new
+adapter = Flipper::Adapters::Consul.new(client)
+flipper = Flipper.new(adapter)
+feature = flipper.feature '{0}'
+print feature.percentage_of_time_value";
 			var output = Run(String.Format(command, key));
 
 			return Int32.Parse(output);
