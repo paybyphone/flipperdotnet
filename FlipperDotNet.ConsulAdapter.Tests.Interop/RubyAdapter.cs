@@ -1,10 +1,11 @@
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace FlipperDotNet.ConsulAdapter.Tests.Interop
 {
 
-	public class RubyImpl
+	public class RubyAdapter
 	{
 		public void Enable(string key)
 		{
@@ -15,6 +16,19 @@ adapter = Flipper::Adapters::Consul.new(client)
 flipper = Flipper.new(adapter)
 flipper.enable('{0}')";
 			Run(String.Format(command, key));
+		}
+
+		public void EnableActor(string key, string actor)
+		{
+			const string command = @"
+require 'flipper-consul'
+client = Diplomat::Kv.new
+adapter = Flipper::Adapters::Consul.new(client)
+flipper = Flipper.new(adapter)
+Actor = Struct.new(:flipper_id)
+actor = Actor.new('{1}')
+flipper.enable('{0}', actor)";
+			Run(String.Format(command, key, actor));
 		}
 
 		public bool IsEnabled(string key)
@@ -28,6 +42,20 @@ p flipper.enabled?('{0}')";
 			var output = Run(String.Format(command, key));
 
 			return output.TrimEnd( Environment.NewLine.ToCharArray()) == "true";
+		}
+
+		public ISet<string> ActorsValue(string key)
+		{
+			const string command = @"
+require 'flipper-consul'
+client = Diplomat::Kv.new
+adapter = Flipper::Adapters::Consul.new(client)
+flipper = Flipper.new(adapter)
+feature = flipper.feature '{0}'
+print feature.actors_value.to_a.join(',')";
+			var output = Run(String.Format(command, key));
+
+			return new HashSet<string>(output.Split(','));
 		}
 
 		private string Run(string script)
