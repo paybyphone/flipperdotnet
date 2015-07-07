@@ -104,6 +104,41 @@ namespace FlipperDotNet.ConsulAdapter.Tests.Interop
 
 			Assert.That(rubyAdapter.ActorsValue(stats), Is.EquivalentTo(new[] { actorId2 }));
 		}
+
+		[Test]
+		public void ShouldReadAPercentageOfActorsGate()
+		{
+			const string stats = "Stats";
+			const int percentage = 10;
+
+			rubyAdapter.EnablePercentageOfActors(stats, percentage);
+
+			Assert.That(flipper.Feature(stats).PercentageOfActorsValue, Is.EqualTo(percentage));
+		}
+
+		[Test]
+		public void ShouldEnablePercentageOfActorsForRuby()
+		{
+			const string stats = "Stats";
+			const int percentage = 10;
+
+			flipper.Feature(stats).EnablePercentageOfActors(percentage);
+
+			Assert.That(rubyAdapter.PercentageOfActorsValue(stats), Is.EqualTo(percentage));
+		}
+
+		[Test]
+		public void ShouldDisablePercentageOfActorsForRuby()
+		{
+			const string stats = "Stats";
+			const int percentage = 10;
+
+			rubyAdapter.EnablePercentageOfActors(stats, percentage);
+
+			flipper.Feature(stats).DisablePercentageOfActors();
+
+			Assert.That(rubyAdapter.PercentageOfActorsValue(stats), Is.EqualTo(0));
+		}
 	}
 }
 
