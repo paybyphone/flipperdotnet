@@ -27,6 +27,11 @@ namespace FlipperDotNet.ConsulAdapter.Tests.Interop
 			Run(BuildScript(String.Format("flipper.feature('{0}').enable_percentage_of_time {1}", key, percentage)));
 		}
 
+		public void AddFeature(string key)
+		{
+			Run(BuildScript(String.Format("flipper.feature('{0}').enable", key)));
+		}
+
 		public bool IsEnabled(string key)
 		{
 			var output = Run(BuildScript(String.Format("print flipper.enabled?('{0}')", key)));
@@ -53,6 +58,13 @@ namespace FlipperDotNet.ConsulAdapter.Tests.Interop
 			var output = Run(BuildScript(String.Format(@"print flipper.feature('{0}').percentage_of_time_value", key)));
 
 			return Int32.Parse(output);
+		}
+
+		public IList<string> Features()
+		{
+			var output = Run(BuildScript("print flipper.features.to_a.join(',')"));
+
+			return new List<string>(output.Split(','));
 		}
 
 		private string BuildScript(string command)

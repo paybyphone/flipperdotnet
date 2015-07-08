@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Consul;
 using FlipperDotNet;
 using FlipperDotNet.ConsulAdapter;
@@ -192,6 +193,40 @@ namespace FlipperDotNet.ConsulAdapter.Tests.Interop
 		public void ShouldDisableGroupGateForRuby()
 		{
 			throw new NotImplementedException();
+		}
+
+		[Test]
+		public void ShouldReadFeatureList()
+		{
+			const string stats = "Stats";
+
+			rubyAdapter.AddFeature(stats);
+
+			Assert.That(from feature in flipper.Features select feature.Name, Is.EquivalentTo(new[]{ stats }));
+		}
+
+		[Test]
+		public void ShouldAddAFeatureForRuby()
+		{
+			const string stats = "Stats";
+
+			flipper.Enable(stats);
+
+			Assert.That(rubyAdapter.Features(), Is.EquivalentTo(new[]{ stats }));
+		}
+
+		[Test]
+		public void ShouldRemoveAFeatureForRuby()
+		{
+			const string stats = "Stats";
+			const string anotherFeature = "AnotherFeature";
+
+			rubyAdapter.AddFeature(stats);
+			rubyAdapter.AddFeature(anotherFeature);
+
+			adapter.Remove(flipper.Feature(stats));
+
+			Assert.That(rubyAdapter.Features(), Is.EquivalentTo(new[]{ anotherFeature }));
 		}
 	}
 }
