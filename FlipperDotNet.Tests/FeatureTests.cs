@@ -334,6 +334,20 @@ namespace FlipperDotNet.Tests
 			DisablePercentage();
 			Assert.That(PercentageValue, Is.EqualTo(0));
 		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentException), ExpectedMessage="Value must be a positive number less than or equal to 100, but was -1")]
+		public void ShouldThrowExceptionWhenValueSetToNegativeNumber()
+		{
+			EnablePercentage(-1);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentException), ExpectedMessage="Value must be a positive number less than or equal to 100, but was 101")]
+		public void ShouldThrowExceptionWhenValueSetToNumberOver100()
+		{
+			EnablePercentage(101);
+		}
 	}
 
     [TestFixture]
