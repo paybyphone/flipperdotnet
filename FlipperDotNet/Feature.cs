@@ -2,6 +2,7 @@
 using System.Linq;
 using FlipperDotNet.Adapter;
 using FlipperDotNet.Gate;
+using System;
 
 namespace FlipperDotNet
 {
@@ -53,21 +54,31 @@ namespace FlipperDotNet
 
         public void EnablePercentageOfTime(int percentage)
         {
+			ValidatePercentage(percentage);
             Adapter.Add(this);
             Adapter.Enable(this, PercentageOfTimeGate, percentage);
         }
 
         public void EnablePercentageOfActors(int percentage)
         {
+			ValidatePercentage(percentage);
             Adapter.Add(this);
             Adapter.Enable(this, PercentageOfActorsGate, percentage);
         }
+
+		static void ValidatePercentage(int percentage)
+		{
+			if (percentage < 0 || percentage > 100)
+			{
+				throw new ArgumentException(string.Format("Value must be a positive number less than or equal to 100, but was {0}", percentage));
+			}
+		}
 
         //private void Enable()
 
         public void Disable()
         {
-            Adapter.Add(this);
+            Adapter.Add(this);	
             Adapter.Disable(this, BooleanGate, false);
         }
 

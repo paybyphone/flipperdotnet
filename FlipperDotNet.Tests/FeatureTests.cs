@@ -294,82 +294,100 @@ namespace FlipperDotNet.Tests
         }
     }
 
+	public abstract class FeaturePercentageValueTests
+	{
+		protected Feature _feature;
+		
+		protected abstract int PercentageValue { get; }
+		protected abstract void EnablePercentage(int percentage);
+		protected abstract void DisablePercentage();
+
+		[SetUp]
+		public void SetUp()
+		{
+			_feature = new Feature("Test", new MemoryAdapter());
+		}
+
+		[Test]
+		public void ShouldDefaultToZero()
+		{
+			Assert.That(PercentageValue, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void ShouldReturnValueWhenEnabled()
+		{
+			EnablePercentage(5);
+			Assert.That(PercentageValue, Is.EqualTo(5));
+		}
+
+		[Test]
+		public void ShouldReturnZeroWhenFullyDisabled()
+		{
+			_feature.Disable();
+			Assert.That(PercentageValue, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void ShouldReturnZeroWhenDisabled()
+		{
+			DisablePercentage();
+			Assert.That(PercentageValue, Is.EqualTo(0));
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentException), ExpectedMessage="Value must be a positive number less than or equal to 100, but was -1")]
+		public void ShouldThrowExceptionWhenValueSetToNegativeNumber()
+		{
+			EnablePercentage(-1);
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentException), ExpectedMessage="Value must be a positive number less than or equal to 100, but was 101")]
+		public void ShouldThrowExceptionWhenValueSetToNumberOver100()
+		{
+			EnablePercentage(101);
+		}
+	}
+
     [TestFixture]
-    public class FeaturePercentageOfTimeValueTests
+	public class FeaturePercentageOfTimeValueTests : FeaturePercentageValueTests
     {
-        private Feature _feature;
+		protected override int PercentageValue {
+			get {
+				return _feature.PercentageOfTimeValue;
+			}
+		}
 
-        [SetUp]
-        public void SetUp()
-        {
-            _feature = new Feature("Test", new MemoryAdapter());
-        }
+		protected override void EnablePercentage(int percentage)
+		{
+			_feature.EnablePercentageOfTime(percentage);
+		}
 
-        [Test]
-        public void ShouldDefaultToZero()
-        {
-            Assert.That(_feature.PercentageOfTimeValue, Is.EqualTo(0));
-        }
-
-        [Test]
-        public void ShouldReturnValueWhenEnabled()
-        {
-            _feature.EnablePercentageOfTime(5);
-            Assert.That(_feature.PercentageOfTimeValue, Is.EqualTo(5));
-        }
-
-        [Test]
-        public void ShouldReturnZeroWhenFullyDisabled()
-        {
-            _feature.Disable();
-            Assert.That(_feature.PercentageOfTimeValue, Is.EqualTo(0));
-        }
-
-        [Test]
-        public void ShouldReturnZeroWhenDisabled()
-        {
-            _feature.DisablePercentageOfTime();
-            Assert.That(_feature.PercentageOfTimeValue, Is.EqualTo(0));
-        }
+		protected override void DisablePercentage()
+		{
+			_feature.DisablePercentageOfTime();
+		}
     }
 
     [TestFixture]
-    public class FeaturePercentageOfActorsValueTests
+	public class FeaturePercentageOfActorsValueTests : FeaturePercentageValueTests
     {
-        private Feature _feature;
+		protected override int PercentageValue {
+			get {
+				return _feature.PercentageOfActorsValue;
+			}
+		}
 
-        [SetUp]
-        public void SetUp()
-        {
-            _feature = new Feature("Test", new MemoryAdapter());
-        }
+		protected override void EnablePercentage(int percentage)
+		{
+			_feature.EnablePercentageOfActors(percentage);
+		}
 
-        [Test]
-        public void ShouldDefaultToZero()
-        {
-            Assert.That(_feature.PercentageOfActorsValue, Is.EqualTo(0));
-        }
-
-        [Test]
-        public void ShouldReturnValueWhenEnabled()
-        {
-            _feature.EnablePercentageOfActors(5);
-            Assert.That(_feature.PercentageOfActorsValue, Is.EqualTo(5));
-        }
-
-        [Test]
-        public void ShouldReturnZeroWhenFullyDisabled()
-        {
-            _feature.Disable();
-            Assert.That(_feature.PercentageOfActorsValue, Is.EqualTo(0));
-        }
-
-        [Test]
-        public void ShouldReturnZeroWhenDisabled()
-        {
-            _feature.DisablePercentageOfActors();
-            Assert.That(_feature.PercentageOfActorsValue, Is.EqualTo(0));
-        }
+		protected override void DisablePercentage()
+		{
+			_feature.DisablePercentageOfActors();
+		}
     }
 
     [TestFixture]
