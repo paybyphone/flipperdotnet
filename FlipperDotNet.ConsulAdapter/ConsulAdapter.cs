@@ -40,10 +40,10 @@ namespace FlipperDotNet.ConsulAdapter
 
             foreach (var gate in feature.Gates)
             {
-                if (gate.DataType == typeof (bool) || gate.DataType == typeof (int))
-                {
-                    result[gate.Key] = ReadValue(values, gate);
-                }
+				if (gate.DataType == typeof(bool) || gate.DataType == typeof(int))
+				{
+					result[gate.Key] = ReadValue(values, gate);
+				}
                 else if (gate.DataType == typeof (ISet<string>))
                 {
                     result[gate.Key] = ReadSet(values, gate);
