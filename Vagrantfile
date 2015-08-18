@@ -25,6 +25,9 @@ Vagrant.configure(2) do |config|
     redis.vm.provision "shell", inline: <<-SHELL
       sudo apt-get update
       sudo apt-get install redis-server
+      
+      sudo sed -e '/^bind/ s/^#*/#/' -i /etc/redis/redis.conf
+      sudo service redis-server restart
       SHELL
   end
 end
