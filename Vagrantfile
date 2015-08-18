@@ -20,4 +20,11 @@ Vagrant.configure(2) do |config|
       consul agent -server -client 0.0.0.0 -bootstrap-expect 1 -data-dir /tmp/consul -ui-dir /home/vagrant/dist > /var/log/consul.log 2>&1 &
     SHELL
   end
+  config.vm.define :redis do |redis|
+    redis.vm.network "forwarded_port", guest: 6379, host: 6379
+    redis.vm.provision "shell", inline: <<-SHELL
+      sudo apt-get update
+      sudo apt-get install redis-server
+      SHELL
+  end
 end

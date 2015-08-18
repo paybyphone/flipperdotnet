@@ -153,7 +153,7 @@ namespace FlipperDotNet.AdapterTests
         public void ShouldAddFeature()
         {
             Adapter.Add(Flipper.Feature("Stats"));
-            Assert.That(Adapter.Features,Is.EquivalentTo(new[]{"Stats"}));
+			Assert.That(Adapter.Features, Is.EquivalentTo(new[]{ "Stats" }));
         }
 
         [Test]
