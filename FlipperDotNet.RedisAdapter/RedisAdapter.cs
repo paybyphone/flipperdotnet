@@ -26,7 +26,7 @@ namespace FlipperDotNet.RedisAdapter
 
 			foreach (var gate in feature.Gates)
 			{
-				if (gate.DataType == typeof(bool))
+				if (gate.DataType == typeof(bool) || gate.DataType == typeof(int))
 				{
 					var value = values.SingleOrDefault(x => x.Name.ToString() == gate.Key);
 					result[gate.Key] = value.Value.ToString();
@@ -43,7 +43,14 @@ namespace FlipperDotNet.RedisAdapter
 
 		public void Disable(Feature feature, IGate gate, object thing)
 		{
-			_database.KeyDelete(feature.Key);
+			if (gate.DataType == typeof(bool))
+			{
+				_database.KeyDelete(feature.Key);
+			}
+			else if (gate.DataType == typeof(int))
+			{
+				_database.HashSet(feature.Key, gate.Key, thing.ToString());
+			}
 		}
 
 		public ISet<string> Features {
