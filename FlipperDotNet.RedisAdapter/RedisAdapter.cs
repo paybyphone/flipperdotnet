@@ -5,6 +5,7 @@ using FlipperDotNet.Adapter;
 using FlipperDotNet.Gate;
 using StackExchange.Redis;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace FlipperDotNet.RedisAdapter
 {
@@ -90,11 +91,21 @@ namespace FlipperDotNet.RedisAdapter
 
 		public void Remove(Feature feature)
 		{
-			_database.SetRemove(FeaturesKey, feature.Key);
+			var transaction = _database.CreateTransaction();
+			transaction.SetRemoveAsync(FeaturesKey, feature.Key);
+			Clear(transaction, feature);
+			transaction.Execute();
 		}
 
 		public void Clear(Feature feature)
 		{
+			var task = Clear(_database, feature);
+			task.Wait();
+		}
+
+		private Task<bool> Clear(IDatabaseAsync database, Feature feature)
+		{
+			return database.KeyDeleteAsync(feature.Key);
 		}
 
 		private string ToField(IGate gate, object thing)
