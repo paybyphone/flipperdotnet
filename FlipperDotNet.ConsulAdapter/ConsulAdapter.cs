@@ -167,7 +167,7 @@ namespace FlipperDotNet.ConsulAdapter
             return values;
         }
 
-        private static ICollection<string> ReadSet(IDictionary<string, object> values, IGate gate)
+        private static ISet<string> ReadSet(IDictionary<string, object> values, IGate gate)
         {
             var keysFromSet = from key in values.Keys
                               where key.StartsWith(gate.Key)

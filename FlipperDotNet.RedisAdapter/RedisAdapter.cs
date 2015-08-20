@@ -4,6 +4,7 @@ using System.Linq;
 using FlipperDotNet.Adapter;
 using FlipperDotNet.Gate;
 using StackExchange.Redis;
+using System.Text.RegularExpressions;
 
 namespace FlipperDotNet.RedisAdapter
 {
@@ -23,6 +24,8 @@ namespace FlipperDotNet.RedisAdapter
 			var result = new Dictionary<string, object>();
 
 			var values = _database.HashGetAll(feature.Key);
+			var fields = from value in values
+			             select value.Name.ToString();
 
 			foreach (var gate in feature.Gates)
 			{
@@ -31,6 +34,10 @@ namespace FlipperDotNet.RedisAdapter
 					var value = values.SingleOrDefault(x => x.Name.ToString() == gate.Key);
 					result[gate.Key] = value.Value.ToString();
 				}
+				else if (gate.DataType == typeof(ISet<string>))
+				{
+					result[gate.Key] = ValuesForSetGate(fields, gate);
+				}
 			}
 
 			return result;
@@ -38,7 +45,14 @@ namespace FlipperDotNet.RedisAdapter
 
 		public void Enable(Feature feature, IGate gate, object thing)
 		{
-			_database.HashSet(feature.Key, gate.Key, thing.ToString().ToLower());
+			if (gate.DataType == typeof(bool) || gate.DataType == typeof(int))
+			{
+				_database.HashSet(feature.Key, gate.Key, thing.ToString().ToLower());
+			}
+			else if (gate.DataType == typeof(ISet<string>))
+			{
+				_database.HashSet(feature.Key, ToField(gate, thing), 1);
+			}
 		}
 
 		public void Disable(Feature feature, IGate gate, object thing)
@@ -50,6 +64,10 @@ namespace FlipperDotNet.RedisAdapter
 			else if (gate.DataType == typeof(int))
 			{
 				_database.HashSet(feature.Key, gate.Key, thing.ToString());
+			}
+			else if (gate.DataType == typeof(ISet<string>))
+			{
+				_database.HashDelete(feature.Key, ToField(gate, thing));
 			}
 		}
 
@@ -77,6 +95,21 @@ namespace FlipperDotNet.RedisAdapter
 
 		public void Clear(Feature feature)
 		{
+		}
+
+		private string ToField(IGate gate, object thing)
+		{
+			return String.Format("{0}/{1}", gate.Key, thing.ToString());
+		}
+
+		private ISet<string> ValuesForSetGate(IEnumerable<string> fields, IGate gate)
+		{
+			var regex = String.Format("^{0}\\/", gate.Key);
+			var keys = from field in fields
+			           where Regex.IsMatch(field, regex)
+			           select field;
+			var values = from key in keys select key.Split(new[]{'/'},2).Last();
+			return new HashSet<string>(values);
 		}
 	}
 }
