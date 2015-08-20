@@ -41,7 +41,7 @@ namespace FlipperDotNet.RedisAdapter
 				}
 				else
 				{
-					throw new NotSupportedException(string.Format("{0} is not supported by this adapter yet", gate.Name));
+					UnsupportedDataType(gate);
 				}
 			}
 
@@ -60,7 +60,7 @@ namespace FlipperDotNet.RedisAdapter
 			}
 			else
 			{
-				throw new NotSupportedException(string.Format("{0} is not supported by this adapter yet", gate.Name));
+				UnsupportedDataType(gate);
 			}
 		}
 
@@ -80,8 +80,13 @@ namespace FlipperDotNet.RedisAdapter
 			}
 			else
 			{
-				throw new NotSupportedException(string.Format("{0} is not supported by this adapter yet", gate.Name));
+				UnsupportedDataType(gate);
 			}
+		}
+
+		private static void UnsupportedDataType(IGate gate)
+		{
+			throw new NotSupportedException(string.Format("{0} is not supported by this adapter yet", gate.Name));
 		}
 
 		public ISet<string> Features {
