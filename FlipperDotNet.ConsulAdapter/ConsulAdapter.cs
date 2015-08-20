@@ -48,6 +48,10 @@ namespace FlipperDotNet.ConsulAdapter
                 {
                     result[gate.Key] = ReadSet(values, gate);
                 }
+				else
+				{
+					throw new NotSupportedException(string.Format("{0} is not supported by this adapter yet", gate.Name));
+				}
             }
 
             return result;

@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FlipperDotNet.Adapter;
 using FlipperDotNet.Gate;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace FlipperDotNet.AdapterTests
 {
@@ -206,6 +208,43 @@ namespace FlipperDotNet.AdapterTests
 
             Assert.That(Adapter.Get(feature), Is.EqualTo(EmptyResult()));
         }
+
+		[Test]
+		[ExpectedException(typeof(NotSupportedException), ExpectedMessage="TEST is not supported by this adapter yet")]
+		public void ShouldFailWhenUnsupportedGateTypeIsEnabled()
+		{
+			var feature = Flipper.Feature("Stats");
+			var gate = MockRepository.GenerateStub<IGate>();
+			gate.Stub(x => x.DataType).Return(typeof(string));
+			gate.Stub(x => x.Name).Return("TEST");
+
+			Adapter.Enable(feature, gate, "foo");
+		}
+
+		[Test]
+		[ExpectedException(typeof(NotSupportedException), ExpectedMessage="TEST is not supported by this adapter yet")]
+		public void ShouldFailWhenUnsupportedGateTypeIsDisabled()
+		{
+			var feature = Flipper.Feature("Stats");
+			var gate = MockRepository.GenerateStub<IGate>();
+			gate.Stub(x => x.DataType).Return(typeof(string));
+			gate.Stub(x => x.Name).Return("TEST");
+
+			Adapter.Disable(feature, gate, "foo");
+		}
+
+		[Test]
+		[ExpectedException(typeof(NotSupportedException), ExpectedMessage="TEST is not supported by this adapter yet")]
+		public void ShouldFailWhenUnsupportedGateTypeIsRetrieved()
+		{
+			var feature = Flipper.Feature("Stats");
+			var gate = MockRepository.GenerateStub<IGate>();
+			gate.Stub(x => x.DataType).Return(typeof(string));
+			gate.Stub(x => x.Name).Return("TEST");
+			feature.Gates.Add(gate);
+
+			Adapter.Get(feature);
+		}
 
         private static Dictionary<string, object> EmptyResult()
         {

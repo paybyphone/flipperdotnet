@@ -39,6 +39,10 @@ namespace FlipperDotNet.RedisAdapter
 				{
 					result[gate.Key] = ValuesForSetGate(fields, gate);
 				}
+				else
+				{
+					throw new NotSupportedException(string.Format("{0} is not supported by this adapter yet", gate.Name));
+				}
 			}
 
 			return result;
@@ -53,6 +57,10 @@ namespace FlipperDotNet.RedisAdapter
 			else if (gate.DataType == typeof(ISet<string>))
 			{
 				_database.HashSet(feature.Key, ToField(gate, thing), 1);
+			}
+			else
+			{
+				throw new NotSupportedException(string.Format("{0} is not supported by this adapter yet", gate.Name));
 			}
 		}
 
@@ -69,6 +77,10 @@ namespace FlipperDotNet.RedisAdapter
 			else if (gate.DataType == typeof(ISet<string>))
 			{
 				_database.HashDelete(feature.Key, ToField(gate, thing));
+			}
+			else
+			{
+				throw new NotSupportedException(string.Format("{0} is not supported by this adapter yet", gate.Name));
 			}
 		}
 
