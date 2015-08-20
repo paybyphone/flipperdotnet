@@ -2,5 +2,4 @@ language: csharp
 solution: FlipperDotNet.sln
 script:
   - xbuild /p:Configuration=Release FlipperDotNet.sln
-  - find / -name *nunit*
-  - nunit-console ./FlipperDotNet.Tests/bin/Release/FlipperDotNet.Tests.dll
+  - mono ./packages/NUnit.Runners.*/tools/nunit-console.exe ./FlipperDotNet.Tests/bin/Release/FlipperDotNet.Tests.dll
