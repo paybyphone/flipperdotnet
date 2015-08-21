@@ -2,5 +2,5 @@ language: csharp
 solution: FlipperDotNet.sln
 script:
   - xbuild /p:Configuration=Release FlipperDotNet.sln
-  - ls ./packages/Klinkby.Checksum.1.0.2.1/lib
+  - ls ./packages/Klinkby.Checksum.1.0.2.1/lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1
   - mono ./packages/NUnit.Runners.*/tools/nunit-console.exe ./FlipperDotNet.Tests/bin/Release/FlipperDotNet.Tests.dll
