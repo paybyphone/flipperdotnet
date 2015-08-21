@@ -1,0 +1,4 @@
+language: csharp
+branches:
+  except:
+    - master
