@@ -2,4 +2,5 @@ language: csharp
 solution: FlipperDotNet.sln
 script:
   - xbuild /p:Configuration=Release FlipperDotNet.sln
+  - ls ./packages/Klinkby.Checksum.1.0.2.1/lib
   - mono ./packages/NUnit.Runners.*/tools/nunit-console.exe ./FlipperDotNet.Tests/bin/Release/FlipperDotNet.Tests.dll
