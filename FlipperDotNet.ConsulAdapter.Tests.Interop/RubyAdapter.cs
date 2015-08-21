@@ -86,11 +86,13 @@ flipper = Flipper.new(adapter)" + "\n" +
 			process.StartInfo.RedirectStandardError = true;
 			process.StartInfo.UseShellExecute = false;
 			process.Start ();
-			string tool_output = process.StandardOutput.ReadToEnd ();
+		    string tool_output = process.StandardOutput.ReadToEnd();
 			process.WaitForExit (1000);
 			int exit_code = process.ExitCode;
-			if (exit_code != 0) {
-				Assert.Fail ("ruby code failed");
+			if (exit_code != 0)
+			{
+			    var errorOut = process.StandardError.ReadToEnd();
+			    Assert.Fail("ruby code failed\n{0}", errorOut);
 			}
 			return tool_output;
 		}
