@@ -97,3 +97,19 @@ Since Consul is intended to be set up as a single global cluster in one datacent
 datacentres, the flipper data can (and should) be namespaced:
 
     var adapter = new ConsulAdapter(client, "my/flipper/name/space");
+
+## Using the Redis Adapter
+
+The Consul adapter uses the [StackExchange.Redis](https://github.com/StackExchange/StackExchange.Redis) client.
+
+Note: The NuGet package does not work on Mono. According to
+[this issue](https://github.com/StackExchange/StackExchange.Redis/issues/233), when using Mono, download the code
+and build it using `monobuild.bash`.
+
+    using FlipperDotNet.RedisAdapter;
+    
+    var multiplexer = ConnectionMultiplexer.Connect("localhost,allowAdmin=true");
+    
+    var	database = multiplexer.GetDatabase();
+    var adapter = new RedisAdapter(database);
+    var flipper = new Flipper(adapter);

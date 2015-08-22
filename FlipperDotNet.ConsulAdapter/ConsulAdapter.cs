@@ -40,14 +40,18 @@ namespace FlipperDotNet.ConsulAdapter
 
             foreach (var gate in feature.Gates)
             {
-                if (gate.DataType == typeof (bool) || gate.DataType == typeof (int))
-                {
-                    result[gate.Key] = ReadValue(values, gate);
-                }
+				if (gate.DataType == typeof(bool) || gate.DataType == typeof(int))
+				{
+					result[gate.Key] = ReadValue(values, gate);
+				}
                 else if (gate.DataType == typeof (ISet<string>))
                 {
                     result[gate.Key] = ReadSet(values, gate);
                 }
+				else
+				{
+					UnsupportedDataType(gate);
+				}
             }
 
             return result;
@@ -69,7 +73,7 @@ namespace FlipperDotNet.ConsulAdapter
             }
             else
             {
-                throw new NotSupportedException(string.Format("{0} is not supported by this adapter yet", gate.Name));
+				UnsupportedDataType(gate);
             }
         }
 
@@ -89,9 +93,14 @@ namespace FlipperDotNet.ConsulAdapter
             }
             else
             {
-                throw new NotSupportedException(string.Format("{0} is not supported by this adapter yet", gate.Name));
+				UnsupportedDataType(gate);
             }
         }
+
+		private static void UnsupportedDataType(IGate gate)
+		{
+			throw new NotSupportedException(string.Format("{0} is not supported by this adapter yet", gate.Name));
+		}
 
         public ISet<string> Features
         {
@@ -167,7 +176,7 @@ namespace FlipperDotNet.ConsulAdapter
             return values;
         }
 
-        private static ICollection<string> ReadSet(IDictionary<string, object> values, IGate gate)
+        private static ISet<string> ReadSet(IDictionary<string, object> values, IGate gate)
         {
             var keysFromSet = from key in values.Keys
                               where key.StartsWith(gate.Key)

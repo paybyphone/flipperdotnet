@@ -1,0 +1,4 @@
+source 'https://rubygems.org'
+
+gem 'flipper-redis', '~> 0.7'
+
