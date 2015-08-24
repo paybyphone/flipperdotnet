@@ -85,7 +85,7 @@ flipper = Flipper.new(adapter)" + "\n" +
 			process.StartInfo.RedirectStandardOutput = true;
 			process.StartInfo.RedirectStandardError = true;
 			process.StartInfo.UseShellExecute = false;
-			process.Start ();
+			process.Start();
 		    string tool_output = process.StandardOutput.ReadToEnd();
 			process.WaitForExit (1000);
 			int exit_code = process.ExitCode;
