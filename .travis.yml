@@ -1,2 +1,5 @@
 language: csharp
 solution: FlipperDotNet.sln
+
+before_script:
+  - cd .. && git clone https://github.com/StackExchange/StackExchange.Redis.git && cd ./StackExchange.Redis/ && monobuild.bash || true
