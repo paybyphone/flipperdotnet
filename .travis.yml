@@ -1,2 +1,5 @@
 language: csharp
 solution: FlipperDotNet.sln
+branches:
+  except:
+    - add_appveyor
