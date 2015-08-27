@@ -4,4 +4,5 @@ build:
 before_build:
   - nuget restore
 test:
-  assemblies: "C:\\projects\\flipperdotnet\\FlipperDotNet.Tests\\bin\\Debug\\FlipperDotNet.Tests.dll"
+  assemblies:
+    - FlipperDotNet.Tests\bin\Debug\FlipperDotNet.Tests.dll
