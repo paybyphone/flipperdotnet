@@ -1,2 +1,4 @@
 language: csharp
 solution: FlipperDotNet.sln
+before_script:
+    - build_redis.sh
