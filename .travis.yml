@@ -4,4 +4,4 @@ before_install:
     - ./build_redis.sh
 script:
     - xbuild /p:Configuration=Release FlipperDotNet.sln
-    - mono ./packages/NUnit.Runners.*/tools/nunit-console.exe ./FlipperDotNet.Tests/bin/Release/FlipperDotNet.RedisAdapter.Tests.dll
+    - mono ./packages/NUnit.Runners.*/tools/nunit-console.exe ./FlipperDotNet.RedisAdapter.Tests/bin/Release/FlipperDotNet.RedisAdapter.Tests.dll
