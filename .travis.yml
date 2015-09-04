@@ -8,7 +8,7 @@ script:
     - xbuild /p:Configuration=Release FlipperDotNet.sln
     - mono ./packages/NUnit.Runners.*/tools/nunit-console.exe ./FlipperDotNet.ConsulAdapter.Tests/bin/Release/FlipperDotNet.ConsulAdapter.Tests.dll
     - mono ./packages/NUnit.Runners.*/tools/nunit-console.exe ./FlipperDotNet.ConsulAdapter.Tests.Interop/bin/Release/FlipperDotNet.ConsulAdapter.Tests.Interop.dll
-    - mono ./packages/NUnit.Runners.*/tools/nunit-console.exe ./FlipperDotNet.Tests/bin/Release/FlipperDotNet.RedisAdapter.Tests.dll
+    - mono ./packages/NUnit.Runners.*/tools/nunit-console.exe ./FlipperDotNet.RedisAdapter.Tests/bin/Release/FlipperDotNet.RedisAdapter.Tests.dll
 addons:
   apt:
     packages:
