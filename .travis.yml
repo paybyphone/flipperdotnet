@@ -4,6 +4,8 @@ before_install:
     - ./build_redis.sh
     - ./install_consul.sh
     - bundle install --gemfile=./FlipperDotNet.ConsulAdapter.Tests.Interop/Gemfile
+services:
+    - redis-server
 script:
     - xbuild /p:Configuration=Release FlipperDotNet.sln
     - mono ./packages/NUnit.Runners.*/tools/nunit-console.exe ./FlipperDotNet.ConsulAdapter.Tests/bin/Release/FlipperDotNet.ConsulAdapter.Tests.dll
