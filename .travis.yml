@@ -2,6 +2,8 @@ language: csharp
 solution: FlipperDotNet.sln
 before_install:
     - ./build_redis.sh
+install:
+    - bundle install --path ./FlipperDotNet.RedisAdapter.Tests.Interop/Gemfile
 services:
     - redis-server
 script:
