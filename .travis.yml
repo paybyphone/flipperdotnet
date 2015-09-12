@@ -4,6 +4,8 @@ before_install:
     - ./build_redis.sh
     - ./install_consul.sh
     - bundle install --gemfile=./FlipperDotNet.ConsulAdapter.Tests.Interop/Gemfile
+install:
+    - bundle install --path ./FlipperDotNet.RedisAdapter.Tests.Interop/Gemfile
 services:
     - redis-server
 script:
