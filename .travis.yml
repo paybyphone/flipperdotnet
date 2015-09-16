@@ -2,6 +2,7 @@ language: csharp
 solution: FlipperDotNet.sln
 before_install:
     - ./build_redis.sh
+    - ./install_consul.sh
 script:
     - xbuild /p:Configuration=Release FlipperDotNet.sln
-    - mono ./packages/NUnit.Runners.*/tools/nunit-console.exe ./FlipperDotNet.Tests/bin/Release/FlipperDotNet.Tests.dll
+    - mono ./packages/NUnit.Runners.*/tools/nunit-console.exe ./FlipperDotNet.ConsulAdapter.Tests/bin/Release/FlipperDotNet.ConsulAdapter.Tests.dll
