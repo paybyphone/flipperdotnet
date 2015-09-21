@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace FlipperDotNet.ConsulAdapter.Tests.Interop
+namespace FlipperDotNet.RedisAdapter.Tests.Interop
 {
 
 	public class RubyAdapter
@@ -70,9 +70,9 @@ namespace FlipperDotNet.ConsulAdapter.Tests.Interop
 		private string BuildScript(string command)
 		{
 			return @"
-require 'flipper-consul'
-client = Diplomat::Kv.new
-adapter = Flipper::Adapters::Consul.new(client)
+require 'flipper-redis'
+client = Redis.new
+adapter = Flipper::Adapters::Redis.new(client)
 flipper = Flipper.new(adapter)" + "\n" +
 			command;
 		}
@@ -85,14 +85,14 @@ flipper = Flipper.new(adapter)" + "\n" +
 			process.StartInfo.RedirectStandardOutput = true;
 			process.StartInfo.RedirectStandardError = true;
 			process.StartInfo.UseShellExecute = false;
-			process.Start();
-		    string tool_output = process.StandardOutput.ReadToEnd();
+			process.Start ();
+			string tool_output = process.StandardOutput.ReadToEnd();
 			process.WaitForExit (1000);
 			int exit_code = process.ExitCode;
 			if (exit_code != 0)
 			{
-			    var errorOut = process.StandardError.ReadToEnd();
-			    Assert.Fail("ruby code failed\n{0}", errorOut);
+				var errorOut = process.StandardError.ReadToEnd();
+				Assert.Fail("ruby code failed\n{0}", errorOut);
 			}
 			return tool_output;
 		}
