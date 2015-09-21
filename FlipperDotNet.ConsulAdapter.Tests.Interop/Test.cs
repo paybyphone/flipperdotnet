@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Consul;
-using FlipperDotNet;
-using FlipperDotNet.ConsulAdapter;
 using NUnit.Framework;
 using Rhino.Mocks;
 
