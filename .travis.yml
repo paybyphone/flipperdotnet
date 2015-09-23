@@ -4,10 +4,15 @@ before_install:
     - ./build_redis.sh
     - ./install_consul.sh
     - bundle install --gemfile=./FlipperDotNet.ConsulAdapter.Tests.Interop/Gemfile
+    - bundle install --gemfile=./FlipperDotNet.RedisAdapter.Tests.Interop/Gemfile
+services:
+    - redis-server
 script:
     - xbuild /p:Configuration=Release FlipperDotNet.sln
     - mono ./packages/NUnit.Runners.*/tools/nunit-console.exe ./FlipperDotNet.ConsulAdapter.Tests/bin/Release/FlipperDotNet.ConsulAdapter.Tests.dll
     - mono ./packages/NUnit.Runners.*/tools/nunit-console.exe ./FlipperDotNet.ConsulAdapter.Tests.Interop/bin/Release/FlipperDotNet.ConsulAdapter.Tests.Interop.dll
+    - mono ./packages/NUnit.Runners.*/tools/nunit-console.exe ./FlipperDotNet.RedisAdapter.Tests/bin/Release/FlipperDotNet.RedisAdapter.Tests.dll
+    - mono ./packages/NUnit.Runners.*/tools/nunit-console.exe ./FlipperDotNet.RedisAdapter.Tests.Interop/bin/Release/FlipperDotNet.RedisAdapter.Tests.Interop.dll
 addons:
   apt:
     packages:
