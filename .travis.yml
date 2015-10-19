@@ -17,6 +17,3 @@ addons:
   apt:
     packages:
       - unzip
-branches:
-  except:
-    - add_appveyor
