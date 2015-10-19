@@ -1,8 +1,12 @@
 version: 0.1.{build}
 build:
   verbosity: normal
+install:
+  - choco install consul
 before_build:
   - nuget restore
 test:
   assemblies:
     - FlipperDotNet.Tests\bin\Debug\FlipperDotNet.Tests.dll
+    - FlipperDotNet.ConsulAdapter.Tests\bin\Debug\FlipperDotNet.ConsulAdapter.Tests.dll
+    - FlipperDotNet.ConsulAdapter.Tests.Interop\bin\Debug\FlipperDotNet.ConsulAdapter.Tests.Interop.dll
