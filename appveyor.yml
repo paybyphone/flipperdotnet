@@ -3,6 +3,7 @@ build:
   verbosity: normal
 install:
   - choco install consul
+  - consul agent -server -bootstrap-expect 1 -data-dir C:\ProgramData\consul\data
 before_build:
   - nuget restore
 test:
