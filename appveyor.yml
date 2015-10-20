@@ -1,0 +1,20 @@
+version: 0.1.{build}
+build:
+  verbosity: normal
+install:
+  - choco install consul
+  - ps: Start-Process -NoNewWindow "C:\ProgramData\chocolatey\bin\consul.exe" "agent -server -bootstrap-expect 1 -data-dir C:\ProgramData\consul\data"
+  - bundle install --gemfile=FlipperDotNet.ConsulAdapter.Tests.Interop\Gemfile
+  - nuget install redis-64 -excludeversion
+  - redis-64\redis-server.exe --service-install
+  - redis-64\redis-server.exe --service-start
+  - bundle install --gemfile=FlipperDotNet.RedisAdapter.Tests.Interop\Gemfile
+before_build:
+  - nuget restore
+test:
+  assemblies:
+    - FlipperDotNet.Tests\bin\Debug\FlipperDotNet.Tests.dll
+    - FlipperDotNet.ConsulAdapter.Tests\bin\Debug\FlipperDotNet.ConsulAdapter.Tests.dll
+    - FlipperDotNet.ConsulAdapter.Tests.Interop\bin\Debug\FlipperDotNet.ConsulAdapter.Tests.Interop.dll
+    - FlipperDotNet.RedisAdapter.Tests\bin\Debug\FlipperDotNet.RedisAdapter.Tests.dll
+    - FlipperDotNet.RedisAdapter.Tests.Interop\bin\Debug\FlipperDotNet.RedisAdapter.Tests.Interop.dll

@@ -35,7 +35,8 @@
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="StackExchange.Redis">
-      <HintPath>..\..\StackExchange.Redis\StackExchange.Redis\bin\mono\StackExchange.Redis.dll</HintPath>
+      <HintPath Condition=" '$(OS)' == 'Windows_NT' ">..\packages\StackExchange.Redis.1.0.481\lib\net45\StackExchange.Redis.dll</HintPath>
+      <HintPath Condition=" '$(OS)' != 'Windows_NT' ">..\..\StackExchange.Redis\StackExchange.Redis\bin\mono\StackExchange.Redis.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
