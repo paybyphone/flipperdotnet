@@ -4,6 +4,7 @@ build:
 install:
   - choco install consul
   - ps: Start-Process -NoNewWindow "C:\ProgramData\chocolatey\bin\consul.exe" "agent -server -bootstrap-expect 1 -data-dir C:\ProgramData\consul\data"
+  - bundle install --gemfile=FlipperDotNet.ConsulAdapter.Tests.Interop\Gemfile
 before_build:
   - nuget restore
 test:
