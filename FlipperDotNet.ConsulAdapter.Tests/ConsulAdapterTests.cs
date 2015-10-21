@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Consul;
 using NUnit.Framework;
 
 namespace FlipperDotNet.ConsulAdapter.Tests
@@ -10,12 +11,12 @@ namespace FlipperDotNet.ConsulAdapter.Tests
         [SetUp]
         public new void SetUp()
         {
-            Client = new Consul.Client();
+            Client = new Client();
             Adapter = new ConsulAdapter(Client, Namespace);
             Client.KV.DeleteTree("/");
         }
 
-        protected Consul.Client Client { get; private set; }
+        protected IConsulClient Client { get; private set; }
     }
 
     [TestFixture]
@@ -64,7 +65,7 @@ namespace FlipperDotNet.ConsulAdapter.Tests
         [TestCase("/foo", ExpectedResult = "foo")]
         public string TestNamespace(string name)
         {
-            var client = new Consul.Client();
+            var client = new Client();
             var adapter = new ConsulAdapter(client, name);
             return adapter.Namespace;
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Consul;
 using FlipperDotNet.Adapter;
 using FlipperDotNet.Gate;
 
@@ -12,16 +13,16 @@ namespace FlipperDotNet.ConsulAdapter
     {
         public const string FeaturesKey = "flipper_features";
 
-        private readonly Consul.Client _client;
+        private readonly IConsulClient _client;
         private readonly string _namespace;
 
-        public ConsulAdapter(Consul.Client client, string rootNamespace)
+        public ConsulAdapter(IConsulClient client, string rootNamespace)
         {
             _client = client;
             _namespace = rootNamespace.TrimStart('/');
         }
 
-        public ConsulAdapter(Consul.Client client)
+        public ConsulAdapter(IConsulClient client)
         {
             _client = client;
             _namespace = "";
@@ -113,7 +114,7 @@ namespace FlipperDotNet.ConsulAdapter
 
         public void Add(Feature feature)
         {
-            var pair = new Consul.KVPair(BuildPath(string.Format("{0}/features/{1}", FeaturesKey, feature.Key)))
+            var pair = new KVPair(BuildPath(string.Format("{0}/features/{1}", FeaturesKey, feature.Key)))
                 {
                     Value = Encoding.UTF8.GetBytes("1")
                 };
@@ -192,7 +193,7 @@ namespace FlipperDotNet.ConsulAdapter
 
         private void WriteValue(string key, string value)
         {
-            var pair = new Consul.KVPair(key)
+            var pair = new KVPair(key)
                 {
                     Value = Encoding.UTF8.GetBytes(value),
                 };
