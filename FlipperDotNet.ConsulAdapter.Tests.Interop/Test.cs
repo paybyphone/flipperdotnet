@@ -9,7 +9,7 @@ namespace FlipperDotNet.ConsulAdapter.Tests.Interop
 	[TestFixture]
 	public class Test
 	{
-		private Client client;
+		private IConsulClient client;
 		private ConsulAdapter adapter;
 		private RubyAdapter rubyAdapter;
 		private Flipper flipper;
