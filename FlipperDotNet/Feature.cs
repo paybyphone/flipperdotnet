@@ -41,30 +41,38 @@ namespace FlipperDotNet
         public IAdapter Adapter { get; private set; }
 
         public void Enable()
-        {
-            Adapter.Add(this);
-            Adapter.Enable(this, BooleanGate, true);
-        }
+		{
+			Enable(BooleanGate, true);
+		}
 
         public void EnableActor(IFlipperActor actor)
-        {
-            Adapter.Add(this);
-            Adapter.Enable(this, ActorGate, actor.FlipperId);
-        }
+		{
+			Enable(ActorGate, actor.FlipperId);
+		}
 
         public void EnablePercentageOfTime(int percentage)
         {
 			ValidatePercentage(percentage);
-            Adapter.Add(this);
-            Adapter.Enable(this, PercentageOfTimeGate, percentage);
+			Enable(PercentageOfTimeGate, percentage);
         }
 
         public void EnablePercentageOfActors(int percentage)
         {
 			ValidatePercentage(percentage);
-            Adapter.Add(this);
-            Adapter.Enable(this, PercentageOfActorsGate, percentage);
+			Enable(PercentageOfActorsGate, percentage);
         }
+
+		private void Enable(IGate gate, object value)
+		{
+			try
+			{
+				Adapter.Add(this);
+				Adapter.Enable(this, gate, value);
+			} catch (Exception e)
+			{
+				throw new AdapterRequestException(string.Format("Failed to enable feature {0}", Name), e);
+			}
+		}
 
 		static void ValidatePercentage(int percentage)
 		{
@@ -74,31 +82,37 @@ namespace FlipperDotNet
 			}
 		}
 
-        //private void Enable()
-
         public void Disable()
         {
-            Adapter.Add(this);	
-            Adapter.Disable(this, BooleanGate, false);
+            Disable(BooleanGate, false);
         }
 
         public void DisableActor(IFlipperActor actor)
         {
-            Adapter.Add(this);
-            Adapter.Disable(this, ActorGate, actor.FlipperId);
+            Disable(ActorGate, actor.FlipperId);
         }
 
         public void DisablePercentageOfTime()
         {
-            Adapter.Add(this);
-            Adapter.Disable(this, PercentageOfTimeGate, 0);
+            Disable(PercentageOfTimeGate, 0);
         }
 
         public void DisablePercentageOfActors()
         {
-            Adapter.Add(this);
-            Adapter.Disable(this, PercentageOfActorsGate, 0);
+            Disable(PercentageOfActorsGate, 0);
         }
+
+		private void Disable(IGate gate, object value)
+		{
+			try
+			{
+				Adapter.Add(this);
+				Adapter.Disable(this, gate, value);
+			} catch (Exception e)
+			{
+				throw new AdapterRequestException(string.Format("Failed to disable feature {0}", Name), e);
+			}
+		}
 
         public FeatureState State
         {
@@ -132,10 +146,19 @@ namespace FlipperDotNet
             get { return State == FeatureState.Conditional; }
         }
 
-        public GateValues GateValues
-        {
-            get { return new GateValues(Adapter.Get(this)); }
-        }
+        public GateValues GateValues 
+		{
+			get
+			{ 
+				try
+				{
+					return new GateValues(Adapter.Get(this));
+				} catch (Exception e)
+				{
+					throw new AdapterRequestException(string.Format("Unable to retrieve feature values for {0}", Name), e);
+				}
+			}
+		}
 
         public bool BooleanValue
         {
