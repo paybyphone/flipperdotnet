@@ -29,6 +29,11 @@ Each instance of the client caches values to reduce traffic. Each request should
 
 That's it! You will be using an in-memory adapter for the client.
 
+### Adapter Exceptions
+
+All exceptions thrown by the underlying adapter are wrapped in an `AdapterRequestException`, with the
+original being passed in the `InnerException` property.
+
 ### Setting Features
 
 Features can be fully enabled or disabled from the client using
@@ -100,7 +105,7 @@ datacentres, the flipper data can (and should) be namespaced:
 
 ## Using the Redis Adapter
 
-The Consul adapter uses the [StackExchange.Redis](https://github.com/StackExchange/StackExchange.Redis) client.
+The Redis adapter uses the [StackExchange.Redis](https://github.com/StackExchange/StackExchange.Redis) client.
 
 Note: The NuGet package does not work on Mono. According to
 [this issue](https://github.com/StackExchange/StackExchange.Redis/issues/233), when using Mono, download the code
