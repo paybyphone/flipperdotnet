@@ -6,8 +6,8 @@ install:
   - ps: Start-Process -NoNewWindow "C:\ProgramData\chocolatey\bin\consul.exe" "agent -server -bootstrap-expect 1 -data-dir C:\ProgramData\consul\data"
   - bundle install --gemfile=FlipperDotNet.ConsulAdapter.Tests.Interop\Gemfile
   - nuget install redis-64 -excludeversion
-  - redis-64\redis-server.exe --service-install
-  - redis-64\redis-server.exe --service-start
+  - redis-64\tools\redis-server.exe --service-install
+  - redis-64\tools\redis-server.exe --service-start
   - bundle install --gemfile=FlipperDotNet.RedisAdapter.Tests.Interop\Gemfile
 before_build:
   - nuget restore
