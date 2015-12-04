@@ -59,6 +59,7 @@
     <Compile Include="Gate\PercentageOfActorsGateTests.cs" />
     <Compile Include="Gate\PercentageOfTimeGateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FeatureAdapterErrorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
