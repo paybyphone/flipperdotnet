@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>flipperdotnet.core</id>
-    <version>0.0.0</version>
+    <version>$version$</version>
     <title>$title$</title>
     <authors>Graham Davison</authors>
     <owners>$author$</owners>
