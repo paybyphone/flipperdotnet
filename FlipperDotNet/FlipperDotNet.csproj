@@ -60,6 +60,7 @@
     <Compile Include="AdapterRequestException.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="FlipperDotNet.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

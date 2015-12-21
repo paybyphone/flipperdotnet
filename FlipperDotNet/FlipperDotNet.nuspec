@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>flipperdotnet.core</id>
+    <version>0.0.0</version>
+    <title>$title$</title>
+    <authors>Graham Davison</authors>
+    <owners>$author$</owners>
+    <projectUrl>https://github.com/paybyphone/flipperdotnet</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>FlipperDotNet is a feature-flagging system</description>
+    <copyright>Copyright 2015</copyright>
+    <tags>feature-flag feature flag toggle</tags>
+  </metadata>
+</package>
