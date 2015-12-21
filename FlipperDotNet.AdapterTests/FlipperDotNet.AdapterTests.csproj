@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="FlipperDotNet.AdapterTests.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlipperDotNet\FlipperDotNet.csproj">
