@@ -19,3 +19,12 @@ test:
     - FlipperDotNet.ConsulAdapter.Tests.Interop\bin\Release\FlipperDotNet.ConsulAdapter.Tests.Interop.dll
     - FlipperDotNet.RedisAdapter.Tests\bin\Release\FlipperDotNet.RedisAdapter.Tests.dll
     - FlipperDotNet.RedisAdapter.Tests.Interop\bin\Release\FlipperDotNet.RedisAdapter.Tests.Interop.dll
+nuget:
+  project_feed: true
+  disable_publish_on_pr: true
+assembly_info:
+  patch: true
+  file: AssemblyInfo.*
+  assembly_version: "0.1.{build}"
+  assembly_file_version: "{version}"
+  assembly_informational_version: "{version}"
