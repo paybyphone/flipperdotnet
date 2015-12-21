@@ -1,4 +1,5 @@
 version: 0.1.{build}
+configuration: Release
 build:
   verbosity: normal
 install:
@@ -13,8 +14,8 @@ before_build:
   - nuget restore
 test:
   assemblies:
-    - FlipperDotNet.Tests\bin\Debug\FlipperDotNet.Tests.dll
-    - FlipperDotNet.ConsulAdapter.Tests\bin\Debug\FlipperDotNet.ConsulAdapter.Tests.dll
-    - FlipperDotNet.ConsulAdapter.Tests.Interop\bin\Debug\FlipperDotNet.ConsulAdapter.Tests.Interop.dll
-    - FlipperDotNet.RedisAdapter.Tests\bin\Debug\FlipperDotNet.RedisAdapter.Tests.dll
-    - FlipperDotNet.RedisAdapter.Tests.Interop\bin\Debug\FlipperDotNet.RedisAdapter.Tests.Interop.dll
+    - FlipperDotNet.Tests\bin\Release\FlipperDotNet.Tests.dll
+    - FlipperDotNet.ConsulAdapter.Tests\bin\Release\FlipperDotNet.ConsulAdapter.Tests.dll
+    - FlipperDotNet.ConsulAdapter.Tests.Interop\bin\Release\FlipperDotNet.ConsulAdapter.Tests.Interop.dll
+    - FlipperDotNet.RedisAdapter.Tests\bin\Release\FlipperDotNet.RedisAdapter.Tests.dll
+    - FlipperDotNet.RedisAdapter.Tests.Interop\bin\Release\FlipperDotNet.RedisAdapter.Tests.Interop.dll
