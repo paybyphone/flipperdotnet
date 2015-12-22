@@ -3,6 +3,7 @@ configuration: Release
 build:
   verbosity: normal
   publish_nuget: true
+  include_nuget_references: true
 install:
   - choco install consul
   - ps: Start-Process -NoNewWindow "C:\ProgramData\chocolatey\bin\consul.exe" "agent -server -bootstrap-expect 1 -data-dir C:\ProgramData\consul\data"
