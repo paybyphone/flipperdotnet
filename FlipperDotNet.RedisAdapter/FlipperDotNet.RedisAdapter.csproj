@@ -55,5 +55,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="FlipperDotNet.RedisAdapter.nuspec" />
   </ItemGroup>
 </Project>
