@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>FlipperDotNet.AdapterTests</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Graham Davison</authors>
+    <owners>$author$</owners>
+    <projectUrl>https://github.com/paybyphone/flipperdotnet</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>FlipperDotNet is a feature-flagging system. This package is the common adapter test suite.</description>
+    <copyright>Copyright 2015</copyright>
+    <tags>feature-flag feature flag toggle</tags>
+  </metadata>
+</package>

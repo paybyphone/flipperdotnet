@@ -1,6 +1,9 @@
-version: 0.1.{build}
+version: 0.1.0.{build}
+configuration: Release
 build:
   verbosity: normal
+  publish_nuget: true
+  include_nuget_references: true
 install:
   - choco install consul
   - ps: Start-Process -NoNewWindow "C:\ProgramData\chocolatey\bin\consul.exe" "agent -server -bootstrap-expect 1 -data-dir C:\ProgramData\consul\data"
@@ -13,8 +16,25 @@ before_build:
   - nuget restore
 test:
   assemblies:
-    - FlipperDotNet.Tests\bin\Debug\FlipperDotNet.Tests.dll
-    - FlipperDotNet.ConsulAdapter.Tests\bin\Debug\FlipperDotNet.ConsulAdapter.Tests.dll
-    - FlipperDotNet.ConsulAdapter.Tests.Interop\bin\Debug\FlipperDotNet.ConsulAdapter.Tests.Interop.dll
-    - FlipperDotNet.RedisAdapter.Tests\bin\Debug\FlipperDotNet.RedisAdapter.Tests.dll
-    - FlipperDotNet.RedisAdapter.Tests.Interop\bin\Debug\FlipperDotNet.RedisAdapter.Tests.Interop.dll
+    - FlipperDotNet.Tests\bin\Release\FlipperDotNet.Tests.dll
+    - FlipperDotNet.ConsulAdapter.Tests\bin\Release\FlipperDotNet.ConsulAdapter.Tests.dll
+    - FlipperDotNet.ConsulAdapter.Tests.Interop\bin\Release\FlipperDotNet.ConsulAdapter.Tests.Interop.dll
+    - FlipperDotNet.RedisAdapter.Tests\bin\Release\FlipperDotNet.RedisAdapter.Tests.dll
+    - FlipperDotNet.RedisAdapter.Tests.Interop\bin\Release\FlipperDotNet.RedisAdapter.Tests.Interop.dll
+nuget:
+  project_feed: true
+  disable_publish_on_pr: true
+assembly_info:
+  patch: true
+  file: AssemblyInfo.*
+  assembly_version: "{version}"
+  assembly_file_version: "{version}"
+  assembly_informational_version: "{version}"
+deploy:
+  - provider: NuGet
+    api_key:
+      secure: oEvXwxjuUjnKapLI/ygF5HfNRzrhslJXpYB9Wkg78r6EJrzoXIk6rv2piN5MF97J
+    artifact: /.*\.nupkg/
+    on:
+      branch: master
+      appveyor_repo_tag: true

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>FlipperDotNet.Redis</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Graham Davison</authors>
+    <owners>$author$</owners>
+    <projectUrl>https://github.com/paybyphone/flipperdotnet</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>FlipperDotNet is a feature-flagging system. This package makes use of Redis as a storage backend.</description>
+    <copyright>Copyright 2015</copyright>
+    <tags>feature-flag feature flag toggle redis</tags>
+  </metadata>
+</package>
