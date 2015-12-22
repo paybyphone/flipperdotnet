@@ -4,11 +4,11 @@ using System.Runtime.CompilerServices;
 // Information about this assembly is defined by the following attributes.
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle("FlipperDotNet.RedisAdapter")]
+[assembly: AssemblyTitle("FlipperDotNet.Redis")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("PayByPhone Technologies")]
-[assembly: AssemblyProduct("FlipperDotNet.RedisAdapter")]
+[assembly: AssemblyProduct("FlipperDotNet.Redis")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
