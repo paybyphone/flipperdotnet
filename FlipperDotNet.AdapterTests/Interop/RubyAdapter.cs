@@ -1,11 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace FlipperDotNet.RedisAdapter.Tests.Interop
+namespace FlipperDotNet.AdapterTests.Interop
 {
-
-	public class RubyAdapter
+	public abstract class RubyAdapter
 	{
 		public void Enable(string key)
 		{
@@ -67,15 +66,7 @@ namespace FlipperDotNet.RedisAdapter.Tests.Interop
 			return new List<string>(output.Split(','));
 		}
 
-		private string BuildScript(string command)
-		{
-			return @"
-require 'flipper-redis'
-client = Redis.new
-adapter = Flipper::Adapters::Redis.new(client)
-flipper = Flipper.new(adapter)" + "\n" +
-			command;
-		}
+		protected abstract string BuildScript(string command);
 
 		private string Run(string script)
 		{
@@ -85,9 +76,9 @@ flipper = Flipper.new(adapter)" + "\n" +
 			process.StartInfo.RedirectStandardOutput = true;
 			process.StartInfo.RedirectStandardError = true;
 			process.StartInfo.UseShellExecute = false;
-			process.Start ();
+			process.Start();
 			string tool_output = process.StandardOutput.ReadToEnd();
-			process.WaitForExit (1000);
+			process.WaitForExit(1000);
 			int exit_code = process.ExitCode;
 			if (exit_code != 0)
 			{
@@ -98,3 +89,4 @@ flipper = Flipper.new(adapter)" + "\n" +
 		}
 	}
 }
+

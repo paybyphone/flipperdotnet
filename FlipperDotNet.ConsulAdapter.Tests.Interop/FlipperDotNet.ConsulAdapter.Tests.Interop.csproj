@@ -45,8 +45,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Test.cs" />
-    <Compile Include="RubyAdapter.cs" />
+    <Compile Include="ConsulInteropTests.cs" />
+    <Compile Include="ConsulRubyAdapter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -61,6 +61,10 @@
     <ProjectReference Include="..\FlipperDotNet.ConsulAdapter\FlipperDotNet.ConsulAdapter.csproj">
       <Project>{D413889B-2F76-48C7-83F7-62077AB9DCF9}</Project>
       <Name>FlipperDotNet.ConsulAdapter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FlipperDotNet.AdapterTests\FlipperDotNet.AdapterTests.csproj">
+      <Project>{D88E3CFB-F9C1-47F4-A278-AE062029DBFE}</Project>
+      <Name>FlipperDotNet.AdapterTests</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
