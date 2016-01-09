@@ -1,29 +1,16 @@
 ﻿using System;
-using System.Linq;
-using Consul;
 using NUnit.Framework;
 using Rhino.Mocks;
+using FlipperDotNet.Adapter;
+using System.Linq;
 
-namespace FlipperDotNet.ConsulAdapter.Tests.Interop
+namespace FlipperDotNet.AdapterTests.Interop
 {
-	[TestFixture]
-	public class Test
+	public abstract class SharedAdapterInteropTests
 	{
-		private IConsulClient client;
-		private ConsulAdapter adapter;
-		private RubyAdapter rubyAdapter;
-		private Flipper flipper;
-
-		[SetUp]
-		public void SetUp()
-		{
-			client = new Client();
-			client.KV.DeleteTree("/");
-			adapter = new ConsulAdapter(client);
-			flipper = new Flipper (adapter);
-
-			rubyAdapter = new RubyAdapter();
-		}
+		protected RubyAdapter rubyAdapter;
+		protected Flipper flipper;
+		protected IAdapter adapter;
 
 		[Test]
 		public void ShouldReadABooleanGate()
