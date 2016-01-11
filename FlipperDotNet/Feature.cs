@@ -2,6 +2,7 @@
 using System.Linq;
 using FlipperDotNet.Adapter;
 using FlipperDotNet.Gate;
+using FlipperDotNet.Instrumenter;
 using System;
 
 namespace FlipperDotNet
@@ -25,11 +26,19 @@ namespace FlipperDotNet
                     new PercentageOfTimeGate()
                 });
 
-        public Feature(string name, IAdapter adapter)
-        {
-            Name = name;
-            Adapter = adapter;
-        }
+		public Feature(string name, IAdapter adapter) : this(name, adapter, new NoOpInstrumenter())
+        { }
+
+		public Feature(string name, IAdapter adapter, IInstrumenter instrumenter)
+		{
+			if (instrumenter == null)
+			{
+				throw new ArgumentNullException("instrumenter");
+			}
+			Name = name;
+			Adapter = adapter;
+			Instrumenter = instrumenter;
+		}
 
         public string Name { get; private set; }
 
@@ -39,6 +48,8 @@ namespace FlipperDotNet
         }
 
         public IAdapter Adapter { get; private set; }
+
+		public IInstrumenter Instrumenter { get; private set; }
 
         public void Enable()
 		{

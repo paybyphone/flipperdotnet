@@ -12,5 +12,6 @@ namespace FlipperDotNet.Adapter
         void Add(Feature feature);
         void Remove(Feature feature);
         void Clear(Feature feature);
+		string Name { get; }
     }
 }

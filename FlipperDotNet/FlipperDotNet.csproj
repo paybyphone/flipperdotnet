@@ -58,6 +58,10 @@
     <Compile Include="IFlipperActor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AdapterRequestException.cs" />
+    <Compile Include="Instrumenter\IInstrumenter.cs" />
+    <Compile Include="Instrumenter\NoOpInstrumenter.cs" />
+    <Compile Include="Adapter\InstrumentedAdapterDecorator.cs" />
+    <Compile Include="Instrumenter\InstrumentationPayload.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FlipperDotNet.nuspec" />
@@ -78,4 +82,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Instrumenter\" />
+  </ItemGroup>
 </Project>
