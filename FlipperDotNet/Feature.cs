@@ -58,7 +58,7 @@ namespace FlipperDotNet
 
         public void EnableActor(IFlipperActor actor)
 		{
-			Enable(ActorGate, actor.FlipperId);
+			Enable(ActorGate, actor);
 		}
 
         public void EnablePercentageOfTime(int percentage)
@@ -78,7 +78,7 @@ namespace FlipperDotNet
 			try
 			{
 				Adapter.Add(this);
-				Adapter.Enable(this, gate, value);
+				Adapter.Enable(this, gate, gate.WrapValue(value));
 			} catch (Exception e)
 			{
 				throw new AdapterRequestException(string.Format("Failed to enable feature {0}", Name), e);
@@ -100,7 +100,7 @@ namespace FlipperDotNet
 
         public void DisableActor(IFlipperActor actor)
         {
-            Disable(ActorGate, actor.FlipperId);
+            Disable(ActorGate, actor);
         }
 
         public void DisablePercentageOfTime()
@@ -118,7 +118,7 @@ namespace FlipperDotNet
 			try
 			{
 				Adapter.Add(this);
-				Adapter.Disable(this, gate, value);
+				Adapter.Disable(this, gate, gate.WrapValue(value));
 			} catch (Exception e)
 			{
 				throw new AdapterRequestException(string.Format("Failed to disable feature {0}", Name), e);

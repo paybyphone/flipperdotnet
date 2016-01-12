@@ -23,5 +23,13 @@ namespace FlipperDotNet.Tests.Gate
             var gate = new PercentageOfTimeGate(random);
             return gate.IsOpen(null, percentage, "Feature");
         }
+
+		[TestCase(0, ExpectedResult = 0)]
+		[TestCase(1, ExpectedResult = 1)]
+		public object WrapValueReturnsTheValue(int value)
+		{
+			var gate = new PercentageOfTimeGate();
+			return gate.WrapValue(value);
+		}
     }
 }

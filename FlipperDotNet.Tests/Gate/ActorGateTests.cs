@@ -61,5 +61,15 @@ namespace FlipperDotNet.Tests.Gate
 
             Assert.That(gate.IsOpen(new object(), new HashSet<string>(new[] {"5"}), "feature"), Is.False);
         }
+
+		[Test]
+		public void WrapValueReturnsTheFlipperId()
+		{
+			var actor = MockRepository.GenerateStub<IFlipperActor>();
+			actor.Stub(x => x.FlipperId).Return("User: 5");
+			var gate = new ActorGate();
+
+			Assert.That(gate.WrapValue(actor), Is.EqualTo("User: 5"));
+		}
     }
 }

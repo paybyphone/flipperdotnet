@@ -13,5 +13,13 @@ namespace FlipperDotNet.Tests.Gate
             var gate = new PercentageOfActorsGate();
             return gate.IsEnabled(value);
         }
+
+		[TestCase(0, ExpectedResult = 0)]
+		[TestCase(1, ExpectedResult = 1)]
+		public object WrapValueReturnsTheValue(int value)
+		{
+			var gate = new PercentageOfActorsGate();
+			return gate.WrapValue(value);
+		}
     }
 }

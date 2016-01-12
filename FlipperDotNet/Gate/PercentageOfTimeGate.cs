@@ -2,7 +2,7 @@
 
 namespace FlipperDotNet.Gate
 {
-    public class PercentageOfTimeGate : IGate
+	public class PercentageOfTimeGate : IGate
     {
         public const string NAME = "percentage_of_time";
         public const string KEY = "percentage_of_time";
@@ -44,5 +44,10 @@ namespace FlipperDotNet.Gate
         {
             get { return typeof (int); }
         }
+
+		public object WrapValue(object value)
+		{
+			return value;
+		}
     }
 }
