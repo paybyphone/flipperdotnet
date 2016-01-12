@@ -8,15 +8,17 @@ namespace FlipperDotNet.Instrumenter
 		public string AdapterName;
 		public string FeatureName;
 		public string GateName;
+		public object Thing;
 		public object Result;
 
 		public bool Equals(InstrumentationPayload other)
 		{
 			return Operation == other.Operation &&
-				   AdapterName == other.AdapterName &&
-				   FeatureName == other.FeatureName &&
-				   GateName == other.GateName &&
-				   Result == other.Result;
+				AdapterName == other.AdapterName &&
+				FeatureName == other.FeatureName &&
+				GateName == other.GateName &&
+				((Thing == null && other.Thing == null) || (Thing.Equals(other.Thing))) &&
+				((Result == null && other.Result == null) || (Result.Equals(other.Result)));
 		}
 		
 		public override bool Equals(object obj)
@@ -30,8 +32,8 @@ namespace FlipperDotNet.Instrumenter
 
 		public override string ToString()
 		{
-			return string.Format("InstrumentationPayload: \"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\"",
-				Operation, AdapterName, FeatureName, GateName, Result);
+			return string.Format("InstrumentationPayload: \"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\"",
+				Operation, AdapterName, FeatureName, GateName, Thing, Result);
 		}
 	}
 }

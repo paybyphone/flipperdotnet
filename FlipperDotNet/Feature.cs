@@ -16,6 +16,8 @@ namespace FlipperDotNet
 
     public class Feature
     {
+		public const string InstrumentationName = "feature_operation" + "." + Flipper.InstrumentationNamespace;
+
         private readonly List<IGate> _gates =
             new List<IGate>(new IGate[]
                 {
@@ -75,13 +77,22 @@ namespace FlipperDotNet
 
 		private void Enable(IGate gate, object value)
 		{
-			try
+			var payload = new InstrumentationPayload {
+				FeatureName = Name,
+				GateName = gate.Name,
+				Operation = "enable",
+				Thing = value,
+			};
+			using (Instrumenter.Instrument(InstrumentationName, payload))
 			{
-				Adapter.Add(this);
-				Adapter.Enable(this, gate, gate.WrapValue(value));
-			} catch (Exception e)
-			{
-				throw new AdapterRequestException(string.Format("Failed to enable feature {0}", Name), e);
+				try
+				{
+					Adapter.Add(this);
+					Adapter.Enable(this, gate, gate.WrapValue(value));
+				} catch (Exception e)
+				{
+					throw new AdapterRequestException(string.Format("Failed to enable feature {0}", Name), e);
+				}
 			}
 		}
 
@@ -115,13 +126,22 @@ namespace FlipperDotNet
 
 		private void Disable(IGate gate, object value)
 		{
-			try
+			var payload = new InstrumentationPayload {
+				FeatureName = Name,
+				GateName = gate.Name,
+				Operation = "disable",
+				Thing = value,
+			};
+			using (Instrumenter.Instrument(InstrumentationName, payload))
 			{
-				Adapter.Add(this);
-				Adapter.Disable(this, gate, gate.WrapValue(value));
-			} catch (Exception e)
-			{
-				throw new AdapterRequestException(string.Format("Failed to disable feature {0}", Name), e);
+				try
+				{
+					Adapter.Add(this);
+					Adapter.Disable(this, gate, gate.WrapValue(value));
+				} catch (Exception e)
+				{
+					throw new AdapterRequestException(string.Format("Failed to disable feature {0}", Name), e);
+				}
 			}
 		}
 
@@ -244,14 +264,40 @@ namespace FlipperDotNet
 
 		public bool IsEnabled()
 		{
-			var values = GateValues;
-			return Gates.Any(gate => gate.IsOpen(null, values[gate.Key], Name));
+			return IsEnabled(null);
 		}
 
         public bool IsEnabledFor(IFlipperActor actor)
         {
-            var values = GateValues;
-            return Gates.Any(gate => gate.IsOpen(actor, values[gate.Key], Name));
+			return IsEnabled(actor);
         }
+
+		private bool IsEnabled(object thing)
+		{
+			var payload = new InstrumentationPayload {
+				FeatureName = Name,
+				Operation = "enabled?",
+			};
+			if (thing != null)
+			{
+				payload.Thing = thing;
+			}
+			using (Instrumenter.Instrument(InstrumentationName, payload))
+			{
+				var values = GateValues;
+				var openGate = Gates.FirstOrDefault(gate => gate.IsOpen(thing, values[gate.Key], Name));
+				bool result;
+				if (openGate != null)
+				{
+					payload.GateName = openGate.Name;
+					result = true;
+				} else
+				{
+					result = false;
+				}
+				payload.Result = result;
+				return result;
+			}
+		}
     }
 }
