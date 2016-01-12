@@ -17,6 +17,7 @@ namespace FlipperDotNet
     public class Feature
     {
 		public const string InstrumentationName = "feature_operation" + "." + Flipper.InstrumentationNamespace;
+		public const string GateInstrumentationName = "gate_operation" + "." + Flipper.InstrumentationNamespace;
 
         private readonly List<IGate> _gates =
             new List<IGate>(new IGate[]
@@ -285,7 +286,7 @@ namespace FlipperDotNet
 			using (Instrumenter.Instrument(InstrumentationName, payload))
 			{
 				var values = GateValues;
-				var openGate = Gates.FirstOrDefault(gate => gate.IsOpen(thing, values[gate.Key], Name));
+				var openGate = Gates.FirstOrDefault(gate => InstrumentGate(gate, "open?", thing, x => x.IsOpen(thing, values[x.Key], Name)));
 				bool result;
 				if (openGate != null)
 				{
@@ -297,6 +298,20 @@ namespace FlipperDotNet
 				}
 				payload.Result = result;
 				return result;
+			}
+		}
+
+		private bool InstrumentGate(IGate gate, string operation, object thing, Func<IGate,bool> function)
+		{
+			var payload = new InstrumentationPayload {
+				FeatureName = Name,
+				GateName = gate.Name,
+				Operation = operation,
+				Thing = thing,
+			};
+			using(Instrumenter.Instrument(GateInstrumentationName, payload))
+			{
+				return function(gate);
 			}
 		}
     }

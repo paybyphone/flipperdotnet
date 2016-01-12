@@ -145,7 +145,11 @@ namespace FlipperDotNet.Tests.Adapter
 		{
 			public string Name;
 			public InstrumentationPayload Payload;
-//			public object Result;
+
+			public override string ToString()
+			{
+				return string.Format("<Name=\"{0}\", Payload=\"{1}\">", Name, Payload);
+			}
 		}
 
 		public List<Event> Events = new List<Event>();
@@ -173,7 +177,6 @@ namespace FlipperDotNet.Tests.Adapter
 				_instrumenter.Events.Add(new Event {
 					Name = _name,
 					Payload = _payload,
-//					Result = _payload.Result,
 				});
 			}
 		}

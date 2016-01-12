@@ -17,8 +17,8 @@ namespace FlipperDotNet.Instrumenter
 				AdapterName == other.AdapterName &&
 				FeatureName == other.FeatureName &&
 				GateName == other.GateName &&
-				((Thing == null && other.Thing == null) || (Thing.Equals(other.Thing))) &&
-				((Result == null && other.Result == null) || (Result.Equals(other.Result)));
+				((Thing == null && other.Thing == null) || (Thing != null && Thing.Equals(other.Thing))) &&
+				((Result == null && other.Result == null) || (Result != null && Result.Equals(other.Result)));
 		}
 		
 		public override bool Equals(object obj)
