@@ -572,7 +572,7 @@ namespace FlipperDotNet.Tests
 
             _feature.EnablePercentageOfTime(percentage);
 
-            return _feature.IsEnabled;
+			return _feature.IsEnabled();
         }
 
         private void HackNewPercentageOfTimeGateIntoPlace(int seed)

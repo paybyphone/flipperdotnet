@@ -242,14 +242,11 @@ namespace FlipperDotNet
             get { return Gates.Except(EnabledGates); }
         }
 
-        public bool IsEnabled
-        {
-            get
-            {
-                var values = GateValues;
-                return Gates.Any(gate => gate.IsOpen(null, values[gate.Key], Name));
-            }
-        }
+		public bool IsEnabled()
+		{
+			var values = GateValues;
+			return Gates.Any(gate => gate.IsOpen(null, values[gate.Key], Name));
+		}
 
         public bool IsEnabledFor(IFlipperActor actor)
         {

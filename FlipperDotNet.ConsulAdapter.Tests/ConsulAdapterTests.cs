@@ -212,7 +212,7 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		[Test]
 		public void ShouldThrowExceptionWhenTestingIfFeatureIsEnabled()
 		{
-			Assert.That(() => _feature.IsEnabled, Throws.TypeOf<AdapterRequestException>()
+			Assert.That(() => _feature.IsEnabled(), Throws.TypeOf<AdapterRequestException>()
 				.With.InnerException.TypeOf<ConsulRequestException>()
 				.With.Property("Message").EqualTo("Unable to retrieve feature values for unobtanium"));
 		}
