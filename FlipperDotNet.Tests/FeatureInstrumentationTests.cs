@@ -77,9 +77,47 @@ namespace FlipperDotNet.Tests
 			{
 				expectedPayload.GateName = feature.BooleanGate.Name;
 			}
+			var expectedEvent = new MockInstrumenter.Event {
+				Name = "feature_operation.flipper",
+				Payload = expectedPayload,
+			};
 
-			Assert.That(instrumenter.Events.First().Name, Is.EqualTo("feature_operation.flipper"));
-			Assert.That(instrumenter.Events.First().Payload, Is.EqualTo(expectedPayload));
+			Assert.That(instrumenter.Events, Has.Member(expectedEvent));
+		}
+
+		[Test]
+		public void ShouldRecordGateInstrumentationForIsEnabled([Values(true,false)] Boolean enabled)
+		{
+			var instrumenter = new MockInstrumenter();
+			var feature = new Feature("Name", new MemoryAdapter(), instrumenter);
+
+			if (enabled)
+			{
+				feature.Enable();
+			} else
+			{
+				feature.Disable();
+			}
+			instrumenter.Events.Clear();
+
+			feature.IsEnabled();
+
+			var expectedPayload = new InstrumentationPayload {
+				FeatureName = "Name",
+				GateName = "boolean",
+				Operation = "open?",
+				Thing = null,
+			};
+			if (enabled)
+			{
+				expectedPayload.GateName = feature.BooleanGate.Name;
+			}
+			var expectedEvent = new MockInstrumenter.Event {
+				Name = "gate_operation.flipper",
+				Payload = expectedPayload,
+			};
+
+			Assert.That(instrumenter.Events, Has.Member(expectedEvent));
 		}
 
 		[Test]
@@ -110,9 +148,48 @@ namespace FlipperDotNet.Tests
 			{
 				expectedPayload.GateName = feature.ActorGate.Name;
 			}
+			var expectedEvent = new MockInstrumenter.Event {
+				Name = "feature_operation.flipper",
+				Payload = expectedPayload,
+			};
 
-			Assert.That(instrumenter.Events.First().Name, Is.EqualTo("feature_operation.flipper"));
-			Assert.That(instrumenter.Events.First().Payload, Is.EqualTo(expectedPayload));
+			Assert.That(instrumenter.Events, Has.Member(expectedEvent));
+		}
+
+		[Test]
+		public void ShouldRecordGateInstrumentationForIsEnabledFor([Values(true,false)] Boolean enabled)
+		{
+			var instrumenter = new MockInstrumenter();
+			var feature = new Feature("Name", new MemoryAdapter(), instrumenter);
+
+			var flipperActor = MockActor("User:5");
+			if (enabled)
+			{
+				feature.EnableActor(flipperActor);
+			} else
+			{
+				feature.DisableActor(flipperActor);
+			}
+			instrumenter.Events.Clear();
+
+			feature.IsEnabledFor(flipperActor);
+
+			var expectedPayload = new InstrumentationPayload {
+				FeatureName = "Name",
+				GateName = "actor",
+				Operation = "open?",
+				Thing = flipperActor,
+			};
+			if (enabled)
+			{
+				expectedPayload.GateName = feature.ActorGate.Name;
+			}
+			var expectedEvent = new MockInstrumenter.Event {
+				Name = "gate_operation.flipper",
+				Payload = expectedPayload,
+			};
+
+			Assert.That(instrumenter.Events, Has.Member(expectedEvent));
 		}
 
 		private static IFlipperActor MockActor(string id)
