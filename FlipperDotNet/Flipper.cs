@@ -8,8 +8,6 @@ namespace FlipperDotNet
 {
     public class Flipper
     {
-		public const string InstrumentationNamespace = "flipper";
-
         private readonly Dictionary<string, Feature> _features = new Dictionary<string, Feature>();
 
 		public Flipper(IAdapter adapter) : this(adapter, new NoOpInstrumenter())

@@ -27,7 +27,7 @@ namespace FlipperDotNet.Tests
 				Thing = flipperActor,
 			};
 
-			Assert.That(instrumenter.Events.First().Name, Is.EqualTo("feature_operation.flipper"));
+			Assert.That(instrumenter.Events.First().Type, Is.EqualTo(InstrumentationType.FeatureOperation));
 			Assert.That(instrumenter.Events.First().Payload, Is.EqualTo(expectedPayload));
 		}
 
@@ -46,7 +46,7 @@ namespace FlipperDotNet.Tests
 				Thing = false,
 			};
 
-			Assert.That(instrumenter.Events.First().Name, Is.EqualTo("feature_operation.flipper"));
+			Assert.That(instrumenter.Events.First().Type, Is.EqualTo(InstrumentationType.FeatureOperation));
 			Assert.That(instrumenter.Events.First().Payload, Is.EqualTo(expectedPayload));
 		}
 
@@ -78,7 +78,7 @@ namespace FlipperDotNet.Tests
 				expectedPayload.GateName = feature.BooleanGate.Name;
 			}
 			var expectedEvent = new MockInstrumenter.Event {
-				Name = "feature_operation.flipper",
+				Type = InstrumentationType.FeatureOperation,
 				Payload = expectedPayload,
 			};
 
@@ -113,7 +113,7 @@ namespace FlipperDotNet.Tests
 				expectedPayload.GateName = feature.BooleanGate.Name;
 			}
 			var expectedEvent = new MockInstrumenter.Event {
-				Name = "gate_operation.flipper",
+				Type = InstrumentationType.GateOperation,
 				Payload = expectedPayload,
 			};
 
@@ -149,7 +149,7 @@ namespace FlipperDotNet.Tests
 				expectedPayload.GateName = feature.ActorGate.Name;
 			}
 			var expectedEvent = new MockInstrumenter.Event {
-				Name = "feature_operation.flipper",
+				Type = InstrumentationType.FeatureOperation,
 				Payload = expectedPayload,
 			};
 
@@ -185,7 +185,7 @@ namespace FlipperDotNet.Tests
 				expectedPayload.GateName = feature.ActorGate.Name;
 			}
 			var expectedEvent = new MockInstrumenter.Event {
-				Name = "gate_operation.flipper",
+				Type = InstrumentationType.GateOperation,
 				Payload = expectedPayload,
 			};
 

@@ -32,7 +32,7 @@ namespace FlipperDotNet.Tests.Adapter
 				Result = result,
 			};
 
-			Assert.That(Instrumenter.Events.First().Name, Is.EqualTo("adapter_operation.flipper"));
+			Assert.That(Instrumenter.Events.First().Type, Is.EqualTo(InstrumentationType.AdapterOperation));
 			Assert.That(Instrumenter.Events.First().Payload, Is.EqualTo(expectedPayload));
 		}
 
@@ -51,7 +51,7 @@ namespace FlipperDotNet.Tests.Adapter
 				GateName = "percentage_of_actors",
 			};
 
-			Assert.That(Instrumenter.Events.First().Name, Is.EqualTo("adapter_operation.flipper"));
+			Assert.That(Instrumenter.Events.First().Type, Is.EqualTo(InstrumentationType.AdapterOperation));
 			Assert.That(Instrumenter.Events.First().Payload, Is.EqualTo(expectedPayload));
 		}
 
@@ -70,7 +70,7 @@ namespace FlipperDotNet.Tests.Adapter
 				GateName = "percentage_of_actors",
 			};
 
-			Assert.That(Instrumenter.Events.First().Name, Is.EqualTo("adapter_operation.flipper"));
+			Assert.That(Instrumenter.Events.First().Type, Is.EqualTo(InstrumentationType.AdapterOperation));
 			Assert.That(Instrumenter.Events.First().Payload, Is.EqualTo(expectedPayload));
 		}
 
@@ -86,7 +86,7 @@ namespace FlipperDotNet.Tests.Adapter
 				FeatureName = "Stats",
 			};
 
-			Assert.That(Instrumenter.Events.First().Name, Is.EqualTo("adapter_operation.flipper"));
+			Assert.That(Instrumenter.Events.First().Type, Is.EqualTo(InstrumentationType.AdapterOperation));
 			Assert.That(Instrumenter.Events.First().Payload, Is.EqualTo(expectedPayload));
 		}
 
@@ -102,7 +102,7 @@ namespace FlipperDotNet.Tests.Adapter
 				FeatureName = "Stats",
 			};
 
-			Assert.That(Instrumenter.Events.First().Name, Is.EqualTo("adapter_operation.flipper"));
+			Assert.That(Instrumenter.Events.First().Type, Is.EqualTo(InstrumentationType.AdapterOperation));
 			Assert.That(Instrumenter.Events.First().Payload, Is.EqualTo(expectedPayload));
 		}
 
@@ -118,7 +118,7 @@ namespace FlipperDotNet.Tests.Adapter
 				FeatureName = "Stats",
 			};
 
-			Assert.That(Instrumenter.Events.First().Name, Is.EqualTo("adapter_operation.flipper"));
+			Assert.That(Instrumenter.Events.First().Type, Is.EqualTo(InstrumentationType.AdapterOperation));
 			Assert.That(Instrumenter.Events.First().Payload, Is.EqualTo(expectedPayload));
 		}
 
@@ -134,7 +134,7 @@ namespace FlipperDotNet.Tests.Adapter
 				Result = result,
 			};
 
-			Assert.That(Instrumenter.Events.First().Name, Is.EqualTo("adapter_operation.flipper"));
+			Assert.That(Instrumenter.Events.First().Type, Is.EqualTo(InstrumentationType.AdapterOperation));
 			Assert.That(Instrumenter.Events.First().Payload, Is.EqualTo(expectedPayload));
 		}
 	}
@@ -143,39 +143,39 @@ namespace FlipperDotNet.Tests.Adapter
 	{
 		public struct Event
 		{
-			public string Name;
+			public InstrumentationType Type;
 			public InstrumentationPayload Payload;
 
 			public override string ToString()
 			{
-				return string.Format("<Name=\"{0}\", Payload=\"{1}\">", Name, Payload);
+				return string.Format("<Type=\"{0}\", Payload=\"{1}\">", Type, Payload);
 			}
 		}
 
 		public List<Event> Events = new List<Event>();
 
-		public IInstrumentationToken Instrument(string name, InstrumentationPayload payload)
+		public IInstrumentationToken Instrument(InstrumentationType type, InstrumentationPayload payload)
 		{
-			return new InstrumentationToken(this, name, payload);
+			return new InstrumentationToken(this, type, payload);
 		}
 
 		public class InstrumentationToken : IInstrumentationToken
 		{
 			readonly MockInstrumenter _instrumenter;
-			readonly string _name;
-			InstrumentationPayload _payload;
+			readonly InstrumentationType _type;
+			readonly InstrumentationPayload _payload;
 
-			public InstrumentationToken(MockInstrumenter instrumenter, string name, InstrumentationPayload payload)
+			public InstrumentationToken(MockInstrumenter instrumenter, InstrumentationType type, InstrumentationPayload payload)
 			{
 				_instrumenter = instrumenter;
-				_name = name;
+				_type = type;
 				_payload = payload;
 			}
 
 			public void Dispose()
 			{
 				_instrumenter.Events.Add(new Event {
-					Name = _name,
+					Type = _type,
 					Payload = _payload,
 				});
 			}

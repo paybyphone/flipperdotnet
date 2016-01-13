@@ -9,7 +9,7 @@ namespace FlipperDotNet.Instrumenter
 
 	public interface IInstrumenter
 	{
-		IInstrumentationToken Instrument(string name, InstrumentationPayload payload);
+		IInstrumentationToken Instrument(InstrumentationType type, InstrumentationPayload payload);
 	}
 }
 

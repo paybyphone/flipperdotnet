@@ -16,9 +16,6 @@ namespace FlipperDotNet
 
     public class Feature
     {
-		public const string InstrumentationName = "feature_operation" + "." + Flipper.InstrumentationNamespace;
-		public const string GateInstrumentationName = "gate_operation" + "." + Flipper.InstrumentationNamespace;
-
         private readonly List<IGate> _gates =
             new List<IGate>(new IGate[]
                 {
@@ -84,7 +81,7 @@ namespace FlipperDotNet
 				Operation = "enable",
 				Thing = value,
 			};
-			using (Instrumenter.Instrument(InstrumentationName, payload))
+			using (Instrumenter.Instrument(InstrumentationType.FeatureOperation, payload))
 			{
 				try
 				{
@@ -133,7 +130,7 @@ namespace FlipperDotNet
 				Operation = "disable",
 				Thing = value,
 			};
-			using (Instrumenter.Instrument(InstrumentationName, payload))
+			using (Instrumenter.Instrument(InstrumentationType.FeatureOperation, payload))
 			{
 				try
 				{
@@ -283,7 +280,7 @@ namespace FlipperDotNet
 			{
 				payload.Thing = thing;
 			}
-			using (Instrumenter.Instrument(InstrumentationName, payload))
+			using (Instrumenter.Instrument(InstrumentationType.FeatureOperation, payload))
 			{
 				var values = GateValues;
 				var openGate = Gates.FirstOrDefault(gate => InstrumentGate(gate, "open?", thing, x => x.IsOpen(thing, values[x.Key], Name)));
@@ -309,7 +306,7 @@ namespace FlipperDotNet
 				Operation = operation,
 				Thing = thing,
 			};
-			using(Instrumenter.Instrument(GateInstrumentationName, payload))
+			using(Instrumenter.Instrument(InstrumentationType.GateOperation, payload))
 			{
 				return function(gate);
 			}
