@@ -67,6 +67,8 @@
     <Compile Include="Instrumenter\InstrumentationPayload.cs" />
     <Compile Include="Instrumenter\StatsdInstrumenter.cs" />
     <Compile Include="Instrumenter\InstrumentationType.cs" />
+    <Compile Include="Util\IClock.cs" />
+    <Compile Include="Util\SystemClock.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FlipperDotNet.nuspec" />
@@ -89,5 +91,6 @@
   -->
   <ItemGroup>
     <Folder Include="Instrumenter\" />
+    <Folder Include="Util\" />
   </ItemGroup>
 </Project>

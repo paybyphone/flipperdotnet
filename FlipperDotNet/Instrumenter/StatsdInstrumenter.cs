@@ -1,21 +1,27 @@
 ﻿using System;
 using System.Linq;
 using StatsdClient;
+using FlipperDotNet.Util;
 
 namespace FlipperDotNet.Instrumenter
 {
 	public class StatsdInstrumenter : IInstrumenter
 	{
-		private IStatsd _statsdClient;
+		private readonly IStatsd _statsdClient;
+		private readonly IClock _clock;
 
-		public StatsdInstrumenter(IStatsd statsdClient)
+		public StatsdInstrumenter(IStatsd statsdClient) : this(statsdClient, new SystemClock())
+		{ }
+
+		public StatsdInstrumenter(IStatsd statsdClient, IClock clock)
 		{
 			_statsdClient = statsdClient;
+			_clock = clock;
 		}
 
 		public IInstrumentationToken Instrument(InstrumentationType type, InstrumentationPayload payload)
 		{
-			return new InstrumentationToken(this, type, payload);
+			return new InstrumentationToken(this, type, payload, _clock);
 		}
 
 		private void Publish(InstrumentationType type, DateTime startTime, DateTime endTime, InstrumentationPayload payload)
@@ -32,7 +38,6 @@ namespace FlipperDotNet.Instrumenter
 					PublishGateMetrics(payload, duration);
 					break;
 			}
-
 		}
 
 		private void PublishFeatureMetrics(InstrumentationPayload payload, TimeSpan duration)
@@ -91,23 +96,27 @@ namespace FlipperDotNet.Instrumenter
 			readonly StatsdInstrumenter _instrumenter;
 			readonly InstrumentationType _type;
 			readonly InstrumentationPayload _payload;
+			readonly IClock _clock;
 			readonly DateTime _startTime;
 
-			public InstrumentationToken(StatsdInstrumenter instrumenter, InstrumentationType type, InstrumentationPayload payload)
+			public InstrumentationToken(StatsdInstrumenter instrumenter, InstrumentationType type, InstrumentationPayload payload, IClock clock)
 			{
 				_instrumenter = instrumenter;
 				_type = type;
 				_payload = payload;
-				_startTime = DateTime.Now;
+				_clock = clock;
+				_startTime = _clock.Now;
 			}
 
 			public void Dispose()
 			{
-				var endTime = DateTime.Now;
+				var endTime = _clock.Now;
 
 				_instrumenter.Publish(_type, _startTime, endTime, _payload);
 			}
 		}
+
+		//class FeatureInstrumentationToken
 	}
 }
 

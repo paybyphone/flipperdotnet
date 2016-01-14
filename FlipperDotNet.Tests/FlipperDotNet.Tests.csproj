@@ -68,6 +68,7 @@
     <Compile Include="Instrumenter\StatsdFeatureInstrumenterIntegrationTests.cs" />
     <Compile Include="Instrumenter\StatsdAdapterInstrumenterIntegrationTests.cs" />
     <Compile Include="Instrumenter\StatsdGateInstrumenterIntegrationTests.cs" />
+    <Compile Include="Instrumenter\StatsdInstrumentationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
