@@ -5,9 +5,11 @@ using FlipperDotNet.Gate;
 namespace FlipperDotNet.Adapter
 {
     public class MemoryAdapter : IAdapter
-    {
+	{
         private readonly HashSet<string> _features = new HashSet<string>();
         private readonly Dictionary<string, object> _dictionary = new Dictionary<string, object>();
+
+		public string Name { get { return "memory"; } }
 
         public IDictionary<string, object> Get(Feature feature)
         {

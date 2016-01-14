@@ -9,5 +9,6 @@ namespace FlipperDotNet.Gate
         string Name { get; }
         string Key { get; }
         Type DataType { get; }
+		object WrapValue(object value);
     }
 }

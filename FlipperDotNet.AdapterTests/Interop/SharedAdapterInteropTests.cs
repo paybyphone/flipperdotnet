@@ -19,7 +19,7 @@ namespace FlipperDotNet.AdapterTests.Interop
 
 			rubyAdapter.Enable(stats);
 
-			Assert.That(flipper.Feature (stats).IsEnabled);
+			Assert.That(flipper.Feature (stats).IsEnabled());
 		}
 
 		[Test]

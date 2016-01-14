@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FlipperDotNet.Adapter;
 using FlipperDotNet.Gate;
+using FlipperDotNet.Instrumenter;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -26,6 +27,29 @@ namespace FlipperDotNet.Tests
             var feature = new Feature("Name", adapter);
             Assert.That(feature.Adapter, Is.EqualTo(adapter));
         }
+
+		[Test]
+		public void ConstructorSetsNoOpInstrumenterByDefault()
+		{
+			var feature = new Feature("Name", MockRepository.GenerateStub<IAdapter>());
+			Assert.That(feature.Instrumenter, Is.InstanceOf<NoOpInstrumenter>());
+		}
+
+		[Test]
+		public void ConstructorShouldThrowExceptionOnNullInstrumenter()
+		{
+			Assert.Throws<ArgumentNullException>(delegate {
+				var feature = new Feature("Name", MockRepository.GenerateStub<IAdapter>(), null);
+			});
+		}
+
+		[Test]
+		public void ConstructorShouldSetInstrumenter()
+		{
+			var instrumenter = MockRepository.GenerateStub<IInstrumenter>();
+			var feature = new Feature("Name", MockRepository.GenerateStub<IAdapter>(), instrumenter);
+			Assert.That(feature.Instrumenter, Is.EqualTo(instrumenter));
+		}
     }
 
     [TestFixture]
@@ -548,7 +572,7 @@ namespace FlipperDotNet.Tests
 
             _feature.EnablePercentageOfTime(percentage);
 
-            return _feature.IsEnabled;
+			return _feature.IsEnabled();
         }
 
         private void HackNewPercentageOfTimeGateIntoPlace(int seed)

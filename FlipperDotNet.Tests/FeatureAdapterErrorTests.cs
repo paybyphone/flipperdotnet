@@ -5,7 +5,6 @@ using Rhino.Mocks;
 
 namespace FlipperDotNet.Tests
 {
-
 	[TestFixture]
 	class FeatureAdapterErrorTests
 	{
@@ -158,7 +157,7 @@ namespace FlipperDotNet.Tests
 		public void ShouldThrowExceptionWhenTestingIfFeatureIsEnabled()
 		{
 			_adapter.Stub(x => x.Get(_feature)).Throw(new TestException());
-			Assert.That(() => _feature.IsEnabled, Throws.TypeOf<AdapterRequestException>()
+			Assert.That(() => _feature.IsEnabled(), Throws.TypeOf<AdapterRequestException>()
 				.With.InnerException.TypeOf<TestException>()
 				.With.Property("Message").EqualTo("Unable to retrieve feature values for unobtanium"));
 		}

@@ -42,6 +42,9 @@
     <Reference Include="Klinkby.Checksum">
       <HintPath>..\packages\Klinkby.Checksum.1.0.2.1\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\klinkby.checksum.dll</HintPath>
     </Reference>
+    <Reference Include="StatsdClient">
+      <HintPath>..\packages\StatsdCsharpClient.1.3.0.0\lib\net45\StatsdClient.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapter\IAdapter.cs" />
@@ -58,6 +61,14 @@
     <Compile Include="IFlipperActor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AdapterRequestException.cs" />
+    <Compile Include="Instrumenter\IInstrumenter.cs" />
+    <Compile Include="Instrumenter\NoOpInstrumenter.cs" />
+    <Compile Include="Adapter\InstrumentedAdapterDecorator.cs" />
+    <Compile Include="Instrumenter\InstrumentationPayload.cs" />
+    <Compile Include="Instrumenter\StatsdInstrumenter.cs" />
+    <Compile Include="Instrumenter\InstrumentationType.cs" />
+    <Compile Include="Util\IClock.cs" />
+    <Compile Include="Util\SystemClock.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FlipperDotNet.nuspec" />
@@ -78,4 +89,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Instrumenter\" />
+    <Folder Include="Util\" />
+  </ItemGroup>
 </Project>

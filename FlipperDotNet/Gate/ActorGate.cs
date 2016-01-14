@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FlipperDotNet.Gate
 {
-    public class ActorGate : IGate
+	public class ActorGate : IGate
     {
         public const string NAME = "actor";
         public const string KEY = "actors";
@@ -42,5 +42,10 @@ namespace FlipperDotNet.Gate
         {
             get { return typeof (ISet<string>); }
         }
+
+		public object WrapValue(object value)
+		{
+			return ((IFlipperActor)value).FlipperId;
+		}
     }
 }

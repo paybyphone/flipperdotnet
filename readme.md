@@ -5,15 +5,18 @@ A .Net port of the client portion of the feature flagging [Flipper](https://gith
 In addition to fully enabling or disabling features, it allows enabling for a percentage of users, a percentage of time,
 or specific users.
 
-The current backend stores are in-memory and [Consul](https://www.consul.io).
+The current backend stores are in-memory, [Consul](https://www.consul.io), and [Redis](http://redis.io).
 
 TODO: enable by groups.
 
 ## Installation
 
-Currently available at <https://github.com/paybyphone/flipperdotnet>
+FlipperDotNet is available as a NuGet package. Include the adapter package that you are using, either
+[FlipperDotNet.Consul](https://www.nuget.org/packages/FlipperDotNet.Consul) or
+[FlipperDotNet.Redis](https://www.nuget.org/packages/FlipperDotNet.Redis/). They will include the core package
+[FlipperDotNet.Core](https://www.nuget.org/packages/FlipperDotNet.Core/)
 
-TODO: Make it a nuget package.
+Source code is available at <https://github.com/paybyphone/flipperdotnet>
 
 ## General Usage
 
@@ -87,6 +90,17 @@ will return `True` if the feature is fully enabled or any of the following are e
 * for the percentage of time,
 * for the percentage of actors, or
 * for the specific actor
+
+### Collecting Statistics
+
+FlipperDotNet can collect timing and count statistics using [Statsd](https://github.com/etsy/statsd/) or compatible systems.
+
+Pass an Instrumenter when creating the Flipper object.
+
+    var statsdClient = new Statsd("localhost", 8125);
+    var instrumenter = new StatsdInstrumenter(statsdClient);
+    var flipper = new Flipper(adapter, instrumenter);
+  
 
 ## Using the Consul Adapter
 

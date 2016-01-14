@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using Rhino.Mocks;
 using FlipperDotNet.Adapter;
+using FlipperDotNet.Instrumenter;
 
 namespace FlipperDotNet.Tests
 {
@@ -13,8 +15,31 @@ namespace FlipperDotNet.Tests
         {
             var adapter = MockRepository.GenerateStub<IAdapter>();
             var flipper = new Flipper(adapter);
-            Assert.That(flipper.Adapter,Is.Not.Null);
+			Assert.That(flipper.Adapter, Is.Not.Null);
         }
+
+		[Test]
+		public void ConstructorSetsNoOpInstrumenterByDefault()
+		{
+			var flipper = new Flipper(MockRepository.GenerateStub<IAdapter>());
+			Assert.That(flipper.Instrumenter, Is.InstanceOf<NoOpInstrumenter>());
+		}
+
+		[Test]
+		public void ConstructorShouldThrowExceptionOnNullInstrumenter()
+		{
+			Assert.Throws<ArgumentNullException>(delegate {
+				var flipper = new Flipper(MockRepository.GenerateStub<IAdapter>(), null);
+			});
+		}
+
+		[Test]
+		public void ConstructorShouldSetInstrumenter()
+		{
+			var instrumenter = MockRepository.GenerateStub<IInstrumenter>();
+			var flipper = new Flipper(MockRepository.GenerateStub<IAdapter>(), instrumenter);
+			Assert.That(flipper.Instrumenter, Is.EqualTo(instrumenter));
+		}
 
         [Test]
         public void GetFeatureSetsNameOfFeature()
@@ -22,7 +47,7 @@ namespace FlipperDotNet.Tests
             var adapter = MockRepository.GenerateStub<IAdapter>();
             var flipper = new Flipper(adapter);
             var feature = flipper.Feature("Test");
-            Assert.That(feature.Name,Is.EqualTo("Test"));
+			Assert.That(feature.Name, Is.EqualTo("Test"));
         }
 
         [Test]
@@ -31,8 +56,17 @@ namespace FlipperDotNet.Tests
             var adapter = MockRepository.GenerateStub<IAdapter>();
             var flipper = new Flipper(adapter);
             var feature = flipper.Feature("Test");
-            Assert.That(feature.Adapter, Is.EqualTo(adapter));
+			Assert.That(feature.Adapter, Is.EqualTo(flipper.Adapter));
         }
+
+		[Test]
+		public void GetFeatureSetsInstrumenterOnFeature()
+		{
+			var instrumenter = MockRepository.GenerateStub<IInstrumenter>();
+			var flipper = new Flipper(MockRepository.GenerateStub<IAdapter>(), instrumenter);
+			var feature = flipper.Feature("Test");
+			Assert.That(feature.Instrumenter, Is.EqualTo(instrumenter));
+		}
 
         [Test]
         public void GetFeatureMemoizesTheFeature()

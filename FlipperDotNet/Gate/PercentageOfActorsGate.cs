@@ -3,7 +3,7 @@ using Klinkby.Checkum;
 
 namespace FlipperDotNet.Gate
 {
-    public class PercentageOfActorsGate : IGate
+	public class PercentageOfActorsGate : IGate
     {
         public const string NAME = "percentage_of_actors";
         public const string KEY = "percentage_of_actors";
@@ -43,5 +43,10 @@ namespace FlipperDotNet.Gate
         {
             get { return typeof (int); }
         }
+
+		public object WrapValue(object value)
+		{
+			return value;
+		}
     }
 }

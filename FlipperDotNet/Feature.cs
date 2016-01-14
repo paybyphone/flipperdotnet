@@ -2,6 +2,7 @@
 using System.Linq;
 using FlipperDotNet.Adapter;
 using FlipperDotNet.Gate;
+using FlipperDotNet.Instrumenter;
 using System;
 
 namespace FlipperDotNet
@@ -25,11 +26,19 @@ namespace FlipperDotNet
                     new PercentageOfTimeGate()
                 });
 
-        public Feature(string name, IAdapter adapter)
-        {
-            Name = name;
-            Adapter = adapter;
-        }
+		public Feature(string name, IAdapter adapter) : this(name, adapter, new NoOpInstrumenter())
+        { }
+
+		public Feature(string name, IAdapter adapter, IInstrumenter instrumenter)
+		{
+			if (instrumenter == null)
+			{
+				throw new ArgumentNullException("instrumenter");
+			}
+			Name = name;
+			Adapter = adapter;
+			Instrumenter = instrumenter;
+		}
 
         public string Name { get; private set; }
 
@@ -40,6 +49,8 @@ namespace FlipperDotNet
 
         public IAdapter Adapter { get; private set; }
 
+		public IInstrumenter Instrumenter { get; private set; }
+
         public void Enable()
 		{
 			Enable(BooleanGate, true);
@@ -47,7 +58,7 @@ namespace FlipperDotNet
 
         public void EnableActor(IFlipperActor actor)
 		{
-			Enable(ActorGate, actor.FlipperId);
+			Enable(ActorGate, actor);
 		}
 
         public void EnablePercentageOfTime(int percentage)
@@ -64,13 +75,22 @@ namespace FlipperDotNet
 
 		private void Enable(IGate gate, object value)
 		{
-			try
+			var payload = new InstrumentationPayload {
+				FeatureName = Name,
+				GateName = gate.Name,
+				Operation = "enable",
+				Thing = value,
+			};
+			using (Instrumenter.InstrumentFeature(payload))
 			{
-				Adapter.Add(this);
-				Adapter.Enable(this, gate, value);
-			} catch (Exception e)
-			{
-				throw new AdapterRequestException(string.Format("Failed to enable feature {0}", Name), e);
+				try
+				{
+					Adapter.Add(this);
+					Adapter.Enable(this, gate, gate.WrapValue(value));
+				} catch (Exception e)
+				{
+					throw new AdapterRequestException(string.Format("Failed to enable feature {0}", Name), e);
+				}
 			}
 		}
 
@@ -89,7 +109,7 @@ namespace FlipperDotNet
 
         public void DisableActor(IFlipperActor actor)
         {
-            Disable(ActorGate, actor.FlipperId);
+            Disable(ActorGate, actor);
         }
 
         public void DisablePercentageOfTime()
@@ -104,13 +124,22 @@ namespace FlipperDotNet
 
 		private void Disable(IGate gate, object value)
 		{
-			try
+			var payload = new InstrumentationPayload {
+				FeatureName = Name,
+				GateName = gate.Name,
+				Operation = "disable",
+				Thing = value,
+			};
+			using (Instrumenter.InstrumentFeature(payload))
 			{
-				Adapter.Add(this);
-				Adapter.Disable(this, gate, value);
-			} catch (Exception e)
-			{
-				throw new AdapterRequestException(string.Format("Failed to disable feature {0}", Name), e);
+				try
+				{
+					Adapter.Add(this);
+					Adapter.Disable(this, gate, gate.WrapValue(value));
+				} catch (Exception e)
+				{
+					throw new AdapterRequestException(string.Format("Failed to disable feature {0}", Name), e);
+				}
 			}
 		}
 
@@ -231,19 +260,58 @@ namespace FlipperDotNet
             get { return Gates.Except(EnabledGates); }
         }
 
-        public bool IsEnabled
-        {
-            get
-            {
-                var values = GateValues;
-                return Gates.Any(gate => gate.IsOpen(null, values[gate.Key], Name));
-            }
-        }
+		public bool IsEnabled()
+		{
+			return IsEnabled(null);
+		}
 
         public bool IsEnabledFor(IFlipperActor actor)
         {
-            var values = GateValues;
-            return Gates.Any(gate => gate.IsOpen(actor, values[gate.Key], Name));
+			return IsEnabled(actor);
         }
+
+		private bool IsEnabled(object thing)
+		{
+			var payload = new InstrumentationPayload {
+				FeatureName = Name,
+				Operation = "enabled?",
+			};
+			if (thing != null)
+			{
+				payload.Thing = thing;
+			}
+			using (Instrumenter.InstrumentFeature(payload))
+			{
+				var values = GateValues;
+				var openGate = Gates.FirstOrDefault(gate => InstrumentGate(gate, "open?", thing, x => x.IsOpen(thing, values[x.Key], Name)));
+				bool result;
+				if (openGate != null)
+				{
+					payload.GateName = openGate.Name;
+					result = true;
+				} else
+				{
+					result = false;
+				}
+				payload.Result = result;
+				return result;
+			}
+		}
+
+		private bool InstrumentGate(IGate gate, string operation, object thing, Func<IGate,bool> function)
+		{
+			var payload = new InstrumentationPayload {
+				FeatureName = Name,
+				GateName = gate.Name,
+				Operation = operation,
+				Thing = thing,
+			};
+			using(Instrumenter.InstrumentGate(payload))
+			{
+				var result = function(gate);
+				payload.Result = result;
+				return result;
+			}
+		}
     }
 }

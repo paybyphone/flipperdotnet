@@ -13,6 +13,8 @@ namespace FlipperDotNet.RedisAdapter
 	{
 		public const string FeaturesKey = "flipper_features";
 
+		public string Name { get { return "redis"; } }
+
 		private IDatabase _database;
 
 		public RedisAdapter(IDatabase database)

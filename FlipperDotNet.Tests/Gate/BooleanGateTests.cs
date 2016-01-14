@@ -21,5 +21,13 @@ namespace FlipperDotNet.Tests.Gate
             var gate = new BooleanGate();
             return gate.IsOpen(new object(), value);
         }
+
+		[TestCase(true, ExpectedResult = true)]
+		[TestCase(false, ExpectedResult = false)]
+		public object WrapValueReturnsTheValue(bool value)
+		{
+			var gate = new BooleanGate();
+			return gate.WrapValue(value);
+		}
     }
 }

@@ -13,6 +13,8 @@ namespace FlipperDotNet.ConsulAdapter
     {
         public const string FeaturesKey = "flipper_features";
 
+		public string Name { get { return "consul"; } }
+
         private readonly IConsulClient _client;
         private readonly string _namespace;
 

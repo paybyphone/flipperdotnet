@@ -2,7 +2,7 @@
 
 namespace FlipperDotNet.Gate
 {
-    public class BooleanGate : IGate
+	public class BooleanGate : IGate
     {
         public const string NAME = "boolean";
         public const string KEY = "boolean";
@@ -41,5 +41,10 @@ namespace FlipperDotNet.Gate
         {
             get { return typeof (bool); }
         }
+
+		public object WrapValue(object value)
+		{
+			return value;
+		}
     }
 }
