@@ -5,7 +5,7 @@ A .Net port of the client portion of the feature flagging [Flipper](https://gith
 In addition to fully enabling or disabling features, it allows enabling for a percentage of users, a percentage of time,
 or specific users.
 
-The current backend stores are in-memory and [Consul](https://www.consul.io).
+The current backend stores are in-memory, [Consul](https://www.consul.io), and [Redis](http://redis.io).
 
 TODO: enable by groups.
 
@@ -87,6 +87,17 @@ will return `True` if the feature is fully enabled or any of the following are e
 * for the percentage of time,
 * for the percentage of actors, or
 * for the specific actor
+
+### Collecting Statistics
+
+FlipperDotNet can collect timing and count statistics using [Statsd](https://github.com/etsy/statsd/) or compatible systems.
+
+Pass an Instrumenter when creating the Flipper object.
+
+    var statsdClient = new Statsd("localhost", 8125);
+    var instrumenter = new StatsdInstrumenter(statsdClient);
+    var flipper = new Flipper(adapter, instrumenter);
+  
 
 ## Using the Consul Adapter
 
