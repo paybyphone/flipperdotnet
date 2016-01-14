@@ -11,9 +11,12 @@ TODO: enable by groups.
 
 ## Installation
 
-Currently available at <https://github.com/paybyphone/flipperdotnet>
+FlipperDotNet is available as a NuGet package. Include the adapter package that you are using, either
+[FlipperDotNet.Consul](https://www.nuget.org/packages/FlipperDotNet.Consul) or
+[FlipperDotNet.Redis](https://www.nuget.org/packages/FlipperDotNet.Redis/). They will include the core package
+[FlipperDotNet.Core](https://www.nuget.org/packages/FlipperDotNet.Core/)
 
-TODO: Make it a nuget package.
+Source code is available at <https://github.com/paybyphone/flipperdotnet>
 
 ## General Usage
 
