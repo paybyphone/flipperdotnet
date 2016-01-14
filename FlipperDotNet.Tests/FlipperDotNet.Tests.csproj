@@ -69,6 +69,7 @@
     <Compile Include="Instrumenter\StatsdAdapterInstrumenterIntegrationTests.cs" />
     <Compile Include="Instrumenter\StatsdGateInstrumenterIntegrationTests.cs" />
     <Compile Include="Instrumenter\StatsdInstrumentationTests.cs" />
+    <Compile Include="Mock\MockInstrumenter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -100,5 +101,6 @@
   -->
   <ItemGroup>
     <Folder Include="Instrumenter\" />
+    <Folder Include="Mock\" />
   </ItemGroup>
 </Project>

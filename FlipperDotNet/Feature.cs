@@ -81,7 +81,7 @@ namespace FlipperDotNet
 				Operation = "enable",
 				Thing = value,
 			};
-			using (Instrumenter.Instrument(InstrumentationType.FeatureOperation, payload))
+			using (Instrumenter.InstrumentFeature(payload))
 			{
 				try
 				{
@@ -130,7 +130,7 @@ namespace FlipperDotNet
 				Operation = "disable",
 				Thing = value,
 			};
-			using (Instrumenter.Instrument(InstrumentationType.FeatureOperation, payload))
+			using (Instrumenter.InstrumentFeature(payload))
 			{
 				try
 				{
@@ -280,7 +280,7 @@ namespace FlipperDotNet
 			{
 				payload.Thing = thing;
 			}
-			using (Instrumenter.Instrument(InstrumentationType.FeatureOperation, payload))
+			using (Instrumenter.InstrumentFeature(payload))
 			{
 				var values = GateValues;
 				var openGate = Gates.FirstOrDefault(gate => InstrumentGate(gate, "open?", thing, x => x.IsOpen(thing, values[x.Key], Name)));
@@ -306,7 +306,7 @@ namespace FlipperDotNet
 				Operation = operation,
 				Thing = thing,
 			};
-			using(Instrumenter.Instrument(InstrumentationType.GateOperation, payload))
+			using(Instrumenter.InstrumentGate(payload))
 			{
 				var result = function(gate);
 				payload.Result = result;

@@ -18,19 +18,19 @@ namespace FlipperDotNet.Instrumenter
 			_clock = clock;
 		}
 
-		public IInstrumentationToken Instrument(InstrumentationType type, InstrumentationPayload payload)
+		public IInstrumentationToken InstrumentFeature(InstrumentationPayload payload)
 		{
-			switch (type)
-			{
-				case InstrumentationType.FeatureOperation:
-					return new FeatureInstrumentationToken(this, payload, _clock);
-				case InstrumentationType.AdapterOperation:
-					return new AdapterInstrumentationToken(this, payload, _clock);
-				case InstrumentationType.GateOperation:
-					return new GateInstrumentationToken(this, payload, _clock);
-				default:
-					return null;
-			}
+			return new FeatureInstrumentationToken(this, payload, _clock);
+		}
+
+		public IInstrumentationToken InstrumentAdapter(InstrumentationPayload payload)
+		{
+			return new AdapterInstrumentationToken(this, payload, _clock);
+		}
+
+		public IInstrumentationToken InstrumentGate(InstrumentationPayload payload)
+		{
+			return new GateInstrumentationToken(this, payload, _clock);
 		}
 
 		private void PublishFeatureMetrics(TimeSpan duration, InstrumentationPayload payload)
@@ -102,7 +102,6 @@ namespace FlipperDotNet.Instrumenter
 			public void Dispose()
 			{
 				var endTime = _clock.Now;
-
 				Publish(endTime - _startTime);
 			}
 

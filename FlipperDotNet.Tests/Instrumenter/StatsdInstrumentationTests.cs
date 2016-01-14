@@ -22,7 +22,7 @@ namespace FlipperDotNet.Tests.Instrumenter
 			};
 
 			var Instrumenter = new StatsdInstrumenter(StatsdClient, clock);
-			var token = Instrumenter.Instrument(InstrumentationType.FeatureOperation, payload);
+			var token = Instrumenter.InstrumentFeature(payload);
 			token.Dispose();
 
 			StatsdClient.AssertWasCalled(x => x.LogTiming(string.Format("flipper.feature_operation.{0}", operationName), milliseconds));
@@ -39,7 +39,7 @@ namespace FlipperDotNet.Tests.Instrumenter
 			};
 
 			var Instrumenter = new StatsdInstrumenter(StatsdClient);
-			var token = Instrumenter.Instrument(InstrumentationType.FeatureOperation, payload);
+			var token = Instrumenter.InstrumentFeature(payload);
 			token.Dispose();
 
 			StatsdClient.AssertWasCalled(x => x.LogTiming(
@@ -61,7 +61,7 @@ namespace FlipperDotNet.Tests.Instrumenter
 			};
 
 			var Instrumenter = new StatsdInstrumenter(StatsdClient);
-			var token = Instrumenter.Instrument(InstrumentationType.FeatureOperation, payload);
+			var token = Instrumenter.InstrumentFeature(payload);
 			token.Dispose();
 
 			StatsdClient.AssertWasCalled(x => x.LogCount(string.Format("flipper.feature.{0}.{1}", featureName, status)));
@@ -81,7 +81,7 @@ namespace FlipperDotNet.Tests.Instrumenter
 			};
 
 			var Instrumenter = new StatsdInstrumenter(StatsdClient, clock);
-			var token = Instrumenter.Instrument(InstrumentationType.AdapterOperation, payload);
+			var token = Instrumenter.InstrumentAdapter(payload);
 			token.Dispose();
 
 			StatsdClient.AssertWasCalled(x => x.LogTiming(string.Format("flipper.adapter.{0}.{1}", adapterName, operationName), milliseconds));
@@ -101,7 +101,7 @@ namespace FlipperDotNet.Tests.Instrumenter
 			};
 
 			var Instrumenter = new StatsdInstrumenter(StatsdClient, clock);
-			var token = Instrumenter.Instrument(InstrumentationType.GateOperation, payload);
+			var token = Instrumenter.InstrumentGate(payload);
 			token.Dispose();
 
 			StatsdClient.AssertWasCalled(x => x.LogTiming(string.Format("flipper.gate_operation.{0}.{1}", gateName, operationName), milliseconds));
@@ -123,7 +123,7 @@ namespace FlipperDotNet.Tests.Instrumenter
 			};
 
 			var Instrumenter = new StatsdInstrumenter(StatsdClient, clock);
-			var token = Instrumenter.Instrument(InstrumentationType.GateOperation, payload);
+			var token = Instrumenter.InstrumentGate(payload);
 			token.Dispose();
 
 			StatsdClient.AssertWasCalled(x => x.LogTiming(string.Format("flipper.feature.{0}.gate_operation.{1}.{2}", featureName, gateName, operationName), milliseconds));
@@ -145,7 +145,7 @@ namespace FlipperDotNet.Tests.Instrumenter
 			};
 
 			var Instrumenter = new StatsdInstrumenter(StatsdClient);
-			var token = Instrumenter.Instrument(InstrumentationType.GateOperation, payload);
+			var token = Instrumenter.InstrumentGate(payload);
 			token.Dispose();
 
 			StatsdClient.AssertWasCalled(x => x.LogCount(string.Format("flipper.feature.{0}.gate.{1}.{2}", featureName, gateName, status)));

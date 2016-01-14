@@ -4,7 +4,17 @@ namespace FlipperDotNet.Instrumenter
 {
 	public class NoOpInstrumenter : IInstrumenter
 	{
-		public IInstrumentationToken Instrument(InstrumentationType type, InstrumentationPayload payload)
+		public IInstrumentationToken InstrumentFeature(InstrumentationPayload payload)
+		{
+			return new InstrumentationToken();
+		}
+
+		public IInstrumentationToken InstrumentAdapter(InstrumentationPayload payload)
+		{
+			return new InstrumentationToken();
+		}
+
+		public IInstrumentationToken InstrumentGate(InstrumentationPayload payload)
 		{
 			return new InstrumentationToken();
 		}

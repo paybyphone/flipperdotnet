@@ -23,7 +23,7 @@ namespace FlipperDotNet.Adapter
 				AdapterName = Adapter.Name,
 				FeatureName = feature.Name,
 			};
-			using (Instrumenter.Instrument(InstrumentationType.AdapterOperation, instrumentationPayload))
+			using (Instrumenter.InstrumentAdapter(instrumentationPayload))
 			{
 				var result = Adapter.Get(feature);
 				instrumentationPayload.Result = result;
@@ -39,7 +39,7 @@ namespace FlipperDotNet.Adapter
 				FeatureName = feature.Name,
 				GateName = gate.Name,
 			};
-			using (Instrumenter.Instrument(InstrumentationType.AdapterOperation, instrumentationPayload))
+			using (Instrumenter.InstrumentAdapter(instrumentationPayload))
 			{
 				Adapter.Enable(feature, gate, thing);
 			}
@@ -53,7 +53,7 @@ namespace FlipperDotNet.Adapter
 				FeatureName = feature.Name,
 				GateName = gate.Name,
 			};
-			using (Instrumenter.Instrument(InstrumentationType.AdapterOperation, instrumentationPayload))
+			using (Instrumenter.InstrumentAdapter(instrumentationPayload))
 			{
 				Adapter.Disable(feature, gate, thing);
 			}
@@ -66,7 +66,7 @@ namespace FlipperDotNet.Adapter
 				AdapterName = Adapter.Name,
 				FeatureName = feature.Name,
 			};
-			using (Instrumenter.Instrument(InstrumentationType.AdapterOperation, instrumentationPayload))
+			using (Instrumenter.InstrumentAdapter(instrumentationPayload))
 			{
 				Adapter.Add(feature);
 			}
@@ -79,7 +79,7 @@ namespace FlipperDotNet.Adapter
 				AdapterName = Adapter.Name,
 				FeatureName = feature.Name,
 			};
-			using (Instrumenter.Instrument(InstrumentationType.AdapterOperation, instrumentationPayload))
+			using (Instrumenter.InstrumentAdapter(instrumentationPayload))
 			{
 				Adapter.Remove(feature);
 			}
@@ -92,7 +92,7 @@ namespace FlipperDotNet.Adapter
 				AdapterName = Adapter.Name,
 				FeatureName = feature.Name,
 			};
-			using (Instrumenter.Instrument(InstrumentationType.AdapterOperation, instrumentationPayload))
+			using (Instrumenter.InstrumentAdapter(instrumentationPayload))
 			{
 				Adapter.Clear(feature);
 			}
@@ -104,7 +104,7 @@ namespace FlipperDotNet.Adapter
 					Operation = "features",
 					AdapterName = Adapter.Name,
 				};
-				using (Instrumenter.Instrument(InstrumentationType.AdapterOperation, instrumentationPayload))
+				using (Instrumenter.InstrumentAdapter(instrumentationPayload))
 				{
 					var result = Adapter.Features;
 					instrumentationPayload.Result = result;

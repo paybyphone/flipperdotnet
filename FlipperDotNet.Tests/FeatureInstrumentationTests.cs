@@ -2,9 +2,9 @@
 using System.Linq;
 using NUnit.Framework;
 using Rhino.Mocks;
+using FlipperDotNet.Tests.Mock;
 using FlipperDotNet.Adapter;
 using FlipperDotNet.Instrumenter;
-using FlipperDotNet.Tests.Adapter;
 
 namespace FlipperDotNet.Tests
 {

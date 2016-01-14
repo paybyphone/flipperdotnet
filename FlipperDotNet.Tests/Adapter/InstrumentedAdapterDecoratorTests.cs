@@ -1,9 +1,10 @@
 ﻿using System;
-using FlipperDotNet.Adapter;
-using FlipperDotNet.Instrumenter;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using FlipperDotNet.Tests.Mock;
+using FlipperDotNet.Adapter;
+using FlipperDotNet.Instrumenter;
 
 namespace FlipperDotNet.Tests.Adapter
 {
@@ -136,49 +137,6 @@ namespace FlipperDotNet.Tests.Adapter
 
 			Assert.That(Instrumenter.Events.First().Type, Is.EqualTo(InstrumentationType.AdapterOperation));
 			Assert.That(Instrumenter.Events.First().Payload, Is.EqualTo(expectedPayload));
-		}
-	}
-
-	internal class MockInstrumenter : IInstrumenter
-	{
-		public struct Event
-		{
-			public InstrumentationType Type;
-			public InstrumentationPayload Payload;
-
-			public override string ToString()
-			{
-				return string.Format("<Type=\"{0}\", Payload=\"{1}\">", Type, Payload);
-			}
-		}
-
-		public List<Event> Events = new List<Event>();
-
-		public IInstrumentationToken Instrument(InstrumentationType type, InstrumentationPayload payload)
-		{
-			return new InstrumentationToken(this, type, payload);
-		}
-
-		public class InstrumentationToken : IInstrumentationToken
-		{
-			readonly MockInstrumenter _instrumenter;
-			readonly InstrumentationType _type;
-			readonly InstrumentationPayload _payload;
-
-			public InstrumentationToken(MockInstrumenter instrumenter, InstrumentationType type, InstrumentationPayload payload)
-			{
-				_instrumenter = instrumenter;
-				_type = type;
-				_payload = payload;
-			}
-
-			public void Dispose()
-			{
-				_instrumenter.Events.Add(new Event {
-					Type = _type,
-					Payload = _payload,
-				});
-			}
 		}
 	}
 }
