@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using StatsdClient;
 using FlipperDotNet.Util;
 
@@ -21,26 +20,20 @@ namespace FlipperDotNet.Instrumenter
 
 		public IInstrumentationToken Instrument(InstrumentationType type, InstrumentationPayload payload)
 		{
-			return new InstrumentationToken(this, type, payload, _clock);
-		}
-
-		private void Publish(InstrumentationType type, DateTime startTime, DateTime endTime, InstrumentationPayload payload)
-		{
-			var duration = endTime - startTime;
-			switch(type){
+			switch (type)
+			{
 				case InstrumentationType.FeatureOperation:
-					PublishFeatureMetrics(payload, duration);
-					break;
+					return new FeatureInstrumentationToken(this, payload, _clock);
 				case InstrumentationType.AdapterOperation:
-					PublishAdapterMetrics(payload, duration);
-					break;
+					return new AdapterInstrumentationToken(this, payload, _clock);
 				case InstrumentationType.GateOperation:
-					PublishGateMetrics(payload, duration);
-					break;
+					return new GateInstrumentationToken(this, payload, _clock);
+				default:
+					return null;
 			}
 		}
 
-		private void PublishFeatureMetrics(InstrumentationPayload payload, TimeSpan duration)
+		private void PublishFeatureMetrics(TimeSpan duration, InstrumentationPayload payload)
 		{
 			var operation = payload.Operation.TrimEnd('?');
 			_statsdClient.LogTiming(string.Format("flipper.feature_operation.{0}", operation), (long)duration.TotalMilliseconds);
@@ -60,14 +53,14 @@ namespace FlipperDotNet.Instrumenter
 			}
 		}
 
-		private void PublishAdapterMetrics(InstrumentationPayload payload, TimeSpan duration)
+		private void PublishAdapterMetrics(TimeSpan duration, InstrumentationPayload payload)
 		{
 			var adapterName = payload.AdapterName;
 			var operation = payload.Operation;
 			_statsdClient.LogTiming(string.Format("flipper.adapter.{0}.{1}", adapterName, operation), (long)duration.TotalMilliseconds);
 		}
 
-		private void PublishGateMetrics(InstrumentationPayload payload, TimeSpan duration)
+		private void PublishGateMetrics(TimeSpan duration, InstrumentationPayload payload)
 		{
 			var featureName = payload.FeatureName;
 			var gateName = payload.GateName;
@@ -91,18 +84,16 @@ namespace FlipperDotNet.Instrumenter
 			}
 		}
 
-		class InstrumentationToken : IInstrumentationToken
+		abstract class InstrumentationToken : IInstrumentationToken
 		{
-			readonly StatsdInstrumenter _instrumenter;
-			readonly InstrumentationType _type;
-			readonly InstrumentationPayload _payload;
+			protected readonly StatsdInstrumenter _instrumenter;
+			protected readonly InstrumentationPayload _payload;
+			protected readonly DateTime _startTime;
 			readonly IClock _clock;
-			readonly DateTime _startTime;
 
-			public InstrumentationToken(StatsdInstrumenter instrumenter, InstrumentationType type, InstrumentationPayload payload, IClock clock)
+			public InstrumentationToken(StatsdInstrumenter instrumenter, InstrumentationPayload payload, IClock clock)
 			{
 				_instrumenter = instrumenter;
-				_type = type;
 				_payload = payload;
 				_clock = clock;
 				_startTime = _clock.Now;
@@ -112,11 +103,47 @@ namespace FlipperDotNet.Instrumenter
 			{
 				var endTime = _clock.Now;
 
-				_instrumenter.Publish(_type, _startTime, endTime, _payload);
+				Publish(endTime - _startTime);
+			}
+
+			protected abstract void Publish(TimeSpan duration);
+		}
+
+		class FeatureInstrumentationToken : InstrumentationToken
+		{
+			public FeatureInstrumentationToken(StatsdInstrumenter instrumenter, InstrumentationPayload payload, IClock clock)
+				: base(instrumenter, payload, clock)
+			{}
+
+			protected override void Publish(TimeSpan duration)
+			{
+				_instrumenter.PublishFeatureMetrics(duration, _payload);
 			}
 		}
 
-		//class FeatureInstrumentationToken
+		class AdapterInstrumentationToken : InstrumentationToken
+		{
+			public AdapterInstrumentationToken(StatsdInstrumenter instrumenter, InstrumentationPayload payload, IClock clock)
+				: base(instrumenter, payload, clock)
+			{}
+
+			protected override void Publish(TimeSpan duration)
+			{
+				_instrumenter.PublishAdapterMetrics(duration, _payload);
+			}
+		}
+
+		class GateInstrumentationToken : InstrumentationToken
+		{
+			public GateInstrumentationToken(StatsdInstrumenter instrumenter, InstrumentationPayload payload, IClock clock)
+				: base(instrumenter, payload, clock)
+			{}
+
+			protected override void Publish(TimeSpan duration)
+			{
+				_instrumenter.PublishGateMetrics(duration, _payload);
+			}
+		}
 	}
 }
 
