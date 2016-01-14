@@ -107,6 +107,7 @@ namespace FlipperDotNet.Tests
 				GateName = "boolean",
 				Operation = "open?",
 				Thing = null,
+				Result = enabled,
 			};
 			if (enabled)
 			{
@@ -179,6 +180,7 @@ namespace FlipperDotNet.Tests
 				GateName = "actor",
 				Operation = "open?",
 				Thing = flipperActor,
+				Result = enabled,
 			};
 			if (enabled)
 			{

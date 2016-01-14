@@ -308,7 +308,9 @@ namespace FlipperDotNet
 			};
 			using(Instrumenter.Instrument(InstrumentationType.GateOperation, payload))
 			{
-				return function(gate);
+				var result = function(gate);
+				payload.Result = result;
+				return result;
 			}
 		}
     }

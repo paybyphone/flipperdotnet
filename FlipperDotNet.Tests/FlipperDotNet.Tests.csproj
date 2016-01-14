@@ -48,6 +48,9 @@
     <Reference Include="Klinkby.Checksum">
       <HintPath>..\packages\Klinkby.Checksum.1.0.2.1\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\klinkby.checksum.dll</HintPath>
     </Reference>
+    <Reference Include="StatsdClient">
+      <HintPath>..\packages\StatsdCsharpClient.1.3.0.0\lib\net45\StatsdClient.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapter\MemoryAdapterTests.cs" />
@@ -62,6 +65,9 @@
     <Compile Include="FeatureAdapterErrorTests.cs" />
     <Compile Include="Adapter\InstrumentedAdapterDecoratorTests.cs" />
     <Compile Include="FeatureInstrumentationTests.cs" />
+    <Compile Include="Instrumenter\StatsdFeatureInstrumenterIntegrationTests.cs" />
+    <Compile Include="Instrumenter\StatsdAdapterInstrumenterIntegrationTests.cs" />
+    <Compile Include="Instrumenter\StatsdGateInstrumenterIntegrationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
