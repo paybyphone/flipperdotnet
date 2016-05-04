@@ -77,7 +77,6 @@ namespace FlipperDotNet
 		{
 			var payload = new InstrumentationPayload {
 				FeatureName = Name,
-				GateName = gate.Name,
 				Operation = "enable",
 				Thing = value,
 			};
@@ -126,7 +125,6 @@ namespace FlipperDotNet
 		{
 			var payload = new InstrumentationPayload {
 				FeatureName = Name,
-				GateName = gate.Name,
 				Operation = "disable",
 				Thing = value,
 			};
@@ -282,33 +280,7 @@ namespace FlipperDotNet
 			}
 			using (Instrumenter.InstrumentFeature(payload))
 			{
-				var values = GateValues;
-				var openGate = Gates.FirstOrDefault(gate => InstrumentGate(gate, "open?", thing, x => x.IsOpen(thing, values[x.Key], Name)));
-				bool result;
-				if (openGate != null)
-				{
-					payload.GateName = openGate.Name;
-					result = true;
-				} else
-				{
-					result = false;
-				}
-				payload.Result = result;
-				return result;
-			}
-		}
-
-		private bool InstrumentGate(IGate gate, string operation, object thing, Func<IGate,bool> function)
-		{
-			var payload = new InstrumentationPayload {
-				FeatureName = Name,
-				GateName = gate.Name,
-				Operation = operation,
-				Thing = thing,
-			};
-			using(Instrumenter.InstrumentGate(payload))
-			{
-				var result = function(gate);
+				bool result = Gates.Any(gate => gate.IsOpen(thing, GateValues[gate.Key], Name));
 				payload.Result = result;
 				return result;
 			}

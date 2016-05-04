@@ -49,7 +49,6 @@ namespace FlipperDotNet.Tests.Adapter
 				Operation = "enable",
 				AdapterName = "memory",
 				FeatureName = "Stats",
-				GateName = "percentage_of_actors",
 			};
 
 			Assert.That(Instrumenter.Events.First().Type, Is.EqualTo(InstrumentationType.AdapterOperation));
@@ -68,7 +67,6 @@ namespace FlipperDotNet.Tests.Adapter
 				Operation = "disable",
 				AdapterName = "memory",
 				FeatureName = "Stats",
-				GateName = "percentage_of_actors",
 			};
 
 			Assert.That(Instrumenter.Events.First().Type, Is.EqualTo(InstrumentationType.AdapterOperation));
@@ -126,7 +124,6 @@ namespace FlipperDotNet.Tests.Adapter
 		[Test]
 		public void ShouldRecordInstrumentationWhenLoadingFeatures()
 		{
-			var feature = Flipper.Feature("Stats");
 			var result = Adapter.Features;
 
 			var expectedPayload = new InstrumentationPayload {

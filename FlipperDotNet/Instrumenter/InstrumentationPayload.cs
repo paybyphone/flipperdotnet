@@ -7,7 +7,6 @@ namespace FlipperDotNet.Instrumenter
 		public string Operation;
 		public string AdapterName;
 		public string FeatureName;
-		public string GateName;
 		public object Thing;
 		public object Result;
 
@@ -16,7 +15,6 @@ namespace FlipperDotNet.Instrumenter
 			return Operation == other.Operation &&
 				AdapterName == other.AdapterName &&
 				FeatureName == other.FeatureName &&
-				GateName == other.GateName &&
 				((Thing == null && other.Thing == null) || (Thing != null && Thing.Equals(other.Thing))) &&
 				((Result == null && other.Result == null) || (Result != null && Result.Equals(other.Result)));
 		}
@@ -32,8 +30,8 @@ namespace FlipperDotNet.Instrumenter
 
 		public override string ToString()
 		{
-			return string.Format("InstrumentationPayload: \"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\"",
-				Operation, AdapterName, FeatureName, GateName, Thing, Result);
+			return string.Format("InstrumentationPayload: \"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\"",
+				Operation, AdapterName, FeatureName, Thing, Result);
 		}
 	}
 }

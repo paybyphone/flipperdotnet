@@ -67,7 +67,6 @@
     <Compile Include="FeatureInstrumentationTests.cs" />
     <Compile Include="Instrumenter\StatsdFeatureInstrumenterIntegrationTests.cs" />
     <Compile Include="Instrumenter\StatsdAdapterInstrumenterIntegrationTests.cs" />
-    <Compile Include="Instrumenter\StatsdGateInstrumenterIntegrationTests.cs" />
     <Compile Include="Instrumenter\StatsdInstrumentationTests.cs" />
     <Compile Include="Mock\MockInstrumenter.cs" />
   </ItemGroup>

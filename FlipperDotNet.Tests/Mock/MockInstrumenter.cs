@@ -29,11 +29,6 @@ namespace FlipperDotNet.Tests.Mock
 			return new InstrumentationToken(this, InstrumentationType.AdapterOperation, payload);
 		}
 
-		public IInstrumentationToken InstrumentGate(InstrumentationPayload payload)
-		{
-			return new InstrumentationToken(this, InstrumentationType.GateOperation, payload);
-		}
-
 		public class InstrumentationToken : IInstrumentationToken
 		{
 			readonly MockInstrumenter _instrumenter;
