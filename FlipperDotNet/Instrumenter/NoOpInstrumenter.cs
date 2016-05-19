@@ -14,11 +14,6 @@ namespace FlipperDotNet.Instrumenter
 			return new InstrumentationToken();
 		}
 
-		public IInstrumentationToken InstrumentGate(InstrumentationPayload payload)
-		{
-			return new InstrumentationToken();
-		}
-
 		internal class InstrumentationToken : IInstrumentationToken
 		{
 			public void Dispose()

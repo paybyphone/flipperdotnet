@@ -11,7 +11,6 @@ namespace FlipperDotNet.Instrumenter
 	{
 		IInstrumentationToken InstrumentFeature(InstrumentationPayload payload);
 		IInstrumentationToken InstrumentAdapter(InstrumentationPayload payload);
-		IInstrumentationToken InstrumentGate(InstrumentationPayload payload);
 	}
 }
 

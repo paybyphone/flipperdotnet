@@ -4,7 +4,6 @@
 	{
 		FeatureOperation,
 		AdapterOperation,
-		GateOperation
 	}
 }
 

@@ -37,7 +37,6 @@ namespace FlipperDotNet.Adapter
 				Operation = "enable",
 				AdapterName = Adapter.Name,
 				FeatureName = feature.Name,
-				GateName = gate.Name,
 			};
 			using (Instrumenter.InstrumentAdapter(instrumentationPayload))
 			{
@@ -51,7 +50,6 @@ namespace FlipperDotNet.Adapter
 				Operation = "disable",
 				AdapterName = Adapter.Name,
 				FeatureName = feature.Name,
-				GateName = gate.Name,
 			};
 			using (Instrumenter.InstrumentAdapter(instrumentationPayload))
 			{

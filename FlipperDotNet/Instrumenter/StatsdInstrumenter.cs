@@ -28,11 +28,6 @@ namespace FlipperDotNet.Instrumenter
 			return new AdapterInstrumentationToken(this, payload, _clock);
 		}
 
-		public IInstrumentationToken InstrumentGate(InstrumentationPayload payload)
-		{
-			return new GateInstrumentationToken(this, payload, _clock);
-		}
-
 		private void PublishFeatureMetrics(TimeSpan duration, InstrumentationPayload payload)
 		{
 			var operation = payload.Operation.TrimEnd('?');
@@ -58,30 +53,6 @@ namespace FlipperDotNet.Instrumenter
 			var adapterName = payload.AdapterName;
 			var operation = payload.Operation;
 			_statsdClient.LogTiming(string.Format("flipper.adapter.{0}.{1}", adapterName, operation), (long)duration.TotalMilliseconds);
-		}
-
-		private void PublishGateMetrics(TimeSpan duration, InstrumentationPayload payload)
-		{
-			var featureName = payload.FeatureName;
-			var gateName = payload.GateName;
-			var operation = payload.Operation.TrimEnd('?');
-			var durationMilliseconds = (long)duration.TotalMilliseconds;
-
-			_statsdClient.LogTiming(string.Format("flipper.gate_operation.{0}.{1}", gateName, operation), durationMilliseconds);
-			_statsdClient.LogTiming(string.Format("flipper.feature.{0}.gate_operation.{1}.{2}", featureName, gateName, operation), durationMilliseconds);
-
-			if (payload.Operation == "open?")
-			{
-				string metricName;
-				if ((bool)payload.Result)
-				{
-					metricName = string.Format("flipper.feature.{0}.gate.{1}.open", featureName, gateName);
-				} else
-				{
-					metricName = string.Format("flipper.feature.{0}.gate.{1}.closed", featureName, gateName);
-				}
-				_statsdClient.LogCount(metricName);
-			}
 		}
 
 		abstract class InstrumentationToken : IInstrumentationToken
@@ -129,18 +100,6 @@ namespace FlipperDotNet.Instrumenter
 			protected override void Publish(TimeSpan duration)
 			{
 				_instrumenter.PublishAdapterMetrics(duration, _payload);
-			}
-		}
-
-		class GateInstrumentationToken : InstrumentationToken
-		{
-			public GateInstrumentationToken(StatsdInstrumenter instrumenter, InstrumentationPayload payload, IClock clock)
-				: base(instrumenter, payload, clock)
-			{}
-
-			protected override void Publish(TimeSpan duration)
-			{
-				_instrumenter.PublishGateMetrics(duration, _payload);
 			}
 		}
 	}
