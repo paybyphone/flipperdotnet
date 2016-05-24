@@ -536,7 +536,7 @@ namespace FlipperDotNet.Tests
         public void ShouldReturnTrueWhenFullyEnabled()
         {
             _feature.Enable();
-            Assert.That(_feature.IsEnabled, Is.True);
+            Assert.True(_feature.IsEnabled());
         }
 
         [Test]
@@ -561,7 +561,7 @@ namespace FlipperDotNet.Tests
         public void ShouldReturnFalseWhenFullyDisabled()
         {
             _feature.Disable();
-            Assert.That(_feature.IsEnabled, Is.False);
+            Assert.False(_feature.IsEnabled());
         }
 
         [TestCase(1, 50, ExpectedResult = true)]

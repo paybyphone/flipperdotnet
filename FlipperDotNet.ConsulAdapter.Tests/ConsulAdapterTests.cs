@@ -1,21 +1,25 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using Consul;
 using NUnit.Framework;
-using System.Net;
 using Rhino.Mocks;
 
 namespace FlipperDotNet.ConsulAdapter.Tests
 {
     internal abstract class ConsulAdapterTests : AdapterTests.SharedAdapterTests
     {
-        public abstract string Namespace { get; }
+        protected abstract string Namespace { get; }
 
         [SetUp]
         public new void SetUp()
         {
-            Client = new Client();
+            Client = new ConsulClient();
             Adapter = new ConsulAdapter(Client, Namespace);
-            Client.KV.DeleteTree("/");
+            var pairs =  Client.KV.Keys("/","/").Result;
+            foreach (var key in pairs.Response)
+            {
+                 Client.KV.DeleteTree(key).Wait();
+            }
         }
 
         protected IConsulClient Client { get; private set; }
@@ -24,7 +28,7 @@ namespace FlipperDotNet.ConsulAdapter.Tests
     [TestFixture]
     class NoNamespaceConsulAdapterTests : ConsulAdapterTests
     {
-        public override string Namespace
+        protected override string Namespace
         {
             get { return ""; }
         }
@@ -33,7 +37,7 @@ namespace FlipperDotNet.ConsulAdapter.Tests
     [TestFixture]
     class NamespacedConsulAdapterTests : ConsulAdapterTests
     {
-        public override string Namespace
+        protected override string Namespace
         {
             get { return "foo/bar"; }
         }
@@ -44,7 +48,7 @@ namespace FlipperDotNet.ConsulAdapter.Tests
             var feature = new Feature("search", Adapter);
             Adapter.Add(feature);
 
-            var result = Client.KV.Get(string.Join("/", Namespace, ConsulAdapter.FeaturesKey, "features", "search"));
+            var result = Client.KV.Get(string.Join("/", Namespace, ConsulAdapter.FeaturesKey, "features", "search")).Result;
             Assert.That(Encoding.UTF8.GetString(result.Response.Value), Is.EqualTo("1"));
         }
 
@@ -54,7 +58,7 @@ namespace FlipperDotNet.ConsulAdapter.Tests
             var feature = new Feature("search", Adapter);
             Adapter.Enable(feature, feature.BooleanGate, true);
 
-            var result = Client.KV.Get(string.Join("/", Namespace, "search", "boolean"));
+            var result = Client.KV.Get(string.Join("/", Namespace, "search", "boolean")).Result;
             Assert.That(Encoding.UTF8.GetString(result.Response.Value), Is.EqualTo("true"));
         }
     }
@@ -67,7 +71,7 @@ namespace FlipperDotNet.ConsulAdapter.Tests
         [TestCase("/foo", ExpectedResult = "foo")]
         public string TestNamespace(string name)
         {
-            var client = new Client();
+            var client = new ConsulClient();
             var adapter = new ConsulAdapter(client, name);
             return adapter.Namespace;
         }
@@ -81,9 +85,8 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			var clientConfig = new ConsulClientConfiguration();
-			clientConfig.Address = "127.0.0.1:9500";
-			var client = new Client(clientConfig);
+		    var clientConfig = new ConsulClientConfiguration {Address = new Uri("http://127.0.0.1:9500")};
+		    var client = new ConsulClient(clientConfig);
 			var adapter = new ConsulAdapter(client);
 			var flipper = new Flipper(adapter);
 			_feature = flipper.Feature("unobtanium");
@@ -93,7 +96,6 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		public void ShouldThrowExceptionWhenEnabling()
 		{
 			Assert.That(_feature.Enable, Throws.TypeOf<AdapterRequestException>()
-				.With.InnerException.TypeOf<WebException>()
 				.With.Property("Message").EqualTo("Failed to enable feature unobtanium"));
 		}
 
@@ -101,7 +103,6 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		public void ShouldThrowExceptionWhenEnablingActor()
 		{
 			Assert.That(() => _feature.EnableActor(MockActor("User:5")), Throws.TypeOf<AdapterRequestException>()
-				.With.InnerException.TypeOf<WebException>()
 				.With.Property("Message").EqualTo("Failed to enable feature unobtanium"));
 		}
 		
@@ -109,7 +110,6 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		public void ShouldThrowExceptionWhenEnablingPercentageOfTime()
 		{
 			Assert.That(() => _feature.EnablePercentageOfTime(10), Throws.TypeOf<AdapterRequestException>()
-				.With.InnerException.TypeOf<WebException>()
 				.With.Property("Message").EqualTo("Failed to enable feature unobtanium"));
 		}
 
@@ -117,7 +117,6 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		public void ShouldThrowExceptionWhenEnablingPercentageOfActors()
 		{
 			Assert.That(() => _feature.EnablePercentageOfActors(10), Throws.TypeOf<AdapterRequestException>()
-				.With.InnerException.TypeOf<WebException>()
 				.With.Property("Message").EqualTo("Failed to enable feature unobtanium"));
 		}
 
@@ -125,7 +124,6 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		public void ShouldThrowExceptionWhenDisabling()
 		{
 			Assert.That(_feature.Disable, Throws.TypeOf<AdapterRequestException>()
-				.With.InnerException.TypeOf<WebException>()
 				.With.Property("Message").EqualTo("Failed to disable feature unobtanium"));
 		}
 
@@ -133,7 +131,6 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		public void ShouldThrowExceptionWhenDisblingActor()
 		{
 			Assert.That(() => _feature.DisableActor(MockActor("User:5")), Throws.TypeOf<AdapterRequestException>()
-				.With.InnerException.TypeOf<WebException>()
 				.With.Property("Message").EqualTo("Failed to disable feature unobtanium"));
 		}
 
@@ -141,7 +138,6 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		public void ShouldThrowExceptionWhenDisablingPercentageOfTime()
 		{
 			Assert.That(_feature.DisablePercentageOfTime, Throws.TypeOf<AdapterRequestException>()
-				.With.InnerException.TypeOf<WebException>()
 				.With.Property("Message").EqualTo("Failed to disable feature unobtanium"));
 		}
 
@@ -149,7 +145,6 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		public void ShouldThrowExceptionWhenDisablingPercentageOfActors()
 		{
 			Assert.That(_feature.DisablePercentageOfActors, Throws.TypeOf<AdapterRequestException>()
-				.With.InnerException.TypeOf<WebException>()
 				.With.Property("Message").EqualTo("Failed to disable feature unobtanium"));
 		}
 
@@ -157,7 +152,6 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		public void ShouldThrowExceptionWhenGettingFeatureState()
 		{
 			Assert.That(() => _feature.State, Throws.TypeOf<AdapterRequestException>()
-				.With.InnerException.TypeOf<ConsulRequestException>()
 				.With.Property("Message").EqualTo("Unable to retrieve feature values for unobtanium"));
 		}
 
@@ -165,7 +159,6 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		public void ShouldThrowExceptionWhenTestingOnState()
 		{
 			Assert.That(() => _feature.IsOn, Throws.TypeOf<AdapterRequestException>()
-				.With.InnerException.TypeOf<ConsulRequestException>()
 				.With.Property("Message").EqualTo("Unable to retrieve feature values for unobtanium"));
 		}
 
@@ -173,7 +166,6 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		public void ShouldThrowExceptionWhenTestingOffState()
 		{
 			Assert.That(() => _feature.IsOff, Throws.TypeOf<AdapterRequestException>()
-				.With.InnerException.TypeOf<ConsulRequestException>()
 				.With.Property("Message").EqualTo("Unable to retrieve feature values for unobtanium"));
 		}
 
@@ -181,7 +173,6 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		public void ShouldThrowExceptionWhenTestingConditionalState()
 		{
 			Assert.That(() => _feature.IsConditional, Throws.TypeOf<AdapterRequestException>()
-				.With.InnerException.TypeOf<ConsulRequestException>()
 				.With.Property("Message").EqualTo("Unable to retrieve feature values for unobtanium"));
 		}
 
@@ -189,7 +180,6 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		public void ShouldThrowExceptionWhenGettingGateValues()
 		{
 			Assert.That(() => _feature.GateValues, Throws.TypeOf<AdapterRequestException>()
-				.With.InnerException.TypeOf<ConsulRequestException>()
 				.With.Property("Message").EqualTo("Unable to retrieve feature values for unobtanium"));
 		}
 
@@ -197,7 +187,6 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		public void ShouldThrowExceptionWhenListingEnabledGates()
 		{
 			Assert.That(() => _feature.EnabledGates, Throws.TypeOf<AdapterRequestException>()
-				.With.InnerException.TypeOf<ConsulRequestException>()
 				.With.Property("Message").EqualTo("Unable to retrieve feature values for unobtanium"));
 		}
 
@@ -205,7 +194,6 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		public void ShouldThrowExceptionWhenListingDisabledGates()
 		{
 			Assert.That(() => _feature.DisabledGates, Throws.TypeOf<AdapterRequestException>()
-				.With.InnerException.TypeOf<ConsulRequestException>()
 				.With.Property("Message").EqualTo("Unable to retrieve feature values for unobtanium"));
 		}
 
@@ -213,7 +201,6 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		public void ShouldThrowExceptionWhenTestingIfFeatureIsEnabled()
 		{
 			Assert.That(() => _feature.IsEnabled(), Throws.TypeOf<AdapterRequestException>()
-				.With.InnerException.TypeOf<ConsulRequestException>()
 				.With.Property("Message").EqualTo("Unable to retrieve feature values for unobtanium"));
 		}
 
@@ -221,7 +208,6 @@ namespace FlipperDotNet.ConsulAdapter.Tests
 		public void ShouldThrowExceptionWhenTestingIfFeatureIsEnabledForActor()
 		{
 			Assert.That(() => _feature.IsEnabledFor(MockActor("User:5")), Throws.TypeOf<AdapterRequestException>()
-				.With.InnerException.TypeOf<ConsulRequestException>()
 				.With.Property("Message").EqualTo("Unable to retrieve feature values for unobtanium"));
 		}
 

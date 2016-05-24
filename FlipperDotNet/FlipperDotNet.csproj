@@ -71,7 +71,9 @@
     <Compile Include="Util\SystemClock.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="FlipperDotNet.nuspec" />
+    <None Include="FlipperDotNet.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -89,8 +91,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="Instrumenter\" />
-    <Folder Include="Util\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>
