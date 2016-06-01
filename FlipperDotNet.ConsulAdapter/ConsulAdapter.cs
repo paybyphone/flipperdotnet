@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Consul;
 using FlipperDotNet.Adapter;
 using FlipperDotNet.Gate;
@@ -120,18 +121,24 @@ namespace FlipperDotNet.ConsulAdapter
                 {
                     Value = Encoding.UTF8.GetBytes("1")
                 };
-            _client.KV.Put(pair);
+            _client.KV.Put(pair).Wait();
         }
 
         public void Remove(Feature feature)
         {
-            _client.KV.DeleteTree(BuildPath(string.Format("{0}/features/{1}", FeaturesKey, feature.Key)));
-            Clear(feature);
+            Task.WaitAll(
+                _client.KV.DeleteTree(BuildPath(string.Format("{0}/features/{1}", FeaturesKey, feature.Key))),
+                ClearAsync(feature));
         }
 
         public void Clear(Feature feature)
         {
-            _client.KV.DeleteTree(BuildPath(feature.Key));
+            ClearAsync(feature).Wait();
+        }
+
+        private Task<WriteResult<bool>> ClearAsync(Feature feature)
+        {
+            return _client.KV.DeleteTree(BuildPath(feature.Key));
         }
 
         private string Key(Feature feature, IGate gate)
@@ -144,7 +151,7 @@ namespace FlipperDotNet.ConsulAdapter
 
             var result = new Dictionary<string, object>();
             var keyPath = BuildPath(feature.Key);
-            var values = _client.KV.List(keyPath);
+            var values = _client.KV.List(keyPath).Result;
             if (values.Response != null)
             {
                 foreach (var member in values.Response)
@@ -168,7 +175,7 @@ namespace FlipperDotNet.ConsulAdapter
         private ISet<string> ReadSet(string keyPath)
         {
             var values = new HashSet<string>();
-            var valuesResult = _client.KV.List(keyPath);
+            var valuesResult = _client.KV.List(keyPath).Result;
             if (valuesResult.Response != null)
             {
                 foreach (var member in valuesResult.Response)
@@ -199,7 +206,7 @@ namespace FlipperDotNet.ConsulAdapter
                 {
                     Value = Encoding.UTF8.GetBytes(value),
                 };
-            _client.KV.Put(pair);
+            _client.KV.Put(pair).Wait();
         }
 
         private void WriteInt(string key, int value)
@@ -214,7 +221,7 @@ namespace FlipperDotNet.ConsulAdapter
 
         private void RemoveFromSet(string key, string value)
         {
-            _client.KV.Delete(SetMemberKey(key, value));
+            _client.KV.Delete(SetMemberKey(key, value)).Wait();
         }
 
         private static string SetMemberKey(string key, string value)
