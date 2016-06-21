@@ -210,6 +210,24 @@ namespace FlipperDotNet.AdapterTests
         }
 
 		[Test]
+		public void ShouldNotRemoveFeatureWhenFeatureCleared ()
+		{
+			var actor22 = new object();
+			var group = new object();
+			var feature = Flipper.Feature("Stats");
+			Adapter.Add(feature);
+			Adapter.Enable(feature, feature.BooleanGate, true);
+			Adapter.Enable(feature, feature.GroupGate, group);
+			Adapter.Enable(feature, feature.ActorGate, actor22);
+			Adapter.Enable(feature, feature.PercentageOfActorsGate, 25);
+			Adapter.Enable(feature, feature.PercentageOfTimeGate, 45);
+
+			Adapter.Clear(feature);
+
+			Assert.That(Adapter.Features, Is.EquivalentTo(new[] { "Stats" }));
+		}
+
+		[Test]
 		[ExpectedException(typeof(NotSupportedException), ExpectedMessage="TEST is not supported by this adapter yet")]
 		public void ShouldFailWhenUnsupportedGateTypeIsEnabled()
 		{
